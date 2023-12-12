@@ -15,4 +15,3 @@ else
     echo "Directory '$directory_to_search' does not exist."
 fi
 ```
-# shell
