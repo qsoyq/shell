@@ -11,4 +11,3 @@ alias works="cd $HOME/works"
 alias reload=". ~/.zshrc"
 alias envactive="set -o allexport && . .env"
 alias grep='grep --color=auto'
-

@@ -6,4 +6,4 @@
 
 alias cloudflared.restart="sudo launchctl stop com.cloudflare.cloudflared && sudo launchctl start com.cloudflare.cloudflared"
 
-alias tailf_cloudflared="tail -f /Users/qs/Library/Logs/com.cloudflare.cloudflared.err.log /Users/qs/Library/Logs/com.cloudflare.cloudflared.out.log"
+alias tailf_cloudflared="tail -f $HOME/Library/Logs/com.cloudflare.cloudflared.err.log $HOME/Library/Logs/com.cloudflare.cloudflared.out.log"
