@@ -5,7 +5,7 @@ export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL="true"
 
 export PYTHON_FASTAPI_TEMPLATE_IMAGE="qsoyq/python-fastapi-template"
 
-alias PIP_INSTALL_EXTRA="pip install --upgrade yapf isort pycln pysocks poetry ipython git+https://github.com/qsoyq/pytoolkit.git@v0.1.0"
+alias PIP_INSTALL_EXTRA="pip install --upgrade yapf isort pycln pysocks poetry ipython you-get git+https://github.com/qsoyq/pytoolkit.git@v0.1.0"
 
 alias python_format="yapf -r -i . && isort . && pycln -a ."
 
