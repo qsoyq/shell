@@ -14,10 +14,8 @@ alias _dsstore_desktop="find $HOME/Desktop -name '*.DS_Store' -type f -ls -delet
 alias _dsstore_share="find $HOME/works/share -name '*.DS_Store' -type f -ls -delete"
 alias dsstore="_dsstore_github && _dsstore_desktop && _dsstore_share"
 
-
-
 # Get WAN IP
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+# alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # Get local IP
 alias localip="ipconfig getifaddr en0"
@@ -28,3 +26,11 @@ alias mbrew="arch -arm64e /opt/homebrew/bin/brew"
 alias m1ipa="sudo xattr -dr com.apple.quarantine"
 alias ipadir="open ~/Library/Group\ Containers/K36BKF7T3D.group.com.apple.configurator/Library"
 alias airport="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
+
+
+# WiFI
+# networksetup -listallhardwareports
+# alias wifi_f50="sudo ifconfig en0 192.168.0.148 netmask 255.255.255.0 &&  sudo route add default gw 192.168.0.148 && sudo ifconfig en0 down && sudo ifconfig en0 up"
+# alias wifi_b340="sudo ifconfig en0 29.62.253.82 netmask 255.255.255.0 &&  sudo route add default gw 29.62.253.1 && sudo ifconfig en0 down && sudo ifconfig en0 up"
+
+alias compgen="bash -c 'compgen -c'"
