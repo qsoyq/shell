@@ -9,3 +9,7 @@ join_docker_network(){
     CONTAINERS=$(docker ps -aq)
     echo $CONTAINERS | xargs -I {} docker network connect "$NETWORK_NAME" {}
 }
+
+orb_restart_for_cloudflared_tunnel(){
+    docker restart cloudflared-tunnel
+}
