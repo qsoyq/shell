@@ -5,7 +5,7 @@
 // @description  将/.well-known/openid-configuration 重定向到 /well-known/openid-configuration
 // @author       wangqs
 // @match        https://chatai.tsingtao.com.cn/chatbot/*
-// @icon         https://chatai.tsingtao.com.cn/facicon.ico
+// @icon         https://chatai.tsingtao.com.cn/favicon.ico
 // @grant        none
 // ==/UserScript==
 
