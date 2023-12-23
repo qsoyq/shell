@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         自动显示Nga图片
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/qsoyq/shell/tree/main/tampermonkey/
 // @version      2023-12-23
 // @description  通过点击页面上的显示图片按钮, 自动加载图片
 // @author       You
