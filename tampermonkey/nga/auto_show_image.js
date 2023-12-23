@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         自动显示Nga图片
 // @namespace    https://github.com/qsoyq/shell/tree/main/tampermonkey/
-// @version      2023-12-23
+// @version      v0.0.1
 // @description  通过点击页面上的显示图片按钮, 自动加载图片
-// @author       You
+// @author       wangqs
 // @match        https://bbs.nga.cn/read.php?*
 // @icon         https://bbs.nga.cn/favicon.ico
 // @grant        none
