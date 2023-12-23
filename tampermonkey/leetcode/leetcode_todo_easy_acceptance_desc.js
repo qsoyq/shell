@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         leetcode-todo-easy-acceptance_desc
 // @namespace    https://github.com/qsoyq/shell/tree/main/tampermonkey/
-// @version      0.1
+// @version      v0.0.1
 // @description  选择难度为 easy 并且状态为 todo, 按 acceptance 从低到高
 // @author       wangqs
 // @match        https://leetcode.com/problemset/all/
