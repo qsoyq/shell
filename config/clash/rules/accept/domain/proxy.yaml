@@ -1,3 +1,8 @@
 payload:
   - 'chatgpt-next-web.19940731.xyz'
   - 'telegraph.19940731.xyz'
+  - '+.bingapis.com'
+  - '+.cdn.jsdelivr.net'
+  - '*.microsoft-falcon.io'
+  - '*.msn.com'
+  - '*.microsoftapp.net'
