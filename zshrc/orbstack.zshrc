@@ -2,6 +2,7 @@ export PATH="/Users/qs/.orbstack/bin:$PATH"
 
 alias dc="docker compose"
 alias dn="docker network"
+alias drmi="docker images --format "{{.ID}}" | xargs docker rmi"
 
 join_docker_network(){
     # 定义要加入的网络名称
@@ -13,3 +14,4 @@ join_docker_network(){
 orb_restart_for_cloudflared_tunnel(){
     docker restart cloudflared-tunnel
 }
+
