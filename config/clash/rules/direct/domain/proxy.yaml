@@ -1,4 +1,5 @@
 payload:
+ - '+.localhost'
  - '+.wushuangai.com'
  - '+.meituan.com'
  - '+.meituan.net'
