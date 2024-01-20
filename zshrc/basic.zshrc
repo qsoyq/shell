@@ -11,6 +11,7 @@ alias works="cd $HOME/works"
 alias reload=". ~/.zshrc"
 alias envactive="set -o allexport && . .env"
 alias grep='grep --color=auto'
+alias timestamp='date +%s'
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000000
