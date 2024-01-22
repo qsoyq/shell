@@ -13,6 +13,8 @@ alias pi="poetry install"
 alias pip="pip3"
 alias python="python3"
 
+alias ruff_run="ruff check . --fix && ruff format ."
+
 pytoolkit_install_completion(){
     scripts=(
         "snowflake"
