@@ -1,3 +1,7 @@
+# pmset
+alias enablesleep="sudo pmset -b sleep 5; sudo pmset -b disablesleep 0"
+alias disablesleep="sudo pmset -b sleep 0; sudo pmset -b disablesleep 1"
+
 # Delete Apple System Logs
 alias dasl="sudo rm -rf /private/var/log/asl/*.asl"
 
