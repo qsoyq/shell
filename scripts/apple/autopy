@@ -1,0 +1,89 @@
+#! /usr/bin/env python3
+# ruff check autopy --fix && ruff format autopy
+import threading
+import os
+import subprocess
+import sys
+import time
+import logging
+from pathlib import Path
+from datetime import datetime
+import httpx
+
+
+logger = logging.getLogger(__file__)
+
+
+def bark_notification(token: str, message: str):
+    url = f"https://api.day.app/{token}/{message}"
+    res = httpx.get(url)
+    res.raise_for_status()
+
+
+class LogWriter(threading.Thread):
+    def __init__(self, interval=60):
+        super().__init__()
+        self.interval = interval
+        homedir = os.getenv("HOME", "./")
+        self.log_path = p = Path(f"{homedir}/Desktop/log.txt")
+        if not p.exists():
+            p.touch()
+
+    def run(self):
+        while True:
+            self.write_log()
+            time.sleep(self.interval)
+
+    def write_log(self):
+        self.log_path.write_text(f"\n{datetime.now()}")
+
+
+class BatteryPowerNotifier(threading.Thread):
+    def __init__(self, interval: int = 60, min_power: int = 20):
+        super().__init__()
+        self.interval = interval
+        self.min_power = min_power
+        self.bark_token = self.get_bark_token()
+
+    def get_bark_token(self):
+        return os.getenv("BARK_TOKEN")
+
+    def _bark_notification(self, percent: int):
+        if self.bark_token:
+            bark_notification(
+                self.bark_token, f"macbookpro 电量不足, 当前电量: {percent}%"
+            )
+
+    def run(self) -> None:
+        while True:
+            percent = self.get_battery_power_percent()
+            if percent is not None:
+                if percent <= self.min_power:
+                    self._bark_notification(percent)
+                    return
+            time.sleep(self.interval)
+
+    def get_battery_power_percent(self) -> int | None:
+        if sys.platform == "darwin":
+            return self.get_battery_power_percent_macos()
+        return None
+
+    def get_battery_power_percent_macos(self) -> int:
+        cmd = "pmset -g batt | grep -o '[0-9]*%' | tr -d '%'"
+        power = subprocess.check_output(cmd, shell=True)
+        return int(power)
+
+
+def main():
+    threads = [LogWriter(), BatteryPowerNotifier()]
+
+    for t in threads:
+        t.start()
+
+    for t in threads:
+        t.join()
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=int(os.getenv("log_level", logging.DEBUG)))
+    main()
