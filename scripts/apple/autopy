@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 # ruff check autopy --fix && ruff format autopy
-import xmltodict
+# pip install xmltodict httpx 
+
 import threading
 import os
 import subprocess
@@ -11,6 +12,7 @@ import logging
 from pathlib import Path
 from datetime import datetime
 import httpx
+import xmltodict
 
 
 logger = logging.getLogger(__file__)
