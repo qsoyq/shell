@@ -3,6 +3,7 @@
 import threading
 import os
 import subprocess
+from functools import wraps
 import sys
 import time
 import logging
@@ -12,6 +13,36 @@ import httpx
 
 
 logger = logging.getLogger(__file__)
+
+
+def get_bark_token():
+    return os.getenv("BARK_TOKEN")
+
+
+def thread_error_handler(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            token = get_bark_token()
+            if token is not None:
+                cb = noexception(bark_notification)
+                cb(token, f"{e}")
+            raise e
+
+    return wrapper
+
+
+def noexception(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            pass
+
+    return wrapper
 
 
 def bark_notification(token: str, message: str):
@@ -29,6 +60,7 @@ class LogWriter(threading.Thread):
         if not p.exists():
             p.touch()
 
+    @thread_error_handler
     def run(self):
         while True:
             self.write_log()
@@ -43,10 +75,7 @@ class BatteryPowerNotifier(threading.Thread):
         super().__init__()
         self.interval = interval
         self.min_power = min_power
-        self.bark_token = self.get_bark_token()
-
-    def get_bark_token(self):
-        return os.getenv("BARK_TOKEN")
+        self.bark_token = get_bark_token()
 
     def _bark_notification(self, percent: int):
         if self.bark_token:
@@ -54,6 +83,7 @@ class BatteryPowerNotifier(threading.Thread):
                 self.bark_token, f"macbookpro 电量不足, 当前电量: {percent}%"
             )
 
+    @thread_error_handler
     def run(self) -> None:
         while True:
             percent = self.get_battery_power_percent()
