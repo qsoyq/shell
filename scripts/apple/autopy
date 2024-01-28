@@ -1,21 +1,90 @@
 #! /usr/bin/env python3
-# ruff check autopy --fix && ruff format autopy
-# pip install xmltodict httpx 
+# isort autopy && ruff check autopy --fix && ruff format autopy
 
-import threading
-import os
-import subprocess
-from functools import wraps
-import sys
-import time
+# pip install xmltodict httpx pydantic python-dateutil
+
+import html
 import logging
-from pathlib import Path
+import os
+import re
+import subprocess
+import sys
+import threading
+import time
+from abc import ABC, abstractmethod
 from datetime import datetime
+from enum import Enum
+from functools import wraps
+from itertools import chain
+from pathlib import Path
+
 import httpx
 import xmltodict
+from dateutil import parser
+from pydantic import BaseModel, Field
+
+
+def remove_html_tags(text: str):
+    # 定义一个正则表达式，用于匹配HTML标签
+    html_tags_re = re.compile(r"<[^>]+>")
+    # 使用sub方法替换掉所有HTML标签为空字符串
+    return html_tags_re.sub("", text)
+
+
+class BarkPushLevel(str, Enum):
+    active = "active"
+    timeSensitive = "timeSensitive"
+    passive = "passive"
+
+
+class BarkPushScheme(BaseModel):
+    title: str
+    body: str
+    category: str | None = Field(None, help="Reserved field, no use yet")
+    device_key: str | None = Field(None, help="bark token, The key for each device")
+    level: BarkPushLevel | None = Field(
+        None, help="'active', 'timeSensitive', or 'passive'"
+    )
+    badge: int | None = Field(
+        None,
+        help="The number displayed next to App icon ([Apple Developer](https://developer.apple.com/documentation/usernotifications/unnotificationcontent/1649864-badge))",
+    )
+    automaticallyCopy: str | None = Field(None, help="Must be 1")
+    _copy: str | None = Field(None, help="The value to be copied", alias="copy")
+    sound: str | None = Field(
+        None, help="Value from [here](https://github.com/Finb/Bark/tree/master/Sounds)"
+    )
+    icon: str | None = Field(
+        None, help="An url to the icon, available only on iOS 15 or later"
+    )
+    group: str | None = Field(None, help="The group of the notification")
+    isArchive: str | None = Field(
+        None, help="Value must be 1. Whether or not should be archived by the app"
+    )
+    url: str | None = Field(None, help="Url that will jump when click notification")
 
 
 logger = logging.getLogger(__file__)
+
+
+class BarkAPI:
+    def __init__(self, token: str) -> None:
+        self.token = token
+
+    def push(self, body: BarkPushScheme) -> httpx.Response:
+        """https://github.com/Finb/bark-server/blob/master/docs/API_V2.md#push"""
+        url = "https://api.day.app/push"
+        if not body.device_key:
+            body.device_key = self.token
+
+        # {"code":500,"message":"interface conversion: interface {} is nil, not string","timestamp":1706443398}%
+        # 兼容对参数位null的处理
+        paylaod = {k: v for k, v in body.dict().items() if v is not None}
+
+        res = httpx.post(url, json=paylaod)
+        logger.debug(f"bark push body: {body.dict()}")
+        res.raise_for_status()
+        return res
 
 
 def get_bark_token():
@@ -39,8 +108,8 @@ def thread_error_handler(func):
         except Exception as e:
             token = get_bark_token()
             if token is not None:
-                cb = noexception(bark_notification)
-                cb(token, f"{e}")
+                cb = noexception(BarkAPI(token).push)
+                cb(BarkPushScheme(title="thread_error_handler", body=f"{e}"))  # type: ignore
             raise e
 
     return wrapper
@@ -51,16 +120,11 @@ def noexception(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except Exception:
+        except Exception as e:
+            logger.warning(f"noexception: {e}", exc_info=True)
             pass
 
     return wrapper
-
-
-def bark_notification(token: str, message: str):
-    url = f"https://api.day.app/{token}/{message}"
-    res = httpx.get(url)
-    res.raise_for_status()
 
 
 class LogWriter(threading.Thread):
@@ -83,15 +147,22 @@ class LogWriter(threading.Thread):
 
 
 class BatteryPowerNotifier(threading.Thread):
-    def __init__(self, bark_token: str, interval: int = 60, min_power: int = 20):
-        super().__init__()
+    def __init__(
+        self, bark_token: str, interval: int = 60, min_power: int = 20, **kwargs
+    ):
+        kwargs.setdefault("name", "BatteryPowerNotifier")
+        super().__init__(**kwargs)
         self.interval = interval
         self.min_power = min_power
         self.bark_token = bark_token
 
     def _bark_notification(self, percent: int):
-        bark_notification(
-            self.bark_token, f"macbookpro 电量不足, 当前电量: {percent}%"
+        BarkAPI(self.bark_token).push(
+            BarkPushScheme(
+                title="macbookpro 电量不足",
+                body=f"当前电量: {percent}%",
+                group="macbookpro",
+            )  # type: ignore
         )
 
     @thread_error_handler
@@ -107,6 +178,7 @@ class BatteryPowerNotifier(threading.Thread):
     def get_battery_power_percent(self) -> int | None:
         if sys.platform == "darwin":
             return self.get_battery_power_percent_macos()
+
         return None
 
     def get_battery_power_percent_macos(self) -> int:
@@ -115,13 +187,90 @@ class BatteryPowerNotifier(threading.Thread):
         return int(power)
 
 
+class RSSHubWatcher(ABC, threading.Thread):
+    """https://docs.rsshub.app/zh/"""
+
+    def __init__(self, bark_token: str, urls: list[str], interval: int = 60, **kwargs):
+        super().__init__(**kwargs)
+        self.interval = interval
+        self.urls = urls
+        self.ts = int(time.time())
+        self.bark_token = bark_token
+        self.failed_messages = []
+
+    def clean_text(self, text: str) -> str:
+        return remove_html_tags(html.unescape(text.replace("<br>", "\n")))
+
+    @thread_error_handler
+    def run(self) -> None:
+        while True:
+            self.parse_rss()
+            time.sleep(self.interval)
+
+    @noexception
+    def parse_rss(self):
+        for url in self.urls:
+            res = httpx.get(url)
+            res.raise_for_status()
+            messages = self.xml_handler(xmltodict.parse(res.text))
+            self._bark_notification(messages)
+        self.ts = int(time.time())
+
+    def _bark_notification(self, messages: list[str | BarkPushScheme]):
+        failed_messages = self.failed_messages.copy()
+        for message in chain(failed_messages, messages):
+            try:
+                if isinstance(message, str):
+                    body = BarkPushScheme(title="", body=message)  # type: ignore
+                elif isinstance(message, BarkPushScheme):
+                    body = message
+                else:
+                    raise ValueError(f"message type error: {type(message)}")
+                BarkAPI(self.bark_token).push(body)
+            except Exception as e:
+                logger.warning(f"MikananiRssWatcher bark notification failed: {e}")
+                self.failed_messages.append(message)
+
+    @abstractmethod
+    def xml_handler(self, data: dict) -> list[str | BarkPushScheme]:
+        return []
+
+
+class RSSHubBilibiliLiveRoomWatcher(RSSHubWatcher):
+    """https://docs.rsshub.app/zh/routes/live#bi-li-bi-li-zhi-bo-zhi-bo-kai-bo"""
+
+    def xml_handler(self, data: dict) -> list[str | BarkPushScheme]:
+        messages = []
+        if "item" in data["rss"]["channel"]:
+            pubDate = data["rss"]["channel"]["item"]["pubDate"]
+            link = data["rss"]["channel"]["link"]
+            title = data["rss"]["channel"]["item"]["title"]
+            content = data["rss"]["channel"]["item"]["description"]
+        else:
+            pubDate = data["rss"]["channel"]["lastBuildDate"]
+            link = data["rss"]["channel"]["link"]
+            title = data["rss"]["channel"]["title"]
+            content = "已开播"
+        title = self.clean_text(title)
+        content = self.clean_text(content)
+        logger.debug(
+            f"RSSHubBilibiliLiveRoomWatcher pubDate: {pubDate}, link: {link}, title: {title}, content: {content}"
+        )
+        if int(parser.parse(pubDate).timestamp()) > self.ts:
+            message = BarkPushScheme(title=title, body=content, url=link)  # type: ignore
+            messages.append(message)
+        return messages
+
+
 class MikananiRssWatcher(threading.Thread):
-    def __init__(self, bark_token: str, rss_url: str, interval: int = 300):
-        super().__init__()
+    def __init__(self, bark_token: str, rss_url: str, interval: int = 300, **kwargs):
+        kwargs.setdefault("name", "MikananiRssWatcher")
+        super().__init__(**kwargs)
         self.interval = interval
         self.rss_url = rss_url
         self.ts = int(time.time())
         self.bark_token = bark_token
+        self.failed_messages = []
 
     @thread_error_handler
     def run(self) -> None:
@@ -130,13 +279,24 @@ class MikananiRssWatcher(threading.Thread):
             time.sleep(self.interval)
 
     def _bark_notification(self, messages: list[str]):
-        for message in messages:
-            bark_notification(self.bark_token, f"蜜柑计划订阅更新: {message}")
+        failed_messages = self.failed_messages.copy()
+        for message in chain(failed_messages, messages):
+            try:
+                BarkAPI(self.bark_token).push(
+                    BarkPushScheme(
+                        title="蜜柑计划订阅更新",
+                        body=message,
+                        group="mikanani",
+                    )  # type: ignore
+                )
+            except Exception as e:
+                logger.warning(f"MikananiRssWatcher bark notification failed: {e}")
+                self.failed_messages.append(message)
 
     def parse_rss_date(self, pubDate: str) -> int:
-        date_format = "%Y-%m-%dT%H:%M:%S.%f"
-        return int(datetime.strptime(pubDate, date_format).timestamp())
+        return int(parser.parse(pubDate).timestamp())
 
+    @noexception
     def parse_rss(self):
         messages = []
         res = httpx.get(self.rss_url)
@@ -149,29 +309,3 @@ class MikananiRssWatcher(threading.Thread):
                 messages.append(item["title"])
         self.ts = int(time.time())
         self._bark_notification(messages)
-
-
-def main():
-    bark_token = get_bark_token()
-    rss_url = get_mikanani_rss_url()
-
-    assert bark_token
-    assert rss_url
-
-    threads = [
-        LogWriter(),
-        BatteryPowerNotifier(bark_token),
-        MikananiRssWatcher(bark_token, rss_url),
-    ]
-
-    for t in threads:
-        t.start()
-
-    for t in threads:
-        t.join()
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=int(os.getenv("log_level", logging.DEBUG)))
-    init()
-    main()
