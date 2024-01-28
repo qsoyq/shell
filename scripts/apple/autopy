@@ -147,6 +147,12 @@ class LogWriter(threading.Thread):
 
 
 class BatteryPowerNotifier(threading.Thread):
+    """When the laptop battery is less than a specified value, send a notification (exit thread after successful sending).
+    >>> bark_token = ""
+    >>> min_power = 20
+    >>> BatteryPowerNotifier(bark_token, min_power=min_power, name="BatteryPowerNotifier20").start().join()
+    """
+
     def __init__(
         self, bark_token: str, interval: int = 60, min_power: int = 20, **kwargs
     ):
@@ -237,7 +243,12 @@ class RSSHubWatcher(ABC, threading.Thread):
 
 
 class RSSHubBilibiliLiveRoomWatcher(RSSHubWatcher):
-    """https://docs.rsshub.app/zh/routes/live#bi-li-bi-li-zhi-bo-zhi-bo-kai-bo"""
+    """Subscribe to the Bilibili live room broadcast status, and send out a notification when it starts broadcasting.
+    https://docs.rsshub.app/zh/routes/live#bi-li-bi-li-zhi-bo-zhi-bo-kai-bo
+    >>> bark_token = ""
+    >>> bilibili_live_room_rss_url = ["https://rsshub.app/bilibili/live/room/732"]
+    >>> RSSHubBilibiliLiveRoomWatcher(bark_token, bilibili_live_room_rss_url, name="RSSHubBilibiliLiveRoomWatcher").start().join()
+    """
 
     def xml_handler(self, data: dict) -> list[str | BarkPushScheme]:
         messages = []
@@ -263,6 +274,13 @@ class RSSHubBilibiliLiveRoomWatcher(RSSHubWatcher):
 
 
 class MikananiRssWatcher(threading.Thread):
+    """Send a notification when the anime subscribed to by Mikanani Project is updated.
+    https://mikanani.me/
+    >>> bark_token = ""
+    >>> rss_url = "https://mikanani.me/RSS/MyBangumi?token={token}"
+    >>> MikananiRssWatcher(bark_token, rss_url, name="MikananiRssWatcher").start().join()
+    """
+
     def __init__(self, bark_token: str, rss_url: str, interval: int = 300, **kwargs):
         kwargs.setdefault("name", "MikananiRssWatcher")
         super().__init__(**kwargs)
@@ -275,37 +293,51 @@ class MikananiRssWatcher(threading.Thread):
     @thread_error_handler
     def run(self) -> None:
         while True:
-            self.parse_rss()
+            messages = self.parse_rss()
+            self._bark_notification(messages)
             time.sleep(self.interval)
 
-    def _bark_notification(self, messages: list[str]):
+    @noexception
+    def _bark_notification(self, messages: list[str | BarkPushScheme]):
         failed_messages = self.failed_messages.copy()
         for message in chain(failed_messages, messages):
             try:
-                BarkAPI(self.bark_token).push(
-                    BarkPushScheme(
+                if isinstance(message, str):
+                    payload = BarkPushScheme(
                         title="蜜柑计划订阅更新",
                         body=message,
                         group="mikanani",
                     )  # type: ignore
-                )
+                elif isinstance(message, BarkPushScheme):
+                    payload = message
+                else:
+                    raise ValueError(f"message type error: {type(message)}")
+                BarkAPI(self.bark_token).push(payload)
             except Exception as e:
                 logger.warning(f"MikananiRssWatcher bark notification failed: {e}")
                 self.failed_messages.append(message)
 
+    @noexception
     def parse_rss_date(self, pubDate: str) -> int:
         return int(parser.parse(pubDate).timestamp())
 
     @noexception
-    def parse_rss(self):
+    def parse_rss(self) -> list[str | BarkPushScheme]:
         messages = []
         res = httpx.get(self.rss_url)
         res.raise_for_status()
         data = xmltodict.parse(res.text)
         for item in data["rss"]["channel"]["item"]:
             torrent = item["torrent"]
+            title = item["title"]
+            content = item["title"]
             pubDate = self.parse_rss_date(torrent["pubDate"])
+            link = torrent["link"]
+            torrent_download_url = item["enclosure"]["@url"]
             if pubDate >= self.ts:
-                messages.append(item["title"])
+                message = BarkPushScheme(
+                    title=title, body=content, url=link, copy=torrent_download_url
+                )  # type: ignore
+                messages.append(message)
         self.ts = int(time.time())
-        self._bark_notification(messages)
+        return messages
