@@ -87,8 +87,8 @@ class BarkAPI:
         return res
 
 
-def get_bark_token():
-    return os.getenv("BARK_TOKEN")
+def get_bark_token(key: str = "BARK_TOKEN"):
+    return os.getenv(key)
 
 
 def get_mikanani_rss_url():
@@ -224,6 +224,7 @@ class RSSHubWatcher(ABC, threading.Thread):
 
     def _bark_notification(self, messages: list[str | BarkPushScheme]):
         failed_messages = self.failed_messages.copy()
+        self.failed_messages.clear()
         for message in chain(failed_messages, messages):
             try:
                 if isinstance(message, str):
@@ -282,7 +283,6 @@ class MikananiRssWatcher(threading.Thread):
     """
 
     def __init__(self, bark_token: str, rss_url: str, interval: int = 300, **kwargs):
-        kwargs.setdefault("name", "MikananiRssWatcher")
         super().__init__(**kwargs)
         self.interval = interval
         self.rss_url = rss_url
@@ -300,6 +300,7 @@ class MikananiRssWatcher(threading.Thread):
     @noexception
     def _bark_notification(self, messages: list[str | BarkPushScheme]):
         failed_messages = self.failed_messages.copy()
+        self.failed_messages.clear()
         for message in chain(failed_messages, messages):
             try:
                 if isinstance(message, str):
