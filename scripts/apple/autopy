@@ -174,6 +174,9 @@ class BatteryPowerNotifier(threading.Thread):
     @thread_error_handler
     def run(self) -> None:
         while True:
+            logger.info(
+                f"{self.__class__.__name__} date {datetime.fromtimestamp(int(time.time()))}"
+            )
             percent = self.get_battery_power_percent()
             if percent is not None:
                 if percent <= self.min_power:
@@ -193,6 +196,53 @@ class BatteryPowerNotifier(threading.Thread):
         return int(power)
 
 
+class BilibiliRoomInfoScheme(BaseModel):
+    uid: int
+    room_id: int
+    title: str | None
+    description: str | None
+    live_status: int | None
+    live_time: str | None
+    user_cover: str | None
+    keyframe: str | None
+    live_time: str | None
+
+    def get_room_link(self):
+        return f"https://live.bilibili.com/{self.room_id}"
+
+    @property
+    def pub_date(self) -> datetime:
+        assert self.live_time
+        return parser.parse(self.live_time)
+
+    def is_alive(self):
+        return self.live_status == 1
+
+    def if_push(self, last_pub_date: datetime | int | None) -> bool:
+        if last_pub_date is None:
+            return True
+
+        if isinstance(last_pub_date, datetime):
+            return int(self.pub_date.timestamp()) > int(last_pub_date.timestamp())
+
+        if isinstance(last_pub_date, int):
+            return int(self.pub_date.timestamp()) > last_pub_date
+
+        return False
+
+    def get_bark_push_message(self) -> BarkPushScheme:
+        link = self.get_room_link()
+        return BarkPushScheme(
+            title=RSSHubWatcher.clean_text(self.title or ""),
+            body=RSSHubWatcher.clean_text(self.description or ""),
+            url=link,
+            icon=self.keyframe,
+            group="bilibili",
+            isArchive="1",
+            _copy=link,  # type: ignore
+        )  # type: ignore
+
+
 class RSSHubWatcher(ABC, threading.Thread):
     """https://docs.rsshub.app/zh/"""
 
@@ -200,16 +250,19 @@ class RSSHubWatcher(ABC, threading.Thread):
         super().__init__(**kwargs)
         self.interval = interval
         self.urls = urls
-        self.ts = int(time.time())
         self.bark_token = bark_token
-        self.failed_messages = []
+        self.failed_messages: list[str | BarkPushScheme] = []
 
-    def clean_text(self, text: str) -> str:
+    @staticmethod
+    def clean_text(text: str) -> str:
         return remove_html_tags(html.unescape(text.replace("<br>", "\n")))
 
     @thread_error_handler
     def run(self) -> None:
         while True:
+            logger.info(
+                f"RSSHubWatcher {self.__class__.__name__} date {datetime.now()}"
+            )
             self.parse_rss()
             time.sleep(self.interval)
 
@@ -218,7 +271,7 @@ class RSSHubWatcher(ABC, threading.Thread):
         for url in self.urls:
             res = httpx.get(url)
             res.raise_for_status()
-            messages = self.xml_handler(xmltodict.parse(res.text))
+            messages = self.handler(url, xmltodict.parse(res.text))
             self._bark_notification(messages)
         self.ts = int(time.time())
 
@@ -226,21 +279,24 @@ class RSSHubWatcher(ABC, threading.Thread):
         failed_messages = self.failed_messages.copy()
         self.failed_messages.clear()
         for message in chain(failed_messages, messages):
+            if isinstance(message, str):
+                body = BarkPushScheme(title="", body=message)  # type: ignore
+            elif isinstance(message, BarkPushScheme):
+                body = message
+            else:
+                raise ValueError(f"message type error: {type(message)}")
             try:
-                if isinstance(message, str):
-                    body = BarkPushScheme(title="", body=message)  # type: ignore
-                elif isinstance(message, BarkPushScheme):
-                    body = message
-                else:
-                    raise ValueError(f"message type error: {type(message)}")
-                BarkAPI(self.bark_token).push(body)
+                res = BarkAPI(self.bark_token).push(body)
+                res.raise_for_status()
             except Exception as e:
-                logger.warning(f"MikananiRssWatcher bark notification failed: {e}")
+                logger.warning(
+                    f"{self.__class__.__name__} bark notification failed: {e}"
+                )
                 self.failed_messages.append(message)
 
     @abstractmethod
-    def xml_handler(self, data: dict) -> list[str | BarkPushScheme]:
-        return []
+    def handler(self, url: str, data: dict) -> list[str | BarkPushScheme]:
+        raise NotImplementedError
 
 
 class RSSHubBilibiliLiveRoomWatcher(RSSHubWatcher):
@@ -251,27 +307,34 @@ class RSSHubBilibiliLiveRoomWatcher(RSSHubWatcher):
     >>> RSSHubBilibiliLiveRoomWatcher(bark_token, bilibili_live_room_rss_url, name="RSSHubBilibiliLiveRoomWatcher").start().join()
     """
 
-    def xml_handler(self, data: dict) -> list[str | BarkPushScheme]:
-        messages = []
-        if "item" in data["rss"]["channel"]:
-            pubDate = data["rss"]["channel"]["item"]["pubDate"]
-            link = data["rss"]["channel"]["link"]
-            title = data["rss"]["channel"]["item"]["title"]
-            content = data["rss"]["channel"]["item"]["description"]
-        else:
-            pubDate = data["rss"]["channel"]["lastBuildDate"]
-            link = data["rss"]["channel"]["link"]
-            title = data["rss"]["channel"]["title"]
-            content = "已开播"
-        title = self.clean_text(title)
-        content = self.clean_text(content)
-        logger.debug(
-            f"RSSHubBilibiliLiveRoomWatcher pubDate: {pubDate}, link: {link}, title: {title}, content: {content}"
-        )
-        if int(parser.parse(pubDate).timestamp()) > self.ts:
-            message = BarkPushScheme(title=title, body=content, url=link)  # type: ignore
-            messages.append(message)
-        return messages
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.start_pub_date = parser.parse("2024/01/30 18:00")
+        self.start_pub_date = datetime.now()
+        self.records: dict[str, datetime] = {}
+
+    def get_room_info(self, room_id: str | int) -> BilibiliRoomInfoScheme:
+        url = "https://api.live.bilibili.com/room/v1/Room/get_info"
+        headers = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        }
+        params = {"room_id": room_id, "from": "from"}
+        resp = httpx.get(url, params=params, headers=headers)
+        resp.raise_for_status()
+        return BilibiliRoomInfoScheme(**resp.json().get("data", {}))
+
+    def handler(self, url: str, data: dict) -> list[str | BarkPushScheme]:
+        room_id = url.split("/")[-1]
+        info = self.get_room_info(room_id)
+        last_pub_date = self.records.get(room_id, self.start_pub_date)
+        logger.debug(f"RSSHubBilibiliLiveRoomWatcher room info: {info}")
+        if info.is_alive() and info.if_push(last_pub_date):
+            message = info.get_bark_push_message()
+            self.records[room_id] = info.pub_date
+            return [message]
+
+        return []
 
 
 class MikananiRssWatcher(threading.Thread):
@@ -286,13 +349,14 @@ class MikananiRssWatcher(threading.Thread):
         super().__init__(**kwargs)
         self.interval = interval
         self.rss_url = rss_url
-        self.ts = int(time.time())
+        self.ts = datetime.now()
         self.bark_token = bark_token
         self.failed_messages = []
 
     @thread_error_handler
     def run(self) -> None:
         while True:
+            logger.info(f"{self.__class__.__name__} date {self.ts}")
             messages = self.parse_rss()
             self._bark_notification(messages)
             time.sleep(self.interval)
@@ -332,13 +396,15 @@ class MikananiRssWatcher(threading.Thread):
             torrent = item["torrent"]
             title = item["title"]
             content = item["title"]
-            pubDate = self.parse_rss_date(torrent["pubDate"])
+            pubDate = parser.parse(torrent["pubDate"])
             link = torrent["link"]
             torrent_download_url = item["enclosure"]["@url"]
-            if pubDate >= self.ts:
+            if int(pubDate.timestamp()) >= int(self.ts.timestamp()):
                 message = BarkPushScheme(
                     title=title, body=content, url=link, copy=torrent_download_url
                 )  # type: ignore
                 messages.append(message)
-        self.ts = int(time.time())
+
+        if messages:
+            self.ts = datetime.now()
         return messages
