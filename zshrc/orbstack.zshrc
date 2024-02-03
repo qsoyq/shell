@@ -15,3 +15,13 @@ orb_restart_for_cloudflared_tunnel(){
     docker restart cloudflared-tunnel
 }
 
+start_all_services(){
+    if [[ -d "$HOME/works/github/services" ]]; then
+        for file in "$HOME/works/github/services"/*/docker-compose.yml; do
+            if [[ -f "$file" ]]; then
+                echo "file: $file"
+                docker compose -f $file up -d
+            fi
+        done
+    fi
+}
