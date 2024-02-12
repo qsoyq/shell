@@ -437,10 +437,12 @@ class BatteryPowerNotifier(threading.Thread):
 class RSSHubWatcher(ABC, threading.Thread):
     """https://docs.rsshub.app/zh/"""
 
-    def __init__(self, bark_token: str, context: dict, interval: int = 60, **kwargs):
+    def __init__(
+        self, bark_token: str, context: dict | None = None, interval: int = 60, **kwargs
+    ):
         super().__init__(**kwargs)
         self.interval = interval
-        self.context = context
+        self.context = context or {}
         self.bark_token = bark_token
         self.failed_messages: list[str | BarkPushScheme] = []
 
@@ -489,8 +491,7 @@ class RSSHubBilibiliLiveRoomWatcher(RSSHubWatcher):
     """Subscribe to the Bilibili live room broadcast status, and send out a notification when it starts broadcasting.
     https://docs.rsshub.app/zh/routes/live#bi-li-bi-li-zhi-bo-zhi-bo-kai-bo
     >>> bark_token = ""
-    >>> bilibili_live_room_rss_url = ["https://rsshub.app/bilibili/live/room/732"]
-    >>> RSSHubBilibiliLiveRoomWatcher(bark_token, bilibili_live_room_rss_url, name="RSSHubBilibiliLiveRoomWatcher").start().join()
+    >>> RSSHubBilibiliLiveRoomWatcher(bark_token, name="RSSHubBilibiliLiveRoomWatcher").start().join()
     """
 
     def __init__(self, *args, **kwargs):
@@ -521,11 +522,14 @@ class RSSHubBilibiliLiveRoomWatcher(RSSHubWatcher):
         resp.raise_for_status()
         return BilibiliAnchorInRoomScheme(**resp.json()["data"]["info"])
 
+    @property
+    def rooms(self) -> list[str]:
+        _local = LocalStorage().get(self.__class__.__name__, {})
+        return list(map(str, _local.keys()))
+
     def handler(self) -> list[str | BarkPushScheme]:
-        urls: list[str] = self.context["urls"]
         res = []
-        for url in urls:
-            roomid = url.split("/")[-1]
+        for roomid in self.rooms:
             messages = self.handle_one(roomid)
             res.extend(messages)
         return res
