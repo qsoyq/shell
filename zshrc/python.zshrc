@@ -5,7 +5,7 @@ export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL="true"
 
 export PYTHON_FASTAPI_TEMPLATE_IMAGE="qsoyq/python-fastapi-template"
 
-alias PIP_INSTALL_EXTRA="pip install --upgrade pysocks ipython httpx pyvim ruff poetry you-get vcron git+https://github.com/qsoyq/pytoolkit.git"
+alias PIP_INSTALL_EXTRA="pip install --upgrade pysocks ipython httpx pyvim ruff poetry you-get vcron mac-cleanup git+https://github.com/qsoyq/pytoolkit.git"
 
 alias python_format="yapf -r -i . && isort . && pycln -a ."
 
