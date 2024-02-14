@@ -10,3 +10,5 @@ payload:
   - '*.ipinfo.io'
   - '+.chinadigitaltimes.net'
   - '+.cloudflare-dns.com'
+  - '+.godaddy.com'
+  - '*.godaddy.com'
