@@ -9,3 +9,4 @@ payload:
   - '+.ipinfo.io'
   - '*.ipinfo.io'
   - '+.chinadigitaltimes.net'
+  - '+.cloudflare-dns.com'
