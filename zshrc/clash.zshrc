@@ -8,3 +8,5 @@ set_new_network_proxy(){
     echo  "https_proxy=http://$addr http_proxy=$addr all_proxy=socks5://$addr"
     export https_proxy=http://$addr http_proxy=$addr all_proxy=socks5://$addr
 }
+
+set_clash_proxy
