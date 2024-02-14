@@ -6,4 +6,5 @@ payload:
   - '*.microsoft-falcon.io'
   - '*.msn.com'
   - '*.microsoftapp.net'
+  - '+.ipinfo.io'
   - '*.ipinfo.io'
