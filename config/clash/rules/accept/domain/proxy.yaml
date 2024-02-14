@@ -8,3 +8,4 @@ payload:
   - '*.microsoftapp.net'
   - '+.ipinfo.io'
   - '*.ipinfo.io'
+  - '+.chinadigitaltimes.net'
