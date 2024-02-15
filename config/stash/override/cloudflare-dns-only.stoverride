@@ -1,0 +1,9 @@
+name: cloudflare-dns-only
+desc: 使用 cloudflare 进行域名解析
+
+dns:
+  default-nameserver: #!replace
+    - 1.1.1.1
+
+  nameserver: #!replace
+    - https://cloudflare-dns.com/dns-query
