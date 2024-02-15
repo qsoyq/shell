@@ -1,0 +1,16 @@
+name: telegram-rules
+desc: 电报规则集
+
+rule-providers:
+  telegram-ipcidr:
+    behavior: ipcidr
+    format: yaml
+    interval: 1800
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/ipcidr/telegram.yaml
+
+rules:
+  - PROCESS-NAME,Telegram.exe,PROXY
+  - PROCESS-NAME,Telegram,PROXY
+  - GEOSITE,telegram,PROXY
+  - IP-ASN,62014,PROXY,no-resolve
+  - RULE-SET,telegram-ipcidr,PROXY
