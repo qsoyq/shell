@@ -9,4 +9,4 @@ rule-providers:
     interval: 86400
 
 rules:
-  - RULE-SET,proxy-domain,PROXY
+  - RULE-SET,stash-offical-rule-set-ipcidr,PROXY
