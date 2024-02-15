@@ -14,3 +14,4 @@ payload:
   - '*.godaddy.com'
   - 'mikanani.me'  
   - '+.mikanani.me'
+  - '+.ip-api.com'
