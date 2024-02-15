@@ -12,3 +12,4 @@ payload:
   - '+.cloudflare-dns.com'
   - '+.godaddy.com'
   - '*.godaddy.com'
+  - '+.mikanani.me'
