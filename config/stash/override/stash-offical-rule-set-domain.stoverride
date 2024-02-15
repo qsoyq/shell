@@ -1,12 +1,12 @@
-name: stash-offical-rule-set-ipcidr
-desc: 加载stash官网的ruleset ipcidr规则
+name: stash-offical-rule-set-domain
+desc: 加载stash官网的ruleset domain规则
 
 rule-providers:
-  stash-offical-rule-set-ipcidr:
+  stash-offical-rule-set-domain:
     behavior: domain # 使用 domain 类规则集，可以使匹配更高效
     format: yaml # 使用 yaml 格式的规则集
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
     interval: 86400
 
 rules:
-  - RULE-SET,stash-offical-rule-set-ipcidr,PROXY
+  - RULE-SET,stash-offical-rule-set-domain,PROXY
