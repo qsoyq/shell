@@ -3,4 +3,4 @@ desc: 根据进程名流量代理
 
 rules:
   - PROCESS-NAME,trustd,PROXY
-  - PROCESS-NAME,OrbStack,PROXY  
+  - PROCESS-NAME,OrbStack,PROXY
