@@ -2,9 +2,9 @@
 name: 当前汇率
 desc: 汇率面板
 category: tiles
+icon: https://telegraph.19940731.xyz/file/9671fec8f736d76ea0004.png
 tiles:
   - name: currency-exchange-rate
-    icon: https://telegraph.19940731.xyz/file/9671fec8f736d76ea0004.png
     backgroundColor: '#D4AF37'
     interval: 60
 script-providers:
