@@ -1,5 +1,7 @@
 name: telegram-rules
 desc: 电报规则集
+category: rules
+icon: https://telegram.org/img/favicon.ico
 
 rule-providers:
   telegram-ipcidr:

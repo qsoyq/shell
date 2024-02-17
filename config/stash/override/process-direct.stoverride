@@ -1,5 +1,7 @@
 name: process-name-direct
 desc: 根据进程名流量直连
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
 
 rules:
   - PROCESS-NAME,WeChat,DIREC

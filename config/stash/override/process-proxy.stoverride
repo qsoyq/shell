@@ -1,5 +1,7 @@
 name: process-name-proxy
 desc: 根据进程名流量代理
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
 
 rules:
   - PROCESS-NAME,trustd,PROXY

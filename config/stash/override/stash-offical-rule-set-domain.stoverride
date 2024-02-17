@@ -1,5 +1,7 @@
 name: stash-offical-rule-set-domain
 desc: 加载stash官网的ruleset domain规则
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
 
 rule-providers:
   stash-offical-rule-set-domain:

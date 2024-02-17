@@ -1,5 +1,7 @@
 name: cloudflare-dns-only
 desc: 使用 cloudflare 进行域名解析
+category: DNS
+icon: https://dash.cloudflare.com/favicon.ico
 
 dns:
   default-nameserver: #!replace
