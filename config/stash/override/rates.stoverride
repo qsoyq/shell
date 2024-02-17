@@ -1,0 +1,12 @@
+# https://whatshub.top/stoverride/rates.stoverride
+name: 当前汇率
+desc: 汇率面板
+category: tiles
+tiles:
+  - name: currency-exchange-rate
+    icon: 'yensign.circle'
+    backgroundColor: '#D4AF37'
+script-providers:
+  currency-exchange-rate:
+    url: https://raw.githubusercontent.com/deezertidal/Surge_Module/master/files/rates.js
+    interval: 60
