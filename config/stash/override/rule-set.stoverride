@@ -8,17 +8,17 @@ rule-providers:
     behavior: domain
     format: yaml
     interval: 86400
-    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/domain/proxy.yaml?ts=1708297477
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/domain/proxy.yaml?ts=1708297679
   direct-domain:
     behavior: domain
     format: yaml
     interval: 86400
-    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/direct/domain/proxy.yaml?ts=1708297477
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/direct/domain/proxy.yaml?ts=1708297679
   reject-domain:
     behavior: domain
     format: yaml
     interval: 86400
-    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/reject/domain/proxy.yaml?ts=1708297477
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/reject/domain/proxy.yaml?ts=1708297679
 
 rules:  
   # RULE-SET

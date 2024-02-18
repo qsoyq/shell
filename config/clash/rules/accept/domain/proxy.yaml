@@ -17,3 +17,4 @@ payload:
   - '+.ip-api.com'
   - 'ip-api.com'
   - '+.gitbook.com'
+  - '*.gitbook.com'
