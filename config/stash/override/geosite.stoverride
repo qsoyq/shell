@@ -6,26 +6,33 @@ icon: https://stash.wiki/favicon-32x32.png
 rules:
   # GEOSITE
   # https://github.com/v2fly/domain-list-community
-  - GEOSITE,category-porn,PROXY
-  - GEOSITE,tiktok,tiktok
-  - GEOSITE,netflix,PROXY
-  - GEOSITE,disney,PROXY
-  - GEOSITE,spotify,PROXY
-  - GEOSITE,speedtest,Speedtest
-  - GEOSITE,github,PROXY
-  - GEOSITE,cloudflare,PROXY
-  - GEOSITE,cloudflare-cn,DIRECT
-  - GEOSITE,cloudflare-ipfs,PROXY
-  - GEOSITE,youtube,YouTube
-  - GEOSITE,docker,Docker
-  - GEOSITE,google,PROXY
-  - GEOSITE,twitter,PROXY
-  - GEOSITE,jd,DIRECT
-  - GEOSITE,instagram,PROXY
-  - GEOSITE,facebook,PROXY
-  - GEOSITE,steam@cn,DIRECT
-  - GEOSITE,steam,PROXY
-  - GEOSITE,microsoft@cn,DIRECT
-  - GEOSITE,microsoft,PROXY
-  - GEOSITE,xbox,PROXY
+
+  # Proxy
+  - GEOSITE,category-porn,Proxy,no-resolve
+  - GEOSITE,netflix,Proxy,no-resolve
+  - GEOSITE,disney,Proxy,no-resolve
+  - GEOSITE,spotify,Proxy,no-resolve
+  - GEOSITE,github,Proxy,no-resolve
+  - GEOSITE,cloudflare,Proxy,no-resolve
+  - GEOSITE,cloudflare-ipfs,Proxy,no-resolve
+
+  - GEOSITE,google,Proxy,no-resolve
+  - GEOSITE,twitter,Proxy,no-resolve
+  - GEOSITE,instagram,Proxy,no-resolve
+  - GEOSITE,facebook,Proxy,no-resolve
+  - GEOSITE,steam,Proxy,no-resolve
+  - GEOSITE,microsoft,Proxy,no-resolve
+  - GEOSITE,xbox,Proxy,no-resolve
+
+  # Custom
+  - GEOSITE,youtube,YouTube,no-resolve
+  - GEOSITE,docker,Docker,no-resolve
+  - GEOSITE,tiktok,tiktok,no-resolve
+  - GEOSITE,speedtest,Speedtest,no-resolve
   - GEOSITE,openai,OpenAI
+
+  # Direct
+  - GEOSITE,jd,DIRECT,no-resolve
+  - GEOSITE,steam@cn,DIRECT,no-resolve
+  - GEOSITE,microsoft@cn,DIRECT,no-resolve
+  - GEOSITE,cloudflare-cn,DIRECT,no-resolve
