@@ -1,0 +1,10 @@
+name: geoip-rules
+desc: 基于IP地区的规则
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
+
+rules:
+  - GEOIP,CN,DIRECT
+  - GEOIP,US,PROXY
+  - GEOIP,EN,PROXY
+  - GEOIP,AU,PROXY

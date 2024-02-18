@@ -1,0 +1,30 @@
+name: geosite-rules
+desc: 基于站点的规则
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
+
+rules:
+  # GEOSITE
+  # https://github.com/v2fly/domain-list-community
+  - GEOSITE,category-porn,PROXY
+  - GEOSITE,tiktok,tiktok
+  - GEOSITE,netflix,PROXY
+  - GEOSITE,disney,PROXY
+  - GEOSITE,spotify,PROXY
+  - GEOSITE,speedtest,Speedtest
+  - GEOSITE,github,PROXY
+  - GEOSITE,cloudflare,PROXY
+  - GEOSITE,cloudflare-cn,DIRECT
+  - GEOSITE,cloudflare-ipfs,PROXY
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,docker,Docker
+  - GEOSITE,google,PROXY
+  - GEOSITE,twitter,PROXY
+  - GEOSITE,jd,DIRECT
+  - GEOSITE,instagram,PROXY
+  - GEOSITE,facebook,PROXY
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,steam,PROXY
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,microsoft,PROXY
+  - GEOSITE,xbox,PROXY
