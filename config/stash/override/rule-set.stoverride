@@ -1,0 +1,27 @@
+name: rule-set
+desc: 远程规则集
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
+
+rule-providers:
+  accept-domain:
+    behavior: domain
+    format: yaml
+    interval: 86400
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/domain/proxy.yaml?ts=1707974400
+  direct-domain:
+    behavior: domain
+    format: yaml
+    interval: 86400
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/direct/domain/proxy.yaml?ts=1707974400
+  reject-domain:
+    behavior: domain
+    format: yaml
+    interval: 86400
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/reject/domain/proxy.yaml?ts=1707974400
+
+rules:  
+  # RULE-SET
+  - RULE-SET,direct-domain,DIRECT
+  - RULE-SET,accept-domain,Proxy
+  - RULE-SET,reject-domain,REJECT
