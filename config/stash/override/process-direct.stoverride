@@ -4,16 +4,16 @@ category: rules
 icon: https://stash.wiki/favicon-32x32.png
 
 rules:
-  - PROCESS-NAME,WeChat,DIREC
-  - PROCESS-NAME,Flux,DIREC
-  - PROCESS-NAME,v2ray,DIREC
-  - PROCESS-NAME,Surge,DIREC
-  - PROCESS-NAME,ss-local,DIREC
-  - PROCESS-NAME,privoxy,DIREC
-  - PROCESS-NAME,trojan,DIREC
-  - PROCESS-NAME,trojan-go,DIREC
-  - PROCESS-NAME,naive,DIREC
-  - PROCESS-NAME,CloudflareWARP,DIREC
+  - PROCESS-NAME,WeChat,DIRECT
+  - PROCESS-NAME,Flux,DIRECT
+  - PROCESS-NAME,v2ray,DIRECT
+  - PROCESS-NAME,Surge,DIRECT
+  - PROCESS-NAME,ss-local,DIRECT
+  - PROCESS-NAME,privoxy,DIRECT
+  - PROCESS-NAME,trojan,DIRECT
+  - PROCESS-NAME,trojan-go,DIRECT
+  - PROCESS-NAME,naive,DIRECT
+  - PROCESS-NAME,CloudflareWARP,DIRECT
   - PROCESS-NAME,Cloudflare WARP,DIRECT
   - PROCESS-NAME,p4pclient,DIREC
   - PROCESS-NAME,Thunder,DIREC
