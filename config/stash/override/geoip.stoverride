@@ -4,7 +4,6 @@ category: rules
 icon: https://stash.wiki/favicon-32x32.png
 
 rules:
-  - GEOIP,CN,DIRECT
   - GEOIP,US,PROXY
   - GEOIP,AR,PROXY
   - GEOIP,SG,PROXY
