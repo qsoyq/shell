@@ -28,3 +28,4 @@ rules:
   - GEOSITE,microsoft@cn,DIRECT
   - GEOSITE,microsoft,PROXY
   - GEOSITE,xbox,PROXY
+  - GEOSITE,openai.com,OpenAI
