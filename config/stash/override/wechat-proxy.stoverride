@@ -7,6 +7,7 @@ rules:
   - IP-ASN,132203,PROXY,no-resolve
   - DOMAIN-SUFFIX,qlogo.cn,PROXY
   - DOMAIN-SUFFIX,qpic.cn,PROXY
+  - DOMAIN-SUFFIX,wx.qq.com,PROXY
   - DOMAIN-SUFFIX,weixin.qq.com,PROXY
   - DOMAIN-SUFFIX,wxapp.tc.qq.com,PROXY
   - DOMAIN-SUFFIX,servicewechat.com,PROXY
