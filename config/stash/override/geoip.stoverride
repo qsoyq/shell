@@ -1,4 +1,4 @@
-name: geoip-rules
+name: geoip
 desc: 基于IP地区的规则
 category: rules
 icon: https://stash.wiki/favicon-32x32.png
