@@ -28,3 +28,7 @@ payload:
   - '*.sanity.io'
   - '+.arc.net'
   - '*.arc.net'
+  - '*.segment.com'
+  - '+.segment.com'
+  - '*.launchdarkly.com'
+  - '+.launchdarkly.com'
