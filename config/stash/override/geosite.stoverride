@@ -29,6 +29,7 @@ rules:
   - GEOSITE,docker,Docker,no-resolve
   - GEOSITE,tiktok,tiktok,no-resolve
   - GEOSITE,speedtest,Speedtest,no-resolve
+  - DOMAIN-SUFFIX,speedtest.cn,Speedtest
   - GEOSITE,openai,OpenAI
 
   # Direct
