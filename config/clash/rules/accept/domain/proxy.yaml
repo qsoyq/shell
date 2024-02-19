@@ -1,6 +1,4 @@
 payload:
-  - 'chatgpt-next-web.19940731.xyz'
-  - 'telegraph.19940731.xyz'
   - '+.bingapis.com'
   - '+.cdn.jsdelivr.net'
   - '*.microsoft-falcon.io'
@@ -32,3 +30,8 @@ payload:
   - '+.segment.com'
   - '*.launchdarkly.com'
   - '+.launchdarkly.com'
+
+  # 19940731.xyz
+  - 'telegraph.19940731.xyz'
+  - 'homepage.19940731.xyz'
+  - 'chatgpt-next-web.19940731.xyz'
