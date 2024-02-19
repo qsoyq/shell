@@ -26,3 +26,5 @@ payload:
   - '+.tapbots.com'
   - '+.sanity.io'
   - '*.sanity.io'
+  - '+.arc.net'
+  - '*.arc.net'
