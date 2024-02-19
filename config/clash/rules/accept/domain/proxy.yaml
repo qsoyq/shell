@@ -23,4 +23,6 @@ payload:
   - '*.ipify.org'
   - '+.ipify.org'
   - '*.tapbots.com'
-  - '+.tapbots.com'  
+  - '+.tapbots.com'
+  - '+.sanity.io'
+  - '*.sanity.io'
