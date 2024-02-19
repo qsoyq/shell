@@ -30,6 +30,8 @@ payload:
   - '+.segment.com'
   - '*.launchdarkly.com'
   - '+.launchdarkly.com'
+  - '*.v2ex.com'
+  - '+.v2ex.com'  
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
