@@ -9,6 +9,6 @@ rules:
   - DOMAIN-SUFFIX,speedtest.cn,Speedtest
   - GEOSITE,youtube,YouTube,no-resolve
   - GEOSITE,docker,Docker,no-resolve
-  - GEOSITE,tiktok,tiktok,no-resolve
+  - GEOSITE,tiktok,TikTok,no-resolve
   - GEOSITE,speedtest,Speedtest,no-resolve
   - GEOSITE,openai,OpenAI
