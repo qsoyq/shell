@@ -13,14 +13,6 @@ rules:
   - GEOSITE,microsoft@cn,DIRECT,no-resolve
   - GEOSITE,cloudflare-cn,DIRECT,no-resolve
 
-  # Custom
-  - GEOSITE,youtube,YouTube,no-resolve
-  - GEOSITE,docker,Docker,no-resolve
-  - GEOSITE,tiktok,tiktok,no-resolve
-  - GEOSITE,speedtest,Speedtest,no-resolve
-  - DOMAIN-SUFFIX,speedtest.cn,Speedtest
-  - GEOSITE,openai,OpenAI
-
   # Proxy
   - GEOSITE,category-porn,Proxy,no-resolve
   - GEOSITE,netflix,Proxy,no-resolve

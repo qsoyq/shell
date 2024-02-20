@@ -1,0 +1,14 @@
+name: bypass
+desc: 基于规则分流
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
+
+rules:
+  # Custom
+  - DOMAIN-KEYWORD,gemini,Gemini
+  - DOMAIN-SUFFIX,speedtest.cn,Speedtest
+  - GEOSITE,youtube,YouTube,no-resolve
+  - GEOSITE,docker,Docker,no-resolve
+  - GEOSITE,tiktok,tiktok,no-resolve
+  - GEOSITE,speedtest,Speedtest,no-resolve
+  - GEOSITE,openai,OpenAI

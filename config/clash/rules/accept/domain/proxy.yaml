@@ -33,8 +33,7 @@ payload:
   - '*.v2ex.com'
   - '+.v2ex.com'  
   - '*.imgur.com'
-  - '+.imgur.com'  
-  
+  - '+.imgur.com'
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
