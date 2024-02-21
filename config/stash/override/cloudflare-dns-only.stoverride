@@ -8,5 +8,5 @@ dns:
     - 1.1.1.1
 
   nameserver: #!replace
-    - https://1.0.0.1/dns-query # CF IPv4
+    - https://1.1.1.1/dns-query # CF IPv4
     - https://[2606:4700:4700::1111]/dns-query # CF IPv6
