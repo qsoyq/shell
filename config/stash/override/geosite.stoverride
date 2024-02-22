@@ -14,7 +14,6 @@ rules:
   - GEOSITE,cloudflare-cn,DIRECT,no-resolve
 
   # Proxy
-  - GEOSITE,category-porn,Proxy,no-resolve
   - GEOSITE,netflix,Proxy,no-resolve
   - GEOSITE,disney,Proxy,no-resolve
   - GEOSITE,spotify,Proxy,no-resolve
