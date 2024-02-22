@@ -35,7 +35,9 @@ payload:
   - '*.imgur.com'
   - '+.imgur.com'
   - '*.zeabur.com'
-  - '+.zeabur.com'  
+  - '+.zeabur.com'
+  - '*.brew.sh'
+  - '+.brew.sh'  
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
