@@ -37,7 +37,9 @@ payload:
   - '*.zeabur.com'
   - '+.zeabur.com'
   - '*.brew.sh'
-  - '+.brew.sh'  
+  - '+.brew.sh'
+  - '*.moeli-desu.com'
+  - '+.moeli-desu.com'
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
