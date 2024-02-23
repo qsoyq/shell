@@ -4,8 +4,8 @@ category: rules
 icon: https://stash.wiki/favicon-32x32.png
 
 rules:
-  - GEOIP,US,Proxy,no-resolve
-  - GEOIP,AR,Proxy,no-resolve
-  - GEOIP,SG,Proxy,no-resolve
-  - GEOIP,EN,Proxy,no-resolve
-  - GEOIP,AU,Proxy,no-resolve
+  - GEOIP,US,Proxy
+  - GEOIP,AR,Proxy
+  - GEOIP,SG,Proxy
+  - GEOIP,EN,Proxy
+  - GEOIP,AU,Proxy
