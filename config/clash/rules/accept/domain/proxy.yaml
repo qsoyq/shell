@@ -40,6 +40,8 @@ payload:
   - '+.brew.sh'
   - '*.moeli-desu.com'
   - '+.moeli-desu.com'
+  - '*.tampermonkey.net'
+  - '+.tampermonkey.net'
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
