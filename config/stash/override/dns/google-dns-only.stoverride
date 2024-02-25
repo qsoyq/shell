@@ -1,5 +1,5 @@
 name: google-dns-only
-desc: 
+desc: 使用 google 进行域名解析
 category: DNS
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Google.png
 
