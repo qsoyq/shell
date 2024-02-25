@@ -1,0 +1,27 @@
+name: default-dns
+desc: 整合DNS
+category: DNS
+icon: https://www.alidns.com/assets/favicon-29bc214a.png
+
+dns:
+  default-nameserver: #!replace
+    - 1.1.1.1
+    - 223.5.5.5
+    - 223.6.6.6
+
+  nameserver: #!replace
+    # AliDNS
+    - https://223.6.6.6/dns-query
+    - https://223.5.5.5/dns-query
+
+    # CloudflareDNS
+    - https://1.1.1.1/dns-query # CF IPv4
+    - https://[2606:4700:4700::1111]/dns-query # CF IPv6    
+
+    # DNSPod
+    - https://1.12.12.12/dns-query
+    - https://120.53.53.53/dns-query
+    - https://doh.pub/dns-query
+
+    # OpenDNS
+    - https://doh.opendns.com/dns-query
