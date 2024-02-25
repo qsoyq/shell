@@ -1,6 +1,6 @@
 name: fake-ip-filter
 desc: fake-ip白名单
-category: rules
+category: dns
 icon: https://stash.wiki/favicon-32x32.png
 
 dns:
