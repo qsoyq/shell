@@ -1,0 +1,13 @@
+name: IP 信息 Tile 面板
+desc: 用于显示 IP 信息的面板 (Stash 2.0)
+category: tiles
+icon: https://telegraph.19940731.xyz/file/3b531e1c9b1a60ecf70c0.jpg
+
+tiles:
+  - name: IPCheck-Tile
+    interval: 7200
+
+script-providers:
+  IPCheck-Tile:
+    url: https://raw.githubusercontent.com/StevenKwan/stash-waffle/main/tiles/ipcheck.js
+    interval: 86400
