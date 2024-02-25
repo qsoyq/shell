@@ -12,4 +12,3 @@ dns:
     - https://1.12.12.12/dns-query
     - https://120.53.53.53/dns-query
     - https://doh.pub/dns-query
-    - https://[2606:4700:4700::1111]/dns-query # CF IPv6    

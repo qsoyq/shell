@@ -6,7 +6,7 @@ icon: https://www.alidns.com/assets/favicon-29bc214a.png
 dns:
   default-nameserver: #!replace
     - 1.1.1.1
-    - 223.5.5.5
+    - 8.8.8.8
     - 223.6.6.6
 
   nameserver: #!replace
@@ -25,3 +25,6 @@ dns:
 
     # OpenDNS
     - https://doh.opendns.com/dns-query
+
+    # Google DNS
+    - https://dns.google/dns-query

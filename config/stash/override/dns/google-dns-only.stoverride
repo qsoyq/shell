@@ -1,0 +1,12 @@
+name: google-dns-only
+desc: 
+category: DNS
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Google.png
+
+dns:
+  default-nameserver: #!replace
+    - 8.8.8.8
+
+  nameserver: #!replace
+    # Google DNS
+    - https://dns.google/dns-query
