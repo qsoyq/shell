@@ -41,7 +41,10 @@ payload:
   - '*.moeli-desu.com'
   - '+.moeli-desu.com'
   - '*.tampermonkey.net'
-  - '+.tampermonkey.net'  
+  - '+.tampermonkey.net'
+  - '*.railway.app'
+  - '+.railway.app'
+  
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
