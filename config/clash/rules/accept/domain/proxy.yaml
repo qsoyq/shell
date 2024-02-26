@@ -44,7 +44,8 @@ payload:
   - '+.tampermonkey.net'
   - '*.railway.app'
   - '+.railway.app'
-  
+  - '*.cloudinary.com'
+  - '+.cloudinary.com'  
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
