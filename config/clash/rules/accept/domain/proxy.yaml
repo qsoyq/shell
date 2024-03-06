@@ -46,6 +46,9 @@ payload:
   - '+.railway.app'
   - '*.cloudinary.com'
   - '+.cloudinary.com'  
+  - '*.redditstatic.com'
+  - '+.redditstatic.com'    
+  
 
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
