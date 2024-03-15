@@ -48,8 +48,13 @@ payload:
   - '+.cloudinary.com'  
   - '*.redditstatic.com'
   - '+.redditstatic.com'    
+  - '*.flyairport.top'
+  - '+.flyairport.top'
+  - '*.quq.world'
+  - '+.quq.world'  
+  - '*.ip-api.com'
+  - '+.ip-api.com'  
   
-
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
   - 'homepage.19940731.xyz'

@@ -2,18 +2,20 @@ name: blibee-startup-free
 desc: 便利蜂去开屏广告
 icon: https://www.bianlifeng.com/favicon.ico
 category: Ad
-
 http:
   mitm:
     - "cvsnotify-api.blibee.com"
-  script:
-    - match: https://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4
-      name: blibee-startup-free # 引用 script-providers 中的脚本
-      type: response # 脚本类型：request / response
-      require-body: true # 如果需要 request / response body，请设置为 true
-      binary-mode: false # 以二进制模式获取 body
+  url-rewrite:
+    - ^https?:\/\/cvsnotify-api\.blibee\.com\/cvs\/notify\/app/banner\/v4 - reject-dict    
 
-script-providers:
-  blibee-startup-free:
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/ad/blibee-startup-free.js
-    interval: 86400
+#   script:
+#     - match: https://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4
+#       name: blibee-startup-free # 引用 script-providers 中的脚本
+#       type: response # 脚本类型：request / response
+#       require-body: true # 如果需要 request / response body，请设置为 true
+#       binary-mode: false # 以二进制模式获取 body
+
+# script-providers:
+#   blibee-startup-free:
+#     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/ad/blibee-startup-free.js
+#     interval: 86400
