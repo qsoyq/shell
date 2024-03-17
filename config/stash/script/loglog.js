@@ -1,15 +1,18 @@
+const printObj = function(body){
+  for (const key in body) {
+      console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
+  }    
+}
 console.log(`loglog`)
-let scriptName = $script.name
-console.log(`script.name: ${scriptName}`)
-console.log(`$environment: ${$environment}`)
+console.log(`script.name: ${$script.name}`)
 console.log(`$argument: ${$argument}`)
-for (const key in $environment) {
-    console.log(`    ==> Key: ${key}, Value: ${$environment[key]}`);
-  }
-let lastRunAt = $persistentStore.read("lastRunAt")
+printObj($environment)
+let lastRunAtKey = "loglogLastRunAt"
+let lastRunAt = $persistentStore.read(lastRunAtKey)
 if (lastRunAt !== undefined){
     console.log(`lastRunAt: ${lastRunAt}`)
 }
-const now = new Date().toString()
-$persistentStore.write(now, "lastRunAt")
+$persistentStore.write(new Date().toString(), lastRunAtKey)
+$notification.post("推送测试", `副标题`, `内容01`)
+$notification.post("推送测试", `副标题`, `内容02`, `https://www.baidu.com`)
 $done({})

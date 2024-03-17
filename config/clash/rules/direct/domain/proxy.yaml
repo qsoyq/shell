@@ -8,3 +8,7 @@ payload:
  - '+.lcdn-registration.apple.com'
  - '+.push.apple.com'
  - '+.argotunnel.com'
+
+ # QQ网页端快捷登陆
+ - 'localhost.ptlogin2.qq.com'
+ - 'localhost.sec.qq.com'
