@@ -119,10 +119,10 @@ const handler = function(roomId, ctx){
 
             
             if (lastPub){
+                lastPub = Number(lastPub)
                 if(isDebug()){
                     console.log(`${anchor.uname} - lastPub: ${new Date(lastPub)}, liveTime: ${new Date(liveTime)}, current: ${new Date(current)}`)
                 }                
-                lastPub = Number(lastPub)
                 if(lastPub >= liveTime && !isAlwaysPub()){
                     ctx.resolve(`${anchor.uname}的直播间已在 ${new Date(lastPub)} 推送过`)
                     return
@@ -160,6 +160,7 @@ const handler = function(roomId, ctx){
                     if(isDebug()){
                         console.log(`为${anchor.uname}发送 bark 推送\nerror: ${error}\ndata:${data}`)
                     }
+                    ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
                     $persistentStore.write(current, lastPubKey)
                 }) 
             }
