@@ -77,28 +77,6 @@ const handler = function(roomId, ctx){
       } else {
         let body = JSON.parse(data)
         let roomInfo = body.data
-
-        // 判断直播状态和上次推送时间
-        let liveTime = new Date(roomInfo.live_time).getTime()
-        let isAlive = roomInfo.live_status === 1
-        if (!isAlive){
-            ctx.resolve(`直播间 ${roomId} 未开播`)
-            return
-        }
-
-        let current = new Date().getTime()
-        let lastPub = $persistentStore.read(lastPubKey)
-        if(isDebug()){
-            console.log(`lastPub: ${lastPub}, liveTime: ${liveTime}, current: ${current}`)
-        }
-        
-        if (lastPub){
-            lastPub = Number(lastPub)
-            if(lastPub >= liveTime){
-                ctx.resolve(`${roomId} 已在 ${lastPub} 推送过`)
-                return 
-            }
-        }
         let headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
@@ -115,8 +93,30 @@ const handler = function(roomId, ctx){
             let anchor = {
                 uid: body.uid,
                 uname: body.uname,
-                face: body.face  // 
+                face: body.face
             }
+
+            // 判断直播状态和上次推送时间
+            let liveTime = new Date(roomInfo.live_time).getTime()
+            let isAlive = roomInfo.live_status === 1
+            if (!isAlive){
+                ctx.resolve(`${anchor.uname}的直播间${roomId}未开播`)
+                return
+            }
+
+            let current = new Date().getTime()
+            let lastPub = $persistentStore.read(lastPubKey)
+            if(isDebug()){
+                console.log(`lastPub: ${lastPub}, liveTime: ${liveTime}, current: ${current}`)
+            }
+            
+            if (lastPub){
+                lastPub = Number(lastPub)
+                if(lastPub >= liveTime){
+                    ctx.resolve(`${anchor.uname}的直播间已在 ${new Date(lastPub)} 推送过`)
+                    return 
+                }
+            }            
             // 推送
             $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
             ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
