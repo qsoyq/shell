@@ -10,7 +10,25 @@ const printObj = function(body){
     }    
 }
 
-const getRoomList = function(argument){
+function removeHtmlTags(text) {
+    // 定义一个正则表达式，用于匹配 HTML 标签
+    const htmlTagsRe = /<[^>]+>/g;
+    // 使用 replace 方法替换 HTML 标签，保留 title 里的字符串
+    return text.replace(htmlTagsRe, (match) => {
+      const title = match.match(/title\s*=\s*"(.*?)"/);
+      return title ? title[1] : "";
+    });
+}
+  
+function unescapeHtml(text) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
+    return doc.body.textContent;
+}
+    
+
+const getRoomList = function(){
+    argument = $argument
     if(!argument){
         return []
     }
@@ -21,7 +39,8 @@ const getRoomList = function(argument){
     return rooms ? rooms.split(","): []
 }
 
-const getBarkToken = function(argument){
+const getBarkToken = function(){
+    argument = $argument
     if(!argument){
         return ""
     }
@@ -97,11 +116,12 @@ const handler = function(roomId, ctx){
 
             let current = new Date().getTime()
             let lastPub = $persistentStore.read(lastPubKey)
-            if(isDebug()){
-                console.log(`${anchor.uname} - lastPub: ${new Date(lastPub)}, liveTime: ${new Date(liveTime)}, current: ${new Date(current)}`)
-            }
+
             
             if (lastPub){
+                if(isDebug()){
+                    console.log(`${anchor.uname} - lastPub: ${new Date(lastPub)}, liveTime: ${new Date(liveTime)}, current: ${new Date(current)}`)
+                }                
                 lastPub = Number(lastPub)
                 if(lastPub >= liveTime && !isAlwaysPub()){
                     ctx.resolve(`${anchor.uname}的直播间已在 ${new Date(lastPub)} 推送过`)
@@ -109,44 +129,42 @@ const handler = function(roomId, ctx){
                 }
             }   
             // 推送   
-            if(isDebug()){
-                console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
-            }                
-            if(error){
-                console.error(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
-                ctx.reject(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
-            }else{
+            const pushToStash = ()=>{
+                if(isDebug()){
+                    console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
+                }                
                 $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`,{url: liveRoomLink})
                 ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-                $persistentStore.write(current.toString(), lastPubKey)
-            }            
-            // $httpClient.post({
-            //     url: "https://api.day.app/push",
-            //     headers: {"content-type": "application/json"},
-            //     body: {
-            //         title: `${anchor.uname} - ${roomId.title}`,
-            //         body: `${roomInfo.description}\n${roomInfo.live_time}\n${liveRoomLink}`,
-            //         group: "BilibiliLive",
-            //         isArchive: "1",
-            //         copy: liveRoomLink,
-            //         url: liveRoomLink,
-            //         icon: anchor.face,
-            //         device_key: barkToken,
-            //         automaticallyCopy: "1",
-            //     }
-            // }, (error, response, data)=>{
-            //     if(isDebug()){
-            //         console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
-            //     }                
-            //     if(error){
-            //         console.error(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
-            //         ctx.reject(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
-            //     }else{
-            //         $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
-            //         ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-            //         $persistentStore.write(current.toString(), lastPubKey)
-            //     }
-            // })      
+                $persistentStore.write(current, lastPubKey)
+            }
+            const pushToBark = () =>{
+                let barkToken = getBarkToken()
+                let description = removeHtmlTags(unescapeHtml(roomInfo.description))
+                let payload = {
+                    title: `${anchor.uname} - ${roomInfo.title}`,
+                    body: `${description}\n${roomInfo.live_time}`,
+                    group: "BilibiliLive",
+                    isArchive: "1",
+                    copy: liveRoomLink,
+                    url: liveRoomLink,
+                    icon: anchor.face,
+                    device_key: barkToken,
+                    automaticallyCopy: "1"
+                }     
+                payload = JSON.stringify(payload)       
+                $httpClient.post({
+                    url: "https://api.day.app/push",
+                    headers: {"content-type": "application/json"},
+                    body: payload
+                }, (error, response, data)=>{
+                    if(isDebug()){
+                        console.log(`为${anchor.uname}发送 bark 推送\nerror: ${error}\ndata:${data}`)
+                    }
+                    $persistentStore.write(current, lastPubKey)
+                }) 
+            }
+            // pushToStash()   
+            pushToBark()
           }
         })        
       }
@@ -170,11 +188,11 @@ if(isDebug()){
 if ($environment.system !== "iOS"){
     $done({})
 }else{
-    const barkToken = getBarkToken($argument)
-    const roomList = getRoomList($argument)
+    const roomList = getRoomList()
     console.log(`isAlwaysPub func: ${isAlwaysPub()}`)
     let promiseList = []
     if(isDebug()){
+        let barkToken = getBarkToken()
         console.log(`roomList: ${roomList}`)
         console.log(`barkToken: ${barkToken}`)
     }
@@ -204,4 +222,3 @@ if ($environment.system !== "iOS"){
         $done({})
     })
 }
-
