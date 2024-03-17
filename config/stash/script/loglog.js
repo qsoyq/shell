@@ -13,6 +13,4 @@ if (lastRunAt !== undefined){
     console.log(`lastRunAt: ${lastRunAt}`)
 }
 $persistentStore.write(new Date().toString(), lastRunAtKey)
-$notification.post("推送测试", `副标题`, `内容01`)
-$notification.post("推送测试", `副标题`, `内容02`, `https://www.baidu.com`)
 $done({})
