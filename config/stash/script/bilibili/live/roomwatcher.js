@@ -150,10 +150,17 @@ const allPromise = Promise.all(promiseList);
 
 allPromise
 .then((results) => {
-  console.log(`run successed: ${results}`)
+  
+  console.log(`run successed`)
+  results.forEach((resolve)=>{
+    console.log(resolve)
+  })
   $done({})
 })
 .catch((error) => {
-    console.error(`run failed: ${error}`); // 输出："失败！"
+    console.error(`run failed`); // 输出："失败！"
+    error.forEach((reject)=>{
+        console.log(reject)
+    })    
     $done({})
 })
