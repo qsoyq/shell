@@ -52,36 +52,18 @@ const isAlwaysPub = function(){
     return body.isAlwaysPub === true
 }
 
-if(isDebug()){
-    printObj($environment)
-}
-
-if(isDebug()){
-    let lastRunAtKey = "bilibiliLiveRoomWatcherLastRunAt"
-    let lastRunAt = $persistentStore.read(lastRunAtKey)
-    if (lastRunAt !== undefined){
-        console.log(`lastRunAt: ${lastRunAt}`)
-    }
-    const now = new Date().toString()
-    $persistentStore.write(now, lastRunAtKey)
-}
-
-
-const headers = {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-}
-
-
-
 const handler = function(roomId, ctx){
     let lastPubKey = `BilibiliWatcherlastPub${roomId}`
     let liveRoomLink = `https://live.bilibili.com/${roomId}`
     $httpClient.get({
         "url": `https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${roomId}&from=room`,
-        "headers": headers
+        "headers": {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+        }
     }, (error, response, data) => {
       if (error) {
+        console.error(`获取直播间信息失败, 房间号: ${roomId}, reason: ${error}`)
         ctx.reject(error)
       } else {
         let body = JSON.parse(data)
@@ -96,6 +78,7 @@ const handler = function(roomId, ctx){
             "headers": headers
         }, (error, response, data) => {
           if (error) {
+            console.error(`获取up主用户信息失败, 房间号: ${roomId}, reason: ${error}`)
             ctx.reject(error)
           } else {  
             let body = JSON.parse(data).data.info
@@ -104,7 +87,6 @@ const handler = function(roomId, ctx){
                 uname: body.uname,
                 face: body.face
             }
-
             // 判断直播状态和上次推送时间
             let liveTime = new Date(roomInfo.live_time).getTime()
             let isAlive = roomInfo.live_status === 1
@@ -116,7 +98,7 @@ const handler = function(roomId, ctx){
             let current = new Date().getTime()
             let lastPub = $persistentStore.read(lastPubKey)
             if(isDebug()){
-                console.log(`${anchor.uname} lastPub: ${new Date(lastPub)}, liveTime: ${new Date(liveTime)}, current: ${new Date(current)}`)
+                console.log(`${anchor.uname} - lastPub: ${new Date(lastPub)}, liveTime: ${new Date(liveTime)}, current: ${new Date(current)}`)
             }
             
             if (lastPub){
@@ -127,75 +109,99 @@ const handler = function(roomId, ctx){
                 }
             }   
             // 推送   
-            $httpClient.post({
-                url: "https://api.day.app/push",
-                headers: {"content-type": "application/json"},
-                body: {
-                    title: `${anchor.uname} - ${roomId.title}`,
-                    body: `${roomInfo.description}\n${roomInfo.live_time}\n${liveRoomLink}`,
-                    group: "BilibiliLive",
-                    isArchive: "1",
-                    copy: liveRoomLink,
-                    url: liveRoomLink,
-                    icon: anchor.face,
-                    device_key: barkToken,
-                    automaticallyCopy: "1",
-                }
-            }, (error, response, data)=>{
-                if(isDebug()){
-                    console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
-                }                
-                if(error){
-                    ctx.reject(`${anchor.uname} ${roomId} 推送失败`)
-                }else{
-                    $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
-                    ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-                    $persistentStore.write(current.toString(), lastPubKey)
-                }
-            })      
+            if(isDebug()){
+                console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
+            }                
+            if(error){
+                console.error(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
+                ctx.reject(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
+            }else{
+                $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`,{url: liveRoomLink})
+                ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
+                $persistentStore.write(current.toString(), lastPubKey)
+            }            
+            // $httpClient.post({
+            //     url: "https://api.day.app/push",
+            //     headers: {"content-type": "application/json"},
+            //     body: {
+            //         title: `${anchor.uname} - ${roomId.title}`,
+            //         body: `${roomInfo.description}\n${roomInfo.live_time}\n${liveRoomLink}`,
+            //         group: "BilibiliLive",
+            //         isArchive: "1",
+            //         copy: liveRoomLink,
+            //         url: liveRoomLink,
+            //         icon: anchor.face,
+            //         device_key: barkToken,
+            //         automaticallyCopy: "1",
+            //     }
+            // }, (error, response, data)=>{
+            //     if(isDebug()){
+            //         console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
+            //     }                
+            //     if(error){
+            //         console.error(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
+            //         ctx.reject(`${anchor.uname} ${roomId} 推送失败, reason: ${error}`)
+            //     }else{
+            //         $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
+            //         ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
+            //         $persistentStore.write(current.toString(), lastPubKey)
+            //     }
+            // })      
           }
         })        
       }
     })
 }
 
+if(isDebug()){
+    printObj($environment)
+}
+
+if(isDebug()){
+    let lastRunAtKey = "bilibiliLiveRoomWatcherLastRunAt"
+    let lastRunAt = $persistentStore.read(lastRunAtKey)
+    if (lastRunAt !== undefined){
+        console.log(`lastRunAt: ${lastRunAt}`)
+    }
+    const now = new Date().toString()
+    $persistentStore.write(now, lastRunAtKey)
+}
+
 if ($environment.system !== "iOS"){
     $done({})
-    return
+}else{
+    const barkToken = getBarkToken($argument)
+    const roomList = getRoomList($argument)
+    console.log(`isAlwaysPub func: ${isAlwaysPub()}`)
+    let promiseList = []
+    if(isDebug()){
+        console.log(`roomList: ${roomList}`)
+        console.log(`barkToken: ${barkToken}`)
+    }
+    
+    roomList.forEach((roomId)=>{
+        task = new Promise((resolve, reject) => {
+            handler(roomId, {resolve: resolve, reject: reject})
+        });
+        promiseList.push(task)    
+    })
+    
+    const allPromise = Promise.all(promiseList);
+    
+    allPromise
+    .then((results) => { 
+        console.log(`run successed`)
+        results.forEach((resolve)=>{
+        console.log(resolve)
+        })
+        $done({})
+    })
+    .catch((error) => {
+        console.error(`run failed`); // 输出："失败！"
+        error.forEach((reject)=>{
+            console.log(reject)
+        })    
+        $done({})
+    })
 }
 
-const barkToken = getBarkToken($argument)
-const roomList = getRoomList($argument)
-console.log(`isAlwaysPub func: ${isAlwaysPub()}`)
-let promiseList = []
-if(isDebug()){
-    console.log(`roomList: ${roomList}`)
-    console.log(`barkToken: ${barkToken}`)
-}
-
-
-roomList.forEach((roomId)=>{
-    task = new Promise((resolve, reject) => {
-        handler(roomId, {resolve: resolve, reject: reject})
-    });
-    promiseList.push(task)    
-})
-
-const allPromise = Promise.all(promiseList);
-
-allPromise
-.then((results) => {
-  
-  console.log(`run successed`)
-  results.forEach((resolve)=>{
-    console.log(resolve)
-  })
-  $done({})
-})
-.catch((error) => {
-    console.error(`run failed`); // 输出："失败！"
-    error.forEach((reject)=>{
-        console.log(reject)
-    })    
-    $done({})
-})
