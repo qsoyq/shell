@@ -4,31 +4,27 @@ barkToken 为对应的推送令牌
 argument:
     {\"rooms\":\"1,2,3,4\",\"barkToken\":\"123456\"}
 */
-(()=>{
-    console.log(`script.name: ${$script.name}`)
-    console.log(`$argument: ${$argument}`)    
-    for (const key in $environment) {
-        console.log(`    ==> Key: ${key}, Value: ${$environment[key]}`);
-    }
-})
+const printObj = function(body){
+    for (const key in body) {
+        console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
+    }    
+}
 
+console.log(`script.name: ${$script.name}`)
+console.log(`$argument: ${$argument}`)    
+printObj($environment)
 
-(()=>{
-    let lastRunAt = $persistentStore.read("lastRunAt")
-    if (lastRunAt !== undefined){
-        console.log(`lastRunAt: ${lastRunAt}`)
-    }
-    const now = new Date().toString()
-    $persistentStore.write(now, "lastRunAt")
-})()
+let lastRunAt = $persistentStore.read("lastRunAt")
+if (lastRunAt !== undefined){
+    console.log(`lastRunAt: ${lastRunAt}`)
+}
+const now = new Date().toString()
+$persistentStore.write(now, "lastRunAt")
 
 const headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
 }
-
-
- 
 
 const isRoomAlive = function(roomId){
     return false
@@ -39,16 +35,10 @@ const getRoomList = function(argument){
         return []
     }
     let body = JSON.parse(argument)
-    let rooms = body["rooms"]
-    return rooms ? rooms.spilt(","): []
-}
-
-const ifPush = function(roomId, lastPushAt){
-
-}
-
-const pushToBark = function(roomId, barkToken){
-
+    t = typeof body.rooms
+    printObj(body)
+    let rooms = body.rooms
+    return rooms ? rooms.split(","): []
 }
 
 const getBarkToken = function(argument){
@@ -66,6 +56,7 @@ const getRoomInfo = function(data){
 
 const handler = function(roomId, ctx){
     let lastPubKey = `BilibiliWatcherlastPub${roomId}`
+    let liveRoomLink = `https://live.bilibili.com/${roomId}`
     $httpClient.get({
         "url": `https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${roomId}&from=room`,
         "headers": headers
@@ -86,7 +77,7 @@ const handler = function(roomId, ctx){
 
         let current = new Date().getTime()
         let lastPub = $persistentStore.read(lastPubKey)
-        if (lastPub){
+        if (lastPub && 0){
             if(lastPub >= current){
                 ctx.resolve(`${roomId} 已在 ${lastPub} 推送过`)
                 return 
@@ -108,9 +99,13 @@ const handler = function(roomId, ctx){
             let anchor = {
                 uid: body.uid,
                 uname: body.uname,
-                face: body.face
+                face: body.face  // 
             }
-            
+            // 推送
+            $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n\n${liveRoomLink}`)
+            console.log(`ctx.resolve: ${ctx.resolve}`)
+            ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
+            console.log(`${anchor.uname}, ${anchor.face}, ${liveRoomLink}, ${roomInfo.title}`)
           }
         })        
       }
@@ -118,7 +113,7 @@ const handler = function(roomId, ctx){
 }
 
 const barkToken = getBarkToken($argument)
-const roomList = getRoomList()
+const roomList = getRoomList($argument)
 let promiseList = []
 console.log(`roomList: ${roomList}`)
 console.log(`barkToken: ${barkToken}`)
@@ -128,16 +123,17 @@ roomList.forEach((roomId)=>{
         handler(roomId, {resolve: resolve, reject: reject})
     });
     promiseList.push(task)    
+    console.log(`new task for room: ${roomId}`)
 })
 
 const allPromise = Promise.all(promiseList);
 
 allPromise
 .then((results) => {
-  console.log(results); // 输出：["成功1！", "成功2！"]
+  console.log(`run successed: ${results}`)
   $done({})
 })
 .catch((error) => {
-    console.error(error); // 输出："失败！"
+    console.error(`run failed: ${error}`); // 输出："失败！"
     $done({})
 })
