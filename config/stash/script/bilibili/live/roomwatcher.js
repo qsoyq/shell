@@ -135,7 +135,7 @@ const handler = function(roomId, ctx){
                 }                
                 $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`,{url: liveRoomLink})
                 ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-                $persistentStore.write(current, lastPubKey)
+                $persistentStore.write(current.toString(), lastPubKey)
             }
             const pushToBark = () =>{
                 let barkToken = getBarkToken()
@@ -161,7 +161,7 @@ const handler = function(roomId, ctx){
                         console.log(`为${anchor.uname}发送 bark 推送\nerror: ${error}\ndata:${data}`)
                     }
                     ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-                    $persistentStore.write(current, lastPubKey)
+                    $persistentStore.write(current.toString(), lastPubKey)
                 }) 
             }
             // pushToStash()   
