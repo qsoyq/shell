@@ -35,7 +35,8 @@ const getRoomInfo = function(data){
 }
 
 const isDebug = function(){
-    if(!$argument){
+    argument = $argument
+    if(!argument){
         return false
     }
     let body = JSON.parse(argument)       
