@@ -68,7 +68,7 @@ const handler = function(roomId, ctx){
         let roomInfo = body.data
 
         // 判断直播状态和上次推送时间
-        let liveTime = new Date(roomInfo.liveTime).getTime()
+        let liveTime = new Date(roomInfo.live_time).getTime()
         let isAlive = roomInfo.live_status === 1
         if (!isAlive){
             ctx.resolve(`直播间 ${roomId} 未开播`)
@@ -78,7 +78,7 @@ const handler = function(roomId, ctx){
         let current = new Date().getTime()
         let lastPub = $persistentStore.read(lastPubKey)
         if (lastPub){
-            if(lastPub >= current){
+            if(lastPub >= liveTime){
                 ctx.resolve(`${roomId} 已在 ${lastPub} 推送过`)
                 return 
             }
@@ -102,10 +102,11 @@ const handler = function(roomId, ctx){
                 face: body.face  // 
             }
             // 推送
-            $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n\n${liveRoomLink}`)
+            $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
             console.log(`ctx.resolve: ${ctx.resolve}`)
             ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-            console.log(`${anchor.uname}, ${anchor.face}, ${liveRoomLink}, ${roomInfo.title}`)
+            console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
+            $persistentStore.write(current, lastPubKey)
           }
         })        
       }
