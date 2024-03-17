@@ -77,7 +77,7 @@ const handler = function(roomId, ctx){
 
         let current = new Date().getTime()
         let lastPub = $persistentStore.read(lastPubKey)
-        if (lastPub && 0){
+        if (lastPub){
             if(lastPub >= current){
                 ctx.resolve(`${roomId} 已在 ${lastPub} 推送过`)
                 return 
