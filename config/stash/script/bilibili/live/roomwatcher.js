@@ -10,26 +10,6 @@ const printObj = function(body){
     }    
 }
 
-console.log(`script.name: ${$script.name}`)
-console.log(`$argument: ${$argument}`)    
-printObj($environment)
-
-let lastRunAt = $persistentStore.read("lastRunAt")
-if (lastRunAt !== undefined){
-    console.log(`lastRunAt: ${lastRunAt}`)
-}
-const now = new Date().toString()
-$persistentStore.write(now, "lastRunAt")
-
-const headers = {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-}
-
-const isRoomAlive = function(roomId){
-    return false
-}
-
 const getRoomList = function(argument){
     if(!argument){
         return []
@@ -54,6 +34,36 @@ const getRoomInfo = function(data){
     return body.data
 }
 
+const isDebug = function(){
+    if(!$argument){
+        return false
+    }
+    let body = JSON.parse(argument)       
+    return body.debug === true
+}
+
+if(isDebug()){
+    printObj($environment)
+}
+
+if(isDebug()){
+    let lastRunAtKey = "bilibiliLiveRoomWatcherLastRunAt"
+    let lastRunAt = $persistentStore.read(lastRunAtKey)
+    if (lastRunAt !== undefined){
+        console.log(`lastRunAt: ${lastRunAt}`)
+    }
+    const now = new Date().toString()
+    $persistentStore.write(now, lastRunAtKey)
+}
+
+
+const headers = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+}
+
+
+
 const handler = function(roomId, ctx){
     let lastPubKey = `BilibiliWatcherlastPub${roomId}`
     let liveRoomLink = `https://live.bilibili.com/${roomId}`
@@ -77,7 +87,12 @@ const handler = function(roomId, ctx){
 
         let current = new Date().getTime()
         let lastPub = $persistentStore.read(lastPubKey)
+        if(isDebug()){
+            console.log(`lastPub: ${lastPub}, liveTime: ${liveTime}, current: ${current}`)
+        }
+        
         if (lastPub){
+            lastPub = Number(lastPub)
             if(lastPub >= liveTime){
                 ctx.resolve(`${roomId} 已在 ${lastPub} 推送过`)
                 return 
@@ -103,10 +118,11 @@ const handler = function(roomId, ctx){
             }
             // 推送
             $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
-            console.log(`ctx.resolve: ${ctx.resolve}`)
             ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-            console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
-            $persistentStore.write(current, lastPubKey)
+            $persistentStore.write(current.toString(), lastPubKey)
+            if(isDebug()){
+                console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
+            }
           }
         })        
       }
@@ -116,15 +132,17 @@ const handler = function(roomId, ctx){
 const barkToken = getBarkToken($argument)
 const roomList = getRoomList($argument)
 let promiseList = []
-console.log(`roomList: ${roomList}`)
-console.log(`barkToken: ${barkToken}`)
+if(isDebug()){
+    console.log(`roomList: ${roomList}`)
+    console.log(`barkToken: ${barkToken}`)
+}
+
 
 roomList.forEach((roomId)=>{
     task = new Promise((resolve, reject) => {
         handler(roomId, {resolve: resolve, reject: reject})
     });
     promiseList.push(task)    
-    console.log(`new task for room: ${roomId}`)
 })
 
 const allPromise = Promise.all(promiseList);
