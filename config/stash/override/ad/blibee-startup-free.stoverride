@@ -6,7 +6,7 @@ http:
   mitm:
     - "cvsnotify-api.blibee.com"
   url-rewrite:
-    - ^https?:\/\/cvsnotify-api\.blibee\.com\/cvs\/notify\/app/banner\/v4 - reject-dict    
+    - ^https?:\/\/cvsnotify-api\.blibee\.com\/cvs\/notify\/app\/banner\/v4 - reject-dict    
 
 #   script:
 #     - match: https://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4
