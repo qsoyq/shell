@@ -43,6 +43,15 @@ const isDebug = function(){
     return body.debug === true
 }
 
+const isAlwaysPub = function(){
+    argument = $argument
+    if(!argument){
+        return false
+    }
+    let body = JSON.parse(argument)       
+    return body.isAlwaysPub === true
+}
+
 if(isDebug()){
     printObj($environment)
 }
@@ -107,31 +116,57 @@ const handler = function(roomId, ctx){
             let current = new Date().getTime()
             let lastPub = $persistentStore.read(lastPubKey)
             if(isDebug()){
-                console.log(`lastPub: ${lastPub}, liveTime: ${liveTime}, current: ${current}`)
+                console.log(`${anchor.uname} lastPub: ${new Date(lastPub)}, liveTime: ${new Date(liveTime)}, current: ${new Date(current)}`)
             }
             
             if (lastPub){
                 lastPub = Number(lastPub)
-                if(lastPub >= liveTime){
+                if(lastPub >= liveTime && !isAlwaysPub()){
                     ctx.resolve(`${anchor.uname}的直播间已在 ${new Date(lastPub)} 推送过`)
-                    return 
+                    return
                 }
-            }            
-            // 推送
-            $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
-            ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-            $persistentStore.write(current.toString(), lastPubKey)
-            if(isDebug()){
-                console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
-            }
+            }   
+            // 推送   
+            $httpClient.post({
+                url: "https://api.day.app/push",
+                headers: {"content-type": "application/json"},
+                body: {
+                    title: `${anchor.uname} - ${roomId.title}`,
+                    body: `${roomInfo.description}\n${roomInfo.live_time}\n${liveRoomLink}`,
+                    group: "BilibiliLive",
+                    isArchive: "1",
+                    copy: liveRoomLink,
+                    url: liveRoomLink,
+                    icon: anchor.face,
+                    device_key: barkToken,
+                    automaticallyCopy: "1",
+                }
+            }, (error, response, data)=>{
+                if(isDebug()){
+                    console.log(`${anchor.uname}\n${anchor.face}\n${roomInfo.title}\n\n${roomInfo.live_time}\n\n${liveRoomLink}`)
+                }                
+                if(error){
+                    ctx.reject(`${anchor.uname} ${roomId} 推送失败`)
+                }else{
+                    $notification.post("bilibiliRoomLiveWatcher", `${anchor.uname}`, `${roomInfo.title}\n${roomInfo.live_time}\n${liveRoomLink}`)
+                    ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
+                    $persistentStore.write(current.toString(), lastPubKey)
+                }
+            })      
           }
         })        
       }
     })
 }
 
+if ($environment.system !== "iOS"){
+    $done({})
+    return
+}
+
 const barkToken = getBarkToken($argument)
 const roomList = getRoomList($argument)
+console.log(`isAlwaysPub func: ${isAlwaysPub()}`)
 let promiseList = []
 if(isDebug()){
     console.log(`roomList: ${roomList}`)
