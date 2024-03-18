@@ -1,16 +1,15 @@
-const printObj = function(body){
-  for (const key in body) {
-      console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
-  }    
+function get(){
+  return {code: 0}
 }
-console.log(`loglog`)
-console.log(`script.name: ${$script.name}`)
-console.log(`$argument: ${$argument}`)
-printObj($environment)
-let lastRunAtKey = "loglogLastRunAt"
-let lastRunAt = $persistentStore.read(lastRunAtKey)
-if (lastRunAt !== undefined){
-    console.log(`lastRunAt: ${lastRunAt}`)
+
+async function asyncGet(){
+  return await new Promise((r=>{r(get())}))
 }
-$persistentStore.write(new Date().toString(), lastRunAtKey)
-$done({})
+async function main(){
+    console.log(await asyncGet())
+    console.log(await asyncGet())
+}
+
+main().then()
+
+// $done({})
