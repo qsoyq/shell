@@ -1,0 +1,31 @@
+name: |-
+  TikTok-JP
+desc: |-
+  TikTok-JP
+icon: |-
+  https://www.tiktok.com/favicon.ico
+category: |-
+  tiktok
+
+http:
+
+  mitm:
+    - "*.tiktokv.com"
+    - "*.byteoversea.com"
+    - "*.musical.ly"
+    - "*.snssdk.com"
+    - "*.tik-tokapi.com"
+
+  url-rewrite:
+# TikTok By blackmatrix7 & wzw1997007 & Choler & llkhs
+    - >-
+      ^https://api[\w-]*?.tiktokv.com/aweme/v\d/policy/notice/? - reject
+    - >-
+      (?<=_region=)CN(?=&) JP 307
+    - >-
+      (?<=&mcc_mnc=)4 2 307
+#Tiktok By Semporia
+    - >-
+      ^(https?:\/\/(tnc|dm)[\w-]+\.\w+\.com\/.+)(\?)(.+) $1$3 302
+    - >-
+      (?<=\d\/\?\w{7}_\w{4}=)1[6-9]..(?=.?.?&) 17 307
