@@ -1,6 +1,6 @@
 name: cats-team-ad-rules
 desc: Cats-Team 去广告
-icon: https://www.bianlifeng.com/favicon.ico
+icon: https://avatars.githubusercontent.com/u/88201352?s=48&v=4
 category: Ad
 rule-providers:
   # https://github.com/Cats-Team/AdRules  
