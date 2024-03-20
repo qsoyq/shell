@@ -1,0 +1,17 @@
+name: cats-team-ad-rules
+desc: Cats-Team 去广告
+icon: https://www.bianlifeng.com/favicon.ico
+category: Ad
+rule-providers:
+  # https://github.com/Cats-Team/AdRules  
+  cats-team-ad-rules:
+    behavior: domain
+    format: text
+    interval: 86400
+    type: http
+    # https://raw.githubusercontent.com/Cats-Team/AdRules/main/adrules_domainset.txt
+    # https://proxy-tool.19940731.xyz/api/clash/config/qx/rules?url=https%3A%2F%2Fraw.githubusercontent.com%2FCats-Team%2FAdRules%2Fmain%2Fqx.conf&behavior=reject
+    url: https://raw.githubusercontent.com/Cats-Team/AdRules/main/adrules_domainset.txt
+
+rules:
+    - RULE-SET,cats-team-ad-rules,REJECT
