@@ -72,7 +72,7 @@ const isAlwaysPub = function(){
 }
 
 const handler = function(roomId, ctx){
-    let lastPubKey = `BilibiliWatcherlastPub${roomId}`
+    let lastPubKey = `${$script.name}lastPub${roomId}`
     let liveRoomLink = `https://live.bilibili.com/${roomId}`
     $httpClient.get({
         "url": `https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${roomId}&from=room`,
