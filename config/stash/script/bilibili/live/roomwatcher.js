@@ -177,7 +177,7 @@ if(isDebug()){
 }
 
 if(isDebug()){
-    let lastRunAtKey = "bilibiliLiveRoomWatcherLastRunAt"
+    let lastRunAtKey = `${$script.name}LastRunAt`
     let lastRunAt = $persistentStore.read(lastRunAtKey)
     if (lastRunAt !== undefined){
         console.log(`lastRunAt: ${lastRunAt}`)
