@@ -133,3 +133,4 @@ dmypy.json
 *.db
 *.DS_Store
 .vscode
+ossutil_output/
