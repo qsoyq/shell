@@ -84,7 +84,7 @@ function handler(roomId, ctx){
             if(isDebug){
                 console.log(`${anchor.uname} - lastPub: ${new Date(lastPub)}, liveTime: ${new Date(liveTime)}, current: ${new Date(current)}`)
             }                
-            if(lastPub >= liveTime && !isAlwaysPub()){
+            if(lastPub >= liveTime && !isAlwaysPub){
                 ctx.resolve(`${anchor.uname}的直播间已在 ${new Date(lastPub)} 推送过`)
                 return
             }
@@ -130,7 +130,7 @@ function handler(roomId, ctx){
             pushToBark()    
         }
         if(getBodyArgument("isPushToStash")){
-            pushToStash()   
+            pushToStash()
         }
     })
 }
@@ -152,7 +152,7 @@ function main(){
         $done({})
     }else{
         const roomList = getRoomList()
-        console.log(`isAlwaysPub func: ${isAlwaysPub()}`)
+        console.log(`isAlwaysPub func: ${isAlwaysPub}`)
         let promiseList = []
         if(isDebug){
             let barkToken = getBarkToken()
