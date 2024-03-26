@@ -7,13 +7,13 @@ http:
     - bbs.nga.cn
   script:
     - match: https://bbs.nga.cn/read.php
-      name: auto_open_nga_in_wechat
+      name: auto-open-nga-in-wechat
       type: request
       require-body: true
       timeout: 20
       argument: ''
  
 script-providers:
-  auto_open_nga_in_wechat:
+  auto-open-nga-in-wechat:
     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/nga/auto_open_nga_in_wechat.js
     interval: 86400

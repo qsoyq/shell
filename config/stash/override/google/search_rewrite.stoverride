@@ -1,0 +1,27 @@
+name: google-search-rewrite
+desc: |-
+  重写 google 搜索的结果
+  去除搜索结果中的相关图片
+  去除搜索结果中的相关搜索
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Google.png
+category: qsoyq
+http:
+  mitm:
+    - "*.google.com"
+  script:
+    # - match: ^https?:\/\/(?:www\.)?google\.com\/search
+    # - match: ^https?:\/\/(?:www\.)?google\.com\/search
+    - match: https://www.google.com/search
+      name: google-search-rewrite
+      type: response # request / response
+      require-body: false
+      timeout: 5
+      argument: ''
+      binary-mode: false
+      max-size: 1048576 # 1MB
+      
+ 
+script-providers:
+  google-search-rewrite:
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/google/search_rewrite.js
+    interval: 86400
