@@ -10,7 +10,7 @@ const printObj = function(body){
     }    
 }
 
-function getBodyArgument(){
+function getBodyArgument(key){
     if (typeof $argument === undefined){
         return undefined
     }
