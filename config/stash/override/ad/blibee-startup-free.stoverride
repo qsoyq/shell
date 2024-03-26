@@ -1,7 +1,7 @@
 name: blibee-startup-free
 desc: 便利蜂去开屏广告
 icon: https://www.bianlifeng.com/favicon.ico
-category: Ad
+category: qsoyq
 http:
   mitm:
     - "cvsnotify-api.blibee.com"

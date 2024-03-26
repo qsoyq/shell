@@ -1,0 +1,14 @@
+name: freshippo-startup-free
+desc: 盒马去开屏广告
+category: qsoyq
+icon: https://img.alicdn.com/imgextra/i1/O1CN017dUqIF1HSII6l0mr1_!!6000000000756-2-tps-265-265.png
+http:
+  mitm:
+    - acs.m.taobao.com
+    - acs-m.freshippo.com
+    - gw.alicdn.com
+  rewrite:
+    # 盒马开屏去广告
+    - ^https:\/\/acs\.m\.taobao\.com\/gw\/mtop\.wdk\.render\.querysinglepage - reject-200
+    - ^https?:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.querysinglepage - reject-200
+    - ^https?:\/\/gw\/alicdn\/com\/imgextra\/i2\/6000000003087\/O1CN01KSOPVz1Yftas4uqTj_!!6000000003087-0-rexmedia\/.jpg - reject
