@@ -173,7 +173,7 @@ function main(){
         .then((results) => { 
             console.log(`run successed`)
             results.forEach((resolve)=>{
-            console.log(resolve)
+                console.log(resolve)
             })
             $done({})
         })
