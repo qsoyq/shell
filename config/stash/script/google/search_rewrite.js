@@ -6,7 +6,13 @@ function removeByClassName(name){
 }
 
 function main(){
-    
+    let isResponse = Boolean(typeof $response !== "undefined")
+    if(!isResponse){
+        return
+    }
+    let body = $response.body
+    console.log(`${$request.url}`)
+    console.log(`response status: ${$response.status}`)
+    $done({status: $response.status, headers: $response.headers, body: body})
 }
-console.log(`${$request.url}`)
-$done({})
+main()

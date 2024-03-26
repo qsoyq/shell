@@ -19,7 +19,15 @@ http:
       argument: ''
       binary-mode: false
       max-size: 1048576 # 1MB
-      
+
+    - match: https://www.google.com/search
+      name: google-search-rewrite
+      type: request # request / response
+      require-body: true
+      timeout: 5
+      argument: ''
+      binary-mode: false
+      max-size: 1048576 # 1MB      
  
 script-providers:
   google-search-rewrite:
