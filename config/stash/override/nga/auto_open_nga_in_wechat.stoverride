@@ -10,8 +10,8 @@ http:
     - match: https://(bbs.nga.cn|ngabbs.com)/read.php
       name: auto-open-nga-in-wechat
       type: request
-      require-body: true
-      timeout: 20
+      require-body: false
+      timeout: 5
       argument: ''
 
 script-providers:
