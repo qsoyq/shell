@@ -5,14 +5,15 @@ icon: https://bbs.nga.cn/favicon.ico
 http:
   mitm:
     - bbs.nga.cn
+    - ngabbs.com
   script:
-    - match: https://bbs.nga.cn/read.php
+    - match: https://(bbs.nga.cn|ngabbs.com)/read.php
       name: auto-open-nga-in-wechat
       type: request
       require-body: true
       timeout: 20
       argument: ''
- 
+
 script-providers:
   auto-open-nga-in-wechat:
     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/nga/auto_open_nga_in_wechat.js

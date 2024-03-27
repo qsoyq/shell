@@ -14,7 +14,7 @@ http:
     - match: https://www.google.com/search
       name: google-search-rewrite
       type: response # request / response
-      require-body: false
+      require-body: true
       timeout: 5
       argument: ''
       binary-mode: false
@@ -23,7 +23,7 @@ http:
     - match: https://www.google.com/search
       name: google-search-rewrite
       type: request # request / response
-      require-body: true
+      require-body: false
       timeout: 5
       argument: ''
       binary-mode: false
