@@ -1,0 +1,19 @@
+name: mdl-ad-free
+desc: |-
+  麦当劳去广告
+    - 去除开屏广告
+    - 去除首页弹窗广告
+    - 去除首页热门活动广告
+category: qsoyq
+icon: https://officialwebsitestorage.blob.core.chinacloudapi.cn/public/files/css/favicons/favicon-16x16.png
+
+http:
+  mitm:
+    - img.mcd.cn
+    - api.mcd.cn
+  url-rewrite:
+    - ^https://api.mcd.cn/bff/portal/home/splash - reject # 开屏广告
+    - ^https://api.mcd.cn/bff/portal/richpop - reject # 弹窗广告
+    - ^https://api.mcd.cn/bff/portal/home/hotActivity - reject # 首页热门活动    
+    # - https://img.mcd.cn/gallery/.+\.(gif|mp4) - reject # 开屏广告和弹窗广告资源
+    # - ^https://img.mcd.cn/cms/images/.+\.(mp4|gif) - reject # 开屏广告和弹窗广告资源    
