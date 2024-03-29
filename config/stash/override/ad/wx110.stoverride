@@ -1,0 +1,24 @@
+name: wx110
+desc: |-
+  微信 110 解锁
+  脚本收集自 https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js
+category: qsoyq
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/WeChat.png
+
+http:
+  mitm:
+    - "weixin110.qq.com"
+    - "security.wechat.com"
+
+  script:
+    - match: ^https\:\/\/(weixin110\.qq|security.wechat)\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi\?
+      name: "wx110"
+      type: response
+      require-body: true
+      max-size: -1
+      timeout: 60
+
+script-providers:
+  "wx110":
+    url: https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js
+    interval: 86400

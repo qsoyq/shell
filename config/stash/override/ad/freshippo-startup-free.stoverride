@@ -7,7 +7,7 @@ http:
     - acs.m.taobao.com
     - acs-m.freshippo.com
     - gw.alicdn.com
-  rewrite:
+  url-rewrite:
     # 盒马开屏去广告
     - ^https:\/\/acs\.m\.taobao\.com\/gw\/mtop\.wdk\.render\.querysinglepage - reject-200
     - ^https?:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.querysinglepage - reject-200
