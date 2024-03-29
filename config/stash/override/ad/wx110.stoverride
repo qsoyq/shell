@@ -1,7 +1,7 @@
 name: wx110
 desc: |-
   微信 110 解锁
-  脚本收集自 https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js
+    - 脚本收集自 https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js
 category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/WeChat.png
 

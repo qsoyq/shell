@@ -1,5 +1,7 @@
 name: cats-team-ad-rules
-desc: Cats-Team 去广告
+desc: |-
+  Cats-Team 去广告
+  会导致微博国际版白屏， 慎用
 icon: https://avatars.githubusercontent.com/u/88201352?s=48&v=4
 category: Cats-Team
 rule-providers:
