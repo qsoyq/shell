@@ -1,0 +1,13 @@
+name: smzdm-ad-free
+desc: |-
+  什么值得买 iOS端去广告
+    去开屏广告
+    去首页弹窗广告
+category: qsoyq
+icon: https://www.smzdm.com/favicon.ico
+http:
+  mitm:
+    - app-api.smzdm.com
+  url-rewrite:
+    - https://app-api.smzdm.com/util/loading - reject # 开屏广告
+    - https://app-api.smzdm.com/util/update - reject # 弹窗广告 + (热更新?)
