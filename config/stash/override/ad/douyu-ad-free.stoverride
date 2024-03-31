@@ -1,0 +1,15 @@
+name: douyu-ad-free
+desc: |-
+  斗鱼去广告
+    - 去开屏广告
+category: qsoyq
+icon: https://www.douyu.com/favicon.ico
+
+http:
+  mitm:
+    - apiv3.douyucdn.cn
+    - capi.douyucdn.cn
+  url-rewrite:
+    # 斗鱼
+    # - https://apiv3.douyucdn.cn/mgapi/livenc/mhome/getSlidesRecV8 - reject-200 # 首页轮播
+    - https://capi.douyucdn.cn/api/v1/getStartSend - reject-200 # 开屏广告

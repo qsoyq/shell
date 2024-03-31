@@ -11,7 +11,7 @@ const printObj = function(body){
 }
 
 function getBodyArgument(key){
-    if (typeof $argument === undefined){
+    if (typeof $argument === "undefined"){
         return undefined
     }
     let body = JSON.parse($argument)
