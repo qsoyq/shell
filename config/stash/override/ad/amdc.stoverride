@@ -22,7 +22,7 @@ http:
 
   script:
     - match: https?://amdc.m.taobao.com
-      name: "amdc"
+      name: amdc
       type: response
       require-body: true
       max-size: -1
