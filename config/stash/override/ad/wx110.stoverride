@@ -1,7 +1,7 @@
+# https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js
 name: 微信 110 解锁
 desc: |-
     - 对于被微信内置浏览器拉黑的网址发出通知
-    - 脚本收集自 https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js
 category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/WeChat.png
 
