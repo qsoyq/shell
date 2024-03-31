@@ -12,7 +12,8 @@
 # //使用AMDC的APP有：咸鱼、淘宝、盒马、高德、菜鸟、飞猪
 name: AMDC
 desc: |-
-
+  - 阿里系 App 去广告
+  - 使用AMDC的APP有: 咸鱼、淘宝、盒马、高德、菜鸟、飞猪
 category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Alibaba.png
 
