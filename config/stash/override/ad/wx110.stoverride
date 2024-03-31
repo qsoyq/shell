@@ -1,6 +1,6 @@
-name: wx110
+name: 微信 110 解锁
 desc: |-
-  微信 110 解锁
+    - 对于被微信内置浏览器拉黑的网址发出通知
     - 脚本收集自 https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js
 category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/WeChat.png
@@ -11,7 +11,7 @@ http:
     - "security.wechat.com"
 
   script:
-    - match: ^https\:\/\/(weixin110\.qq|security.wechat)\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi\?
+    - match: ^https://(weixin110.qq|security.wechat).com/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi\?
       name: "wx110"
       type: response
       require-body: true

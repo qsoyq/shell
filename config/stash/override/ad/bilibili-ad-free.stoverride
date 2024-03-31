@@ -1,7 +1,6 @@
-name: bilibili-ad-free
+name: 哔哩哔哩去广告
 desc: |-
-  哔哩哔哩去广告
-    - 去开屏广告
+  - 去开屏广告
 category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/bilibili.png
 

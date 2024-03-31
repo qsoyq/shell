@@ -1,8 +1,7 @@
-name: smzdm-ad-free
+name: 什么值得买去广告
 desc: |-
-  什么值得买 iOS端去广告
-    - 去开屏广告
-    - 去首页弹窗广告
+  - 去开屏广告
+  - 去首页弹窗广告
 category: qsoyq
 icon: https://www.smzdm.com/favicon.ico
 http:

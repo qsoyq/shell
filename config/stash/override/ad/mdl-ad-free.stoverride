@@ -1,9 +1,8 @@
-name: mdl-ad-free
+name: 麦当劳去广告
 desc: |-
-  麦当劳去广告
-    - 去除开屏广告
-    - 去除首页弹窗广告
-    - 去除首页热门活动广告
+  - 去除开屏广告
+  - 去除首页弹窗广告
+  - 去除首页热门活动广告
 category: qsoyq
 icon: https://officialwebsitestorage.blob.core.chinacloudapi.cn/public/files/css/favicons/favicon-16x16.png
 

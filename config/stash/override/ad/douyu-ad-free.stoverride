@@ -1,7 +1,6 @@
-name: douyu-ad-free
-desc: |-
-  斗鱼去广告
-    - 去开屏广告
+name: 斗鱼去广告
+desc: |-  
+  - 去开屏广告
 category: qsoyq
 icon: https://www.douyu.com/favicon.ico
 
