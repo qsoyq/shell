@@ -1,5 +1,6 @@
-name: auto-open-nga-in-wechat
-desc: 在微信点开 nga 链接时发出可跳转到 app 的通知
+name: Nga微信解锁
+desc: |-
+  - 在微信点开nga链接时发出可跳转到app的stash通知
 category: qsoyq
 icon: https://bbs.nga.cn/favicon.ico
 http:
