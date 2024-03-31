@@ -7,9 +7,6 @@ http:
   mitm:
     - acs.m.taobao.com
     - acs-m.freshippo.com
-    - gw.alicdn.com
   url-rewrite:
-    # 盒马开屏去广告
-    - ^https:\/\/acs\.m\.taobao\.com\/gw\/mtop\.wdk\.render\.querysinglepage - reject-200
-    - ^https?:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.querysinglepage - reject-200
-    - ^https?:\/\/gw\/alicdn\/com\/imgextra\/i2\/6000000003087\/O1CN01KSOPVz1Yftas4uqTj_!!6000000003087-0-rexmedia\/.jpg - reject
+    - ^https?://acs.m.taobao.com/gw/mtop.wdk.render.querysinglepage - reject
+    - ^https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage - reject
