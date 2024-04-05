@@ -67,14 +67,3 @@ function gather(params, handler, callback){
         callback["catch"](results)
     })
 }
-
-// console.log(``)
-if(typeof $request !== 'undefined'){
-    console.log(`url: ${$request.url}`)
-}
-
-if(typeof $response !== 'undefined'){
-    console.log(`status: ${$response.status}`)
-}
-console.log(`${new Date().toString()}`)
-$done({})
