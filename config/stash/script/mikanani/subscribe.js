@@ -130,6 +130,12 @@ function main(){
                     items.push(element)
                 }
             })
+
+            if (items.length==0){
+                $done({})
+                return 
+            }
+
             gather(items, handler, callback)
         })
     })
