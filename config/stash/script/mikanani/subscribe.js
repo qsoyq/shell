@@ -1,3 +1,4 @@
+const lastPubKey = `${$script.name}lastPub`
 const printObj = function(body){
     for (const key in body) {
         console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
@@ -30,8 +31,8 @@ function gather(items, handler, callback){
     .then((results) => { 
         callback["then"](results)
     })
-    .catch((error) => {
-        callback["catch"](results)
+    .catch((errors) => {
+        callback["catch"](errors)
     })
 }
 
@@ -69,12 +70,29 @@ function handler(item, callback){
         body: payload
     }, (error, response, data)=>{
         if(error){
-            reject(errors)
+            reject(error)
         }else{
             resolve("item resolved")
         }
     })     
 
+}
+const callback = {
+    then: function(results){
+        $done({})
+        // TODO: 优化推送逻辑， 解决当部分推送成功时再次执行可能导致重复推送的问题
+        let current = new Date().getTime()
+        console.log(`执行结束: ${current.toString()}`)
+        $persistentStore.write(current.toString(), lastPubKey)
+    },
+    catch: function(errors){
+        errors.forEach(error=>{
+            console.log(`${error}`)
+        })
+        $done({})
+        let current = new Date().getTime()
+        console.log(`执行结束: ${current.toString()}`)        
+    }
 }
 
 function main(){
@@ -85,24 +103,25 @@ function main(){
         $done({})
         return
     }
-    let lastPubKey = `${$script.name}lastPub`
     let isAlwaysPub = getBodyArgument("isAlwaysPub")
     let url = getBodyArgument("url")
-    $httpClient.get(url, (error, response, data) => {
-        if(error){
-            console.log(`请求 mikan 订阅失败: ${error}`)
+    $httpClient.get(url, (err, _, xmlBody) => {
+        if(err){
+            console.log(`请求 mikan 订阅失败: ${err}`)
             $done({})
             return
         }
         url = "https://proxy-tool.19940731.xyz/api/convert/xml/json"
-        payload = {content: data}
-        $httpClient.post({url: "", headers: {"content-type": "application/json"}, payload}, (error, response, data)=>{
+        let payload = JSON.stringify({content: xmlBody})
+
+        $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{
             if(error){
-                console.log(`xml 转 json 请求失败: ${error}`)
+                console.log(`xml 转 json 请求失败: ${error}, status: ${response.status}`)
                 $done({})
                 return
             }
-            let body = JSON.parse(data)
+            
+            let body = JSON.parse(JSON.parse(data)['content'])
             // 过滤 items, 筛选需要推送的对象
             let lastPubDate = $persistentStore.read(lastPubKey)
             let items = []
@@ -111,22 +130,8 @@ function main(){
                     items.push(element)
                 }
             })
-
-            let callback = {
-                then: function(results){
-                    $done({})
-                    // TODO: 优化推送逻辑， 解决当部分推送成功时再次执行可能导致重复推送的问题
-                    let current = new Date().getTime()
-                    $persistentStore.write(current.toString(), lastPubKey)
-                },
-                catch: function(errors){
-                    errors.forEach(error=>{
-                        console.log(`${error}`)
-                    })
-                    $done({})
-                }
-            }
             gather(items, handler, callback)
         })
     })
 }
+main()
