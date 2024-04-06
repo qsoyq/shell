@@ -16,42 +16,9 @@ const getBarkToken = function(){
     return getBodyArgument("barkToken")
 }
 
-
-
-const pushToStash = (title, subtitle, content, url)=>{
-    $notification.post(title, subtitle, content,{url: url})
-}
-
-const pushToBark = function(title, body, group, copyContent, url, icon, deviceKey){
-    let apiUrl = "https://api.day.app/push" 
-    let payload = {
-        title: title,
-        body: body,
-        group: group,
-        isArchive: "1",
-        copy: copyContent,
-        url: url,
-        icon: icon,
-        device_key: deviceKey,
-        automaticallyCopy: "1"
-    }     
-    payload = JSON.stringify(payload)       
-    $httpClient.post({
-        url: apiUrl,
-        headers: {"content-type": "application/json"},
-        body: payload
-    }, (error, response, data)=>{
-        if(error){
-
-        }else{
-
-        }
-    })
-}  
-
-function gather(params, handler, callback){
+function gather(items, handler, callback){
     let promiseList = []
-    params.forEach(element => {
+    items.forEach(element => {
         task = new Promise((resolve, reject) => {
             handler(element, {resolve: resolve, reject: reject})
         });        
@@ -65,5 +32,101 @@ function gather(params, handler, callback){
     })
     .catch((error) => {
         callback["catch"](results)
+    })
+}
+
+function handler(item, callback){
+    let resolve = callback['resolve']
+    let reject = callback['reject']
+    let barkToken = getBarkToken()
+
+    let apiUrl = "https://api.day.app/push" 
+    let url = "https://mikanani.me/"
+    let group = "Mikanani"
+    let level = "passive"
+    let copyContent = url
+    let icon = "https://mikanani.me/favicon.ico"
+
+    let title = item["title"]
+    let body = item["title"]
+
+    let payload = {
+        title: title,
+        body: body,
+        group: group,
+        isArchive: "1",
+        copy: copyContent,
+        url: url,
+        icon: icon,
+        device_key: barkToken,
+        automaticallyCopy: "1",
+        level: level
+    }     
+    payload = JSON.stringify(payload)       
+    $httpClient.post({
+        url: apiUrl,
+        headers: {"content-type": "application/json"},
+        body: payload
+    }, (error, response, data)=>{
+        if(error){
+            reject(errors)
+        }else{
+            resolve("item resolved")
+        }
+    })     
+
+}
+
+function main(){
+    // let url = "https://mikanani.me/RSS/MyBangumi?token={token}"
+    let barkToken = getBarkToken()
+    if (!barkToken){
+        console.log("bark token 未定义")
+        $done({})
+        return
+    }
+    let lastPubKey = `${$script.name}lastPub`
+    let isAlwaysPub = getBodyArgument("isAlwaysPub")
+    let url = getBodyArgument("url")
+    $httpClient.get(url, (error, response, data) => {
+        if(error){
+            console.log(`请求 mikan 订阅失败: ${error}`)
+            $done({})
+            return
+        }
+        url = "https://proxy-tool.19940731.xyz/api/convert/xml/json"
+        payload = {content: data}
+        $httpClient.post({url: "", headers: {"content-type": "application/json"}, payload}, (error, response, data)=>{
+            if(error){
+                console.log(`xml 转 json 请求失败: ${error}`)
+                $done({})
+                return
+            }
+            let body = JSON.parse(data)
+            // 过滤 items, 筛选需要推送的对象
+            let lastPubDate = $persistentStore.read(lastPubKey)
+            let items = []
+            body['rss']['channel']['item'].forEach(element=>{
+                if (isAlwaysPub || (!lastPubDate) || (Number(lastPubDate) < (new Date(element['torrent']['pubDate']).getTime()) )){
+                    items.push(element)
+                }
+            })
+
+            let callback = {
+                then: function(results){
+                    $done({})
+                    // TODO: 优化推送逻辑， 解决当部分推送成功时再次执行可能导致重复推送的问题
+                    let current = new Date().getTime()
+                    $persistentStore.write(current.toString(), lastPubKey)
+                },
+                catch: function(errors){
+                    errors.forEach(error=>{
+                        console.log(`${error}`)
+                    })
+                    $done({})
+                }
+            }
+            gather(items, handler, callback)
+        })
     })
 }
