@@ -82,7 +82,7 @@ const callback = {
         $done({})
         // TODO: 优化推送逻辑， 解决当部分推送成功时再次执行可能导致重复推送的问题
         let current = new Date().getTime()
-        console.log(`执行结束: ${current.toString()}`)
+        console.log(`执行结束: ${new Date()}`)
         $persistentStore.write(current.toString(), lastPubKey)
     },
     catch: function(errors){
@@ -91,7 +91,7 @@ const callback = {
         })
         $done({})
         let current = new Date().getTime()
-        console.log(`执行结束: ${current.toString()}`)        
+        console.log(`执行结束: ${new Date()}`)
     }
 }
 
@@ -130,7 +130,6 @@ function main(){
                     items.push(element)
                 }
             })
-
             if (items.length==0){
                 $done({})
                 return 
