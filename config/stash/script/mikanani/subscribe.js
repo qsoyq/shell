@@ -79,19 +79,19 @@ function handler(item, callback){
 }
 const callback = {
     then: function(results){
-        $done({})
         // TODO: 优化推送逻辑， 解决当部分推送成功时再次执行可能导致重复推送的问题
         let current = new Date().getTime()
         console.log(`执行结束: ${new Date()}`)
         $persistentStore.write(current.toString(), lastPubKey)
+        $done({})
     },
     catch: function(errors){
         errors.forEach(error=>{
             console.log(`${error}`)
         })
-        $done({})
         let current = new Date().getTime()
         console.log(`执行结束: ${new Date()}`)
+        $done({})
     }
 }
 
@@ -103,8 +103,14 @@ function main(){
         $done({})
         return
     }
-    let isAlwaysPub = getBodyArgument("isAlwaysPub")
     let url = getBodyArgument("url")
+    if (!url){
+        console.log("url 未定义")
+        $done({})
+        return
+    }    
+    
+    let isAlwaysPub = getBodyArgument("isAlwaysPub")
     $httpClient.get(url, (err, _, xmlBody) => {
         if(err){
             console.log(`请求 mikan 订阅失败: ${err}`)
