@@ -53,7 +53,8 @@ payload:
   - '*.quq.world'
   - '+.quq.world'  
   - '*.ip-api.com'
-  - '+.ip-api.com'  
+  - '+.ip-api.com'
+  - '+.fly.io'      
   
   # 19940731.xyz
   - 'telegraph.19940731.xyz'
