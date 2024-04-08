@@ -137,6 +137,7 @@ function main(){
                 }
             })
             if (items.length==0){
+                console.log("暂无番剧更新")
                 $done({})
                 return 
             }
