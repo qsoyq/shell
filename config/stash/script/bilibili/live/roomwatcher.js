@@ -103,8 +103,8 @@ function handler(roomId, ctx){
             let barkToken = getBarkToken()
             let description = removeHtmlTags(unescapeHtml(roomInfo.description))
             let payload = {
-                title: `${anchor.uname} - ${roomInfo.title}`,
-                body: `${description}\n${roomInfo.live_time}`,
+                title: `${anchor.uname}`,
+                body: `${roomInfo.title}\n${description}\n${roomInfo.live_time}`,
                 group: "BilibiliLive",
                 isArchive: "1",
                 copy: liveRoomLink,
