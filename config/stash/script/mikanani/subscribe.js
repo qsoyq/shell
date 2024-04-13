@@ -44,7 +44,7 @@ function handler(item, callback){
     let apiUrl = "https://api.day.app/push" 
     let url = "https://mikanani.me/"
     let group = "Mikanani"
-    let level = "passive"
+    let level = "active"
     let copyContent = url
     let icon = "https://mikanani.me/favicon.ico"
 
