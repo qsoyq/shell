@@ -50,6 +50,9 @@ function handler(item, callback){
 
     let title = item["title"]
     let body = item["title"]
+    if (typeof item["image"] !== "undefined"){
+        icon = item['image']
+    }
 
     let payload = {
         title: title,
@@ -80,8 +83,8 @@ function handler(item, callback){
 const callback = {
     then: function(results){
         // TODO: 优化推送逻辑， 解决当部分推送成功时再次执行可能导致重复推送的问题
-        let current = new Date().getTime()
         console.log(`执行结束: ${new Date()}`)
+        let current = new Date().getTime()
         $persistentStore.write(current.toString(), lastPubKey)
         $done({})
     },
@@ -89,61 +92,50 @@ const callback = {
         errors.forEach(error=>{
             console.log(`${error}`)
         })
-        let current = new Date().getTime()
         console.log(`执行结束: ${new Date()}`)
         $done({})
     }
 }
 
 function main(){
-    // let url = "https://mikanani.me/RSS/MyBangumi?token={token}"
     let barkToken = getBarkToken()
     if (!barkToken){
         console.log("bark token 未定义")
         $done({})
         return
     }
-    let url = getBodyArgument("url")
-    if (!url){
-        console.log("url 未定义")
+    let mikananiToken = getBodyArgument("mikananiToken")
+    if (!mikananiToken){
+        console.log("mikanani token 未定义")
         $done({})
         return
     }    
     
     let isAlwaysPub = getBodyArgument("isAlwaysPub")
-    $httpClient.get(url, (err, _, xmlBody) => {
-        if(err){
-            console.log(`请求 mikan 订阅失败: ${err}`)
+    let url = `https://proxy-tool.19940731.xyz/api/mikanani/rss?token=${mikananiToken}`
+    $httpClient.get({url: url, headers: {"content-type": "application/json"}}, (error, response, data)=>{
+        if(error){
+            console.log(`获取 mikanani rss 订阅失败: ${error}, status: ${response.status}`)
             $done({})
             return
         }
-        url = "https://proxy-tool.19940731.xyz/api/convert/xml/json"
-        let payload = JSON.stringify({content: xmlBody})
-
-        $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{
-            if(error){
-                console.log(`xml 转 json 请求失败: ${error}, status: ${response.status}`)
-                $done({})
-                return
+        
+        let body = JSON.parse(data)
+        // 过滤 items, 筛选需要推送的对象
+        let lastPubDate = $persistentStore.read(lastPubKey)
+        let items = []
+        body['rss']['channel']['item'].forEach(element=>{
+            if (isAlwaysPub || (!lastPubDate) || (Number(lastPubDate) < (new Date(element['torrent']['pubDate']).getTime()) )){
+                items.push(element)
             }
-            
-            let body = JSON.parse(JSON.parse(data)['content'])
-            // 过滤 items, 筛选需要推送的对象
-            let lastPubDate = $persistentStore.read(lastPubKey)
-            let items = []
-            body['rss']['channel']['item'].forEach(element=>{
-                if (isAlwaysPub || (!lastPubDate) || (Number(lastPubDate) < (new Date(element['torrent']['pubDate']).getTime()) )){
-                    items.push(element)
-                }
-            })
-            if (items.length==0){
-                console.log("暂无番剧更新")
-                $done({})
-                return 
-            }
-
-            gather(items, handler, callback)
         })
-    })
+        if (items.length==0){
+            console.log("暂无番剧更新")
+            $done({})
+            return 
+        }
+
+        gather(items, handler, callback)
+    })    
 }
 main()
