@@ -1,0 +1,12 @@
+name: 淘宝去广告
+desc: |-
+  - 去除开屏广告
+category: qsoyq
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Taobao.png
+
+http:
+  mitm:
+    - gw.alicdn.com
+    - heic.alicdn.com
+  url-rewrite:
+    - ^https:\/\/(gw|heic)\.alicdn\.com\/imgextra\/i\d\/\d*\/?[\w!]+-\d-(octopus|tps-1125-1602)\.(jp|pn)g_(1\d{3}|9\d{2})x(1\d{3}|9\d{2})q[59]0 - reject # 开屏广告
