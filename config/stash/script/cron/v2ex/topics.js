@@ -49,7 +49,7 @@ function handler(topic, callback){
     let nodeName = topic["node"]["title"]
     let title = `V2ex ${nodeName} 有新帖子`
     let group = `V2ex-Node-${nodeName}`
-    let body = `${topic["title"]}\n创建时间${topic["createdStr"]}\n最后一次回复:${topic["lastTouchedStr"]}\nurl:${url}`
+    let body = `${topic["title"]}\n创建${topic["createdStr"]}\n回复:${topic["lastTouchedStr"]}\nurl:${url}`
     let payload = {
         title: title,
         body: body,
