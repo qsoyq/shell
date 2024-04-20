@@ -43,12 +43,18 @@ function handler(thread, callback){
 
     let apiUrl = "https://api.day.app/push" 
     let url = thread["ios_open_scheme_url"]
-    let group = "NGA"
-    let level = "active"
+    
+    let level = getBodyArgument("level") ? getBodyArgument("level") : "active"
     let copyContent = url
     let icon = ""
 
-    let title = "NGA 有新帖子发布了"
+    let name = getBodyArgument("name") ? getBodyArgument("name") : ""
+    let title = `NGA ${name}有新帖子发布了`
+    let group = "NGA"
+    if (name){
+        group = `NGA-${name}`
+    }
+
     let body = thread["subject"]
     if (typeof thread["image"] !== "undefined"){
         icon = thread['image']
@@ -147,7 +153,6 @@ function main(){
         body['threads'].forEach(t=>{
             let lastPubKey = `${$script.name}lastPub${t["tid"]}`
             let lastPubDate = $persistentStore.read(lastPubKey)
-            console.log(`${t["tid"]} lastPubKey: ${lastPubKey}`)
             if (isAlwaysPub || (!lastPubDate)){
                 threads.push(t)
             }
