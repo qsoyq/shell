@@ -85,7 +85,7 @@ function handler(thread, callback){
             let lastPubKey = `${$script.name}lastPub${thread["tid"]}`
             let current = new Date().getTime()
             $persistentStore.write(current.toString(), lastPubKey)
-            resolve(`${t["subject"]} 推送成功`)
+            resolve(`${thread["subject"]} 推送成功`)
         }
     })     
 }
