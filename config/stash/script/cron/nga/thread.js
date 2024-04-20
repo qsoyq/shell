@@ -1,4 +1,3 @@
-const lastPubKey = `${$script.name}lastPub`
 const printObj = function(body){
     for (const key in body) {
         console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
