@@ -50,13 +50,13 @@ function handler(thread, callback){
     let icon = ""
 
     let name = getBodyArgument("name") ? getBodyArgument("name") : ""
-    let title = `NGA ${name}有新帖子发布了`
+    let title = `NGA ${name} 收藏的主题有新的回复啦`
     let group = "NGA"
     if (name){
-        group = `NGA-${name}`
+        group = `NGA-favor-${thread["tid"]}`
     }
 
-    let body = `${thread["subject"]}\nurl:${thread["url"]}\n${thread["ios_app_scheme_url"]}`
+    let body = `${thread["subject"]}\n发布时间: ${thread["postdateStr"]}\n更新时间: ${thread["lastpostStr"]}\nurl:${thread["url"]}\n${thread["ios_app_scheme_url"]}`
     if (typeof thread["image"] !== "undefined"){
         icon = thread['image']
     }
@@ -82,8 +82,10 @@ function handler(thread, callback){
         if(error){
             reject(error)
         }else{
-            let lastPubKey = `${$script.name}lastPub${thread["tid"]}`
-            resolve(lastPubKey)
+            let lastPubKey = `${$script.name}lastPub${t["tid"]}`
+            let current = new Date().getTime()
+            $persistentStore.write(current.toString(), lastPubKey)
+            resolve(`${t["subject"]} 推送成功`)
         }
     })     
 }
@@ -94,8 +96,6 @@ const callback = {
 
         results.forEach(lastPubKey=>{
             console.log(`执行结束: ${new Date()}`)
-            let current = new Date().getTime()
-            $persistentStore.write(current.toString(), lastPubKey)
         })
 
         $done({})
@@ -118,8 +118,8 @@ function main(){
         return
     }
 
-    let fid = getBodyArgument("fid")
-    if (!fid){
+    let favor = getBodyArgument("favor")
+    if (!favor){
         console.log("fid 未定义")
         $done({})
         return
@@ -140,7 +140,7 @@ function main(){
     }    
     
     let isAlwaysPub = getBodyArgument("isAlwaysPub")
-    let url = `https://proxy-tool.19940731.xyz/api/nga/threads?fid=${fid}&order_by=lastpostdesc`
+    let url = `https://proxy-tool.19940731.xyz/api/nga/threads?favor=${favor}&order_by=lastpostdesc`
     $httpClient.get({url: url, headers: {"content-type": "application/json", "uid": uid, "cid": cid}}, (error, response, data)=>{
         if(error){
             console.log(`获取 nga 帖子失败: ${error}, status: ${response.status}`)
@@ -154,7 +154,7 @@ function main(){
         body['threads'].forEach(t=>{
             let lastPubKey = `${$script.name}lastPub${t["tid"]}`
             let lastPubDate = $persistentStore.read(lastPubKey)
-            if (isAlwaysPub || (!lastPubDate)){
+            if (isAlwaysPub || (!lastPubDate) || (Number(lastPubDate) < (new Date(t["lastpostStr"]).getTime()))){
                 threads.push(t)
             }
         })
