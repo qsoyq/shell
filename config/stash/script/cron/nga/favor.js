@@ -82,7 +82,7 @@ function handler(thread, callback){
         if(error){
             reject(error)
         }else{
-            let lastPubKey = `${$script.name}lastPub${t["tid"]}`
+            let lastPubKey = `${$script.name}lastPub${thread["tid"]}`
             let current = new Date().getTime()
             $persistentStore.write(current.toString(), lastPubKey)
             resolve(`${t["subject"]} 推送成功`)
