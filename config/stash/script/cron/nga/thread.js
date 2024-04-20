@@ -42,7 +42,8 @@ function handler(thread, callback){
     let barkToken = getBarkToken()
 
     let apiUrl = "https://api.day.app/push" 
-    let url = thread["ios_open_scheme_url"]
+    // let url = thread["ios_open_scheme_url"]
+    let url = thread["ios_app_scheme_url"]
     
     let level = getBodyArgument("level") ? getBodyArgument("level") : "active"
     let copyContent = url
@@ -55,7 +56,7 @@ function handler(thread, callback){
         group = `NGA-${name}`
     }
 
-    let body = thread["subject"]
+    let body = `${thread["subject"]}\n${thread["ios_app_scheme_url"]}`
     if (typeof thread["image"] !== "undefined"){
         icon = thread['image']
     }
