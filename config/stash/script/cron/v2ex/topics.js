@@ -42,7 +42,7 @@ function handler(topic, callback){
     let barkToken = getBarkToken()
 
     let apiUrl = "https://api.day.app/push" 
-    let url = topic["url"]
+    let url = typeof topic["v2fun_urlscheme"] !== 'undefined' ? topic["v2fun_urlscheme"] : topic["url"]
     let level = getBodyArgument("level") ? getBodyArgument("level") : "active"
     let copyContent = url
     let icon = topic["node"]["avatar"]
