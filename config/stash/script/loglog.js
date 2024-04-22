@@ -1,3 +1,12 @@
+function getLocalDateString(date){
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `${year}-${month}-${day} ${hours}-${minutes}`
+}
+
 const printObj = function(body){
     for (const key in body) {
         console.log(`    ==> Key: ${key}, Value: ${body[key]}`);

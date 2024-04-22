@@ -1,3 +1,12 @@
+function getLocalDateString(date){
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `${year}-${month}-${day} ${hours}:${minutes}`
+}
+
 const printObj = function(body){
     for (const key in body) {
         console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
@@ -52,8 +61,9 @@ function handler(thread, callback){
     let name = getBodyArgument("name") ? getBodyArgument("name") : ""
     let title = `NGA ${name}有新帖子发布了`
     let group = "NGA"
+    let dateString = getLocalDateString(new Date())
     if (name){
-        group = `NGA-${name}`
+        group = `NGA-${name}-${dateString}`
     }
 
     let body = `${thread["subject"]}\nurl:${thread["url"]}\n${thread["ios_app_scheme_url"]}`
