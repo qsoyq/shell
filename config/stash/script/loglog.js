@@ -4,7 +4,7 @@ function getLocalDateString(date){
     const day = date.getDate();
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    return `${year}-${month}-${day} ${hours}-${minutes}`
+    return `${year}-${month}-${day} ${hours}:${minutes}`
 }
 
 const printObj = function(body){
