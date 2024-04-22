@@ -4,7 +4,7 @@ function getLocalDateString(date){
     const day = date.getDate();
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    return `${year}-${month}-${day} ${hours}:${minutes}`
+    return `${year}-${month}-${day} ${hours}`
 }
 
 const printObj = function(body){
@@ -63,6 +63,7 @@ function handler(thread, callback){
     let group = "NGA"
     let dateString = getLocalDateString(new Date())
     if (name){
+        // 通知按分区和小时分组
         group = `NGA-${name}-${dateString}`
     }
 
