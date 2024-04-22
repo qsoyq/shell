@@ -1,3 +1,15 @@
+function randomChar(num) {
+    const min = 65; // 'A' 的 ASCII 码
+    const max = 90; // 'Z' 的 ASCII 码
+    let chars = []
+    for(let i=0; i<num;i++){
+        let char = String.fromCharCode(Math.floor(Math.random() * (max - min + 1)) + min)
+        chars.push(char)
+    }
+    
+    return chars.join("")
+}
+
 function getLocalDateString(date){
     const year = date.getFullYear();
     const month = date.getMonth() + 1;

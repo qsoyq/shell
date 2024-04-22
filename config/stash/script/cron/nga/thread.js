@@ -1,3 +1,15 @@
+function randomChar(num) {
+    const min = 65; // 'A' 的 ASCII 码
+    const max = 90; // 'Z' 的 ASCII 码
+    let chars = []
+    for(let i=0; i<num;i++){
+        let char = String.fromCharCode(Math.floor(Math.random() * (max - min + 1)) + min)
+        chars.push(char)
+    }
+    
+    return chars.join("")
+}
+
 function getLocalDateString(date){
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -61,13 +73,20 @@ function handler(thread, callback){
     let name = getBodyArgument("name") ? getBodyArgument("name") : ""
     let title = `NGA ${name}有新帖子发布了`
     let group = "NGA"
+
     let dateString = getLocalDateString(new Date())
     if (name){
         // 通知按分区和小时分组
         group = `NGA-${name}-${dateString}`
+
+        if (typeof thread["_group"] !== "undefined"){
+            group = `NGA-${name}-${thread['_group']}`
+        }
     }
 
+
     let body = `${thread["subject"]}\nurl:${thread["url"]}\n${thread["ios_app_scheme_url"]}`
+
     if (typeof thread["image"] !== "undefined"){
         icon = thread['image']
     }
@@ -161,10 +180,11 @@ function main(){
         
         let body = JSON.parse(data)
         let threads = []
-
+        let _group = randomChar(16) // 用于标记本次推送的分组
         body['threads'].forEach(t=>{
             let lastPubKey = `${$script.name}lastPub${t["tid"]}`
             let lastPubDate = $persistentStore.read(lastPubKey)
+            t["_group"] = _group
             if (isAlwaysPub || (!lastPubDate)){
                 threads.push(t)
             }
