@@ -9,13 +9,13 @@ http:
     - ngabbs.com
   script:
     - match: https://(bbs.nga.cn|ngabbs.com)/read.php
-      name: auto-open-nga-in-wechat
+      name: "NGA-微信内通知提醒插件"
       type: request
       require-body: false
       timeout: 5
       argument: ''
 
 script-providers:
-  auto-open-nga-in-wechat:
+  "NGA-微信内通知提醒插件":
     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/nga/auto_open_nga_in_wechat.js
     interval: 86400

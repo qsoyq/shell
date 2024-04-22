@@ -29,8 +29,10 @@ function main(){
         return 
     }
     let ngaUrl = `nga://opentype=2?tid=${tid}&`
+    // https://proxy-tool.19940731.xyz/redoc#tag/network.url/operation/redirect_api_network_url_redirect_get
     let openUrl = `https://proxy-tool.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(ngaUrl)}`
     $notification.post("Nga", ngaUrl, ngaUrl, {url: openUrl})
+    // $notification.post("Nga", ngaUrl, ngaUrl, {url: ngaUrl})
 }
 
 main()
