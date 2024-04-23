@@ -161,6 +161,13 @@ function main(){
         console.log("uid 未定义")
         $done({})
         return
+    }
+    
+    let name = getBodyArgument("name")
+    if (!name){
+        console.log("name 未定义")
+        $done({})
+        return
     }    
     
     let isAlwaysPub = getBodyArgument("isAlwaysPub")
@@ -177,7 +184,6 @@ function main(){
 
         let group = ''
         let groupBy = getBodyArgument("groupBy")
-        
         if (typeof groupBy === 'string' && groupBy === 'name'){
             let name = getBodyArgument('name')
             if(name){
