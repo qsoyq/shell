@@ -57,7 +57,7 @@ function gather(items, handler, callback){
 }
 
 function handler(thread, callback){
-    console.log(`处理帖子 tid: ${thread["tid"]}, subject: ${thread["subject"]}`)
+    console.log(`处理帖子 tid: ${thread["tid"]}, subject: ${thread["subject"]}, group: ${thread["_group"]}`)
     let resolve = callback['resolve']
     let reject = callback['reject']
     let barkToken = getBarkToken()
