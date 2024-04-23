@@ -74,14 +74,8 @@ function handler(thread, callback){
     let title = `NGA ${name}有新帖子发布了`
     let group = "NGA"
 
-    let dateString = getLocalDateString(new Date())
-    if (name){
-        // 通知按分区和小时分组
-        group = `NGA-${name}-${dateString}`
-
-        if (typeof thread["_group"] !== "undefined"){
-            group = `NGA-${name}-${thread['_group']}`
-        }
+    if (typeof thread["_group"] !== "undefined"){
+        group = thread['_group']
     }
 
 
@@ -180,11 +174,23 @@ function main(){
         
         let body = JSON.parse(data)
         let threads = []
-        let _group = randomChar(16) // 用于标记本次推送的分组
+
+        let group = ''
+        let groupBy = getBodyArgument("groupBy")
+        
+        if (typeof groupBy === 'string' && groupBy === 'name'){
+            let name = getBodyArgument('name')
+            if(name){
+                group = `NGA-${name}`
+            }
+        }else{
+            group = randomChar(16) // 用于标记本次推送的分组
+        }        
+
         body['threads'].forEach(t=>{
             let lastPubKey = `${$script.name}lastPub${t["tid"]}`
             let lastPubDate = $persistentStore.read(lastPubKey)
-            t["_group"] = _group
+            t['_group'] = group
             if (isAlwaysPub || (!lastPubDate)){
                 threads.push(t)
             }

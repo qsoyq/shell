@@ -102,13 +102,14 @@ function handler(roomId, ctx){
         const pushToBark = function(){
             let barkToken = getBarkToken()
             let description = removeHtmlTags(unescapeHtml(roomInfo.description))
+            let openLiveRoom = `bilibili://live/${roomId}`
             let payload = {
                 title: `${anchor.uname}`,
                 body: `${roomInfo.title}\n${description}\n${roomInfo.live_time}`,
                 group: "BilibiliLive",
                 isArchive: "1",
                 copy: liveRoomLink,
-                url: liveRoomLink,
+                url: openLiveRoom,
                 icon: anchor.face,
                 device_key: barkToken,
                 automaticallyCopy: "1"
