@@ -69,8 +69,18 @@ function handler(thread, callback){
     let level = getBodyArgument("level") ? getBodyArgument("level") : "active"
     let copyContent = url
     let icon = ""
+    let name = ""
 
-    let name = getBodyArgument("name") ? getBodyArgument("name") : ""
+    if (typeof thread["fname"] !== "undefined"){
+        name = thread['fname']
+    }else{
+        name = getBodyArgument("name") ? getBodyArgument("name") : ""
+    } 
+    
+    if (typeof thread["icon"] !== "undefined"){
+        icon = thread['icon']
+    }    
+    
     let title = `NGA ${name}有新帖子发布了`
     let group = "NGA"
 
@@ -81,9 +91,7 @@ function handler(thread, callback){
 
     let body = `${thread["subject"]}\nurl:${thread["url"]}\n${thread["ios_app_scheme_url"]}`
 
-    if (typeof thread["image"] !== "undefined"){
-        icon = thread['image']
-    }
+
 
     let payload = {
         title: title,

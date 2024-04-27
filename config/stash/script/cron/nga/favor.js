@@ -57,8 +57,8 @@ function handler(thread, callback){
     }
 
     let body = `${thread["subject"]}\n发布时间: ${thread["postdateStr"]}\n更新时间: ${thread["lastpostStr"]}\nurl:${thread["url"]}\n${thread["ios_app_scheme_url"]}`
-    if (typeof thread["image"] !== "undefined"){
-        icon = thread['image']
+    if (typeof thread["icon"] !== "undefined"){
+        icon = thread['icon']
     }
 
     let payload = {
