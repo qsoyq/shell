@@ -29,7 +29,7 @@ function ifPush(topic){
     let lastReplies = $persistentStore.read(key)
     let topicReplies = topic['replies']
     // console.log(`debug ${lastReplies}, ${topicReplies}`)
-    if (isAlwaysPub || (!lastReplies) || (Number(lastReplies) < (topicReplies))){
+    if (isAlwaysPub || (typeof lastReplies === "undefined") || (Number(lastReplies) < (topicReplies))){
         return true
     }
     return false
