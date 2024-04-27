@@ -32,11 +32,12 @@ function ifPush(tid, last_touched){
     }
     key = getPersistentKey(tid)
     let lastPub = $persistentStore.read(key)
+    console.log(`tid: ${tid}, lastPub: ${lastPub}`)
     if(!lastPub){
         return true
     }
     // 接口返回的是秒级时间戳
-    if ((new Date(lastPub).getTime()) >= (last_touched * 1000)){
+    if ((new Date(lastPub).getTime()) < (last_touched * 1000)){
         return true
     }
     return false
