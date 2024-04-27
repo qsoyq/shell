@@ -103,7 +103,7 @@ function main(){
                 return 
             }
             let current = new Date().toString()
-            messages.forEach(element=>{
+            topics.forEach(element=>{
                 key = getPersistentKey(element['id'])
                 $persistentStore.write(current, key)
             })
