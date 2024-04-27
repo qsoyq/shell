@@ -4,6 +4,10 @@ barkToken
 isAlwaysPub
 {"isAlwaysPub":false, "barkToken":"","sessionKey":""}
 */
+
+function getPersistentKey(tid){
+    return `${$script.name}-${tid}`
+}
 const printObj = function(body){
     for (const key in body) {
         console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
@@ -26,7 +30,7 @@ function ifPush(tid, last_touched){
     if (getBodyArgument("isAlwaysPub")){
         return true
     }
-    key = `${$script.name}-${tid}`
+    key = getPersistentKey(tid)
     let lastPub = $persistentStore.read(key)
     if(!lastPub){
         return true
@@ -94,13 +98,17 @@ function main(){
         let url = "https://proxy-tool.19940731.xyz/api/notifications/push"
         $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{
             if (error){
-                console.log(`推送消失失败: ${error}`)
+                console.log(`推送消息失败: ${error}`)
                 $done({})
                 return 
             }
+            let current = new Date().toString()
+            messages.forEach(element=>{
+                key = getPersistentKey(element['id'])
+                $persistentStore.write(current, key)
+            })
             $done({})
         })
     })
 }
-
 main()
