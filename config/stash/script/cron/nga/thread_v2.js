@@ -28,7 +28,7 @@ function ifPush(element){
     let key = getPersistentKey(element["tid"])
     let lastPubDate = $persistentStore.read(key)
     let threadLastPost = element['lastpost']
-    console.log(`debug: ${element["subject"]} ${lastPubDate} ${threadLastPost}`)
+    // console.log(`debug: ${element["subject"]} ${lastPubDate} ${threadLastPost}`)
     if (isAlwaysPub || (!lastPubDate) || (new Date(lastPubDate).getTime() < (threadLastPost*1000))){
         return true
     }
