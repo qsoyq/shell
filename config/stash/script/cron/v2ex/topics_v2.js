@@ -29,7 +29,7 @@ function ifPush(topic){
     let lastReplies = $persistentStore.read(key)
     let topicReplies = topic['replies']
     // console.log(`debug ${lastReplies}, ${topicReplies}`)
-    if (isAlwaysPub || (typeof lastReplies === "undefined") || (Number(lastReplies) < (topicReplies))){
+    if (isAlwaysPub || (typeof lastReplies === "undefined")){
         return true
     }
     return false
@@ -47,7 +47,7 @@ function makeMessages(items){
         let payload = {
             device_key: device_key,
             title: `V2ex ${topic["node"]["title"]} 有新帖子`,
-            body: `${topic["title"]}\n回复数:${topic["replies"]}\n创建${topic["createdStr"]}\n回复时间:${topic["lastTouchedStr"]}\nurl:${topic["url"]}`,
+            body: `${topic["title"]}\n回复数:${topic["replies"]}\n创建${topic["createdStr"]}\n回复时间:${topic["lastModifiedStr"]}\nurl:${topic["url"]}`,
             level: "passive",
             group: `V2ex-Node-${topic["node"]["title"]}`,
             url: typeof topic["v2fun_urlscheme"] !== 'undefined' ? topic["v2fun_urlscheme"] : topic["url"],

@@ -29,7 +29,7 @@ function ifPush(element){
     let lastPubDate = $persistentStore.read(key)
     let threadLastPost = element['lastpost']
     // console.log(`debug: ${element["subject"]} ${lastPubDate} ${threadLastPost}`)
-    if (isAlwaysPub || (!lastPubDate) || (new Date(lastPubDate).getTime() < (threadLastPost*1000))){
+    if (isAlwaysPub || (!lastPubDate)){
         return true
     }
     return false
@@ -53,7 +53,7 @@ function makeMessages(items){
         let payload = {
             device_key: device_key,
             title: `NGA ${item["fname"]} 有新帖子发布了`,
-            body: `${item["subject"]}\nurl:${item["url"]}\n${item["ios_app_scheme_url"]}`,
+            body: `${item["subject"]}\n创建时间:${item["postdateStr"]}\n回复时间:${item["lastpostStr"]}url:${item["url"]}\n${item["ios_app_scheme_url"]}`,
             level: "passive",
             group: group,
             url: `${item["ios_app_scheme_url"]}`,
