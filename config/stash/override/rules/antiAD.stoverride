@@ -1,6 +1,6 @@
 name: antiad
 desc: 基于规则分流
-category: rules
+category: privacy-protection-tools
 icon: "https://avatars.githubusercontent.com/u/58900766?s=48&v=4"
 rule-providers:
   anti-AD:
