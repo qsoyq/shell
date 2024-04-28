@@ -20,3 +20,4 @@ dns:
     - '*.msftncsi.com'
     - '*.msftconnecttest.com'
     - '*.mcdn.bilivideo.cn'
+    - '*.qidian.com'
