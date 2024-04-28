@@ -53,7 +53,7 @@ function makeMessages(items){
         let payload = {
             device_key: device_key,
             title: `NGA ${item["fname"]} 有新帖子发布了`,
-            body: `${item["subject"]}\n创建时间:${item["postdateStr"]}\n回复时间:${item["lastpostStr"]}url:${item["url"]}\n${item["ios_app_scheme_url"]}`,
+            body: `${item["subject"]}\n创建时间:${item["postdateStr"]}\n回复时间:${item["lastpostStr"]}\nurl:${item["url"]}\n${item["ios_app_scheme_url"]}`,
             level: "passive",
             group: group,
             url: `${item["ios_app_scheme_url"]}`,
