@@ -8,7 +8,7 @@ http:
     - bbs.nga.cn
     - ngabbs.com
   script:
-    - match: https://(bbs.nga.cn|ngabbs.com)/read.php
+    - match: https://(bbs.nga.cn|ngabbs.com|nga.178.com)/read.php
       name: "NGA-微信内通知提醒插件"
       type: request
       require-body: false
