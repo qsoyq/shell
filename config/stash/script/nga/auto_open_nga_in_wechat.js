@@ -25,6 +25,7 @@ function main(){
     let resp = {}
     let cid = getBodyArgument("cid")
     let uid = getBodyArgument("uid")
+    let openApp = getBodyArgument("oepnApp")
     if(cid && uid){
         cookies=`ngaPassportUid=${uid}; ngaPassportCid=${cid}`
         resp["headers"] = {"Cookie": cookies}
@@ -51,7 +52,9 @@ function main(){
     let ngaUrl = `nga://opentype=2?tid=${tid}&`
     // https://proxy-tool.19940731.xyz/redoc#tag/network.url/operation/redirect_api_network_url_redirect_get
     let openUrl = `https://proxy-tool.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(ngaUrl)}`
-    $notification.post("Nga", ngaUrl, ngaUrl, {url: openUrl})
+    if(openApp){
+        $notification.post("Nga", ngaUrl, ngaUrl, {url: openUrl})
+    }
     $done(resp)
     // $notification.post("Nga", ngaUrl, ngaUrl, {url: ngaUrl})
 }
