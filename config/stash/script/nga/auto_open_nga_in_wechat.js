@@ -23,14 +23,6 @@ function main(){
     // printObj($request.headers)
 
     let resp = {}
-    let cid = getBodyArgument("cid")
-    let uid = getBodyArgument("uid")
-    let disableOpenApp = getBodyArgument("disableOpenApp")
-    if(cid && uid){
-        cookies=`ngaPassportUid=${uid}; ngaPassportCid=${cid}`
-        resp["headers"] = {"Cookie": cookies}
-    }
-
     let url = $request.url
     console.log(`url: ${$request.url}`)
     let ua = $request.headers["User-Agent"]
@@ -39,6 +31,14 @@ function main(){
         $done(resp)
         return
     }
+
+    let cid = getBodyArgument("cid")
+    let uid = getBodyArgument("uid")
+    
+    if(cid && uid){
+        cookies=`ngaPassportUid=${uid}; ngaPassportCid=${cid}`
+        resp["headers"] = {"Cookie": cookies}
+    }    
     let tid = getUrlArgument(url, "tid")
     let rand = getUrlArgument(url, "rand")
     if(!tid){
@@ -52,6 +52,7 @@ function main(){
     let ngaUrl = `nga://opentype=2?tid=${tid}&`
     // https://proxy-tool.19940731.xyz/redoc#tag/network.url/operation/redirect_api_network_url_redirect_get
     let openUrl = `https://proxy-tool.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(ngaUrl)}`
+    let disableOpenApp = getBodyArgument("disableOpenApp")
     if(!disableOpenApp){
         $notification.post("Nga", ngaUrl, ngaUrl, {url: openUrl})
     }
