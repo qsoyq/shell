@@ -44,13 +44,14 @@ function makeMessages(items){
     let messages = []
     for(let i=0;i<items.length;i++){
         let topic = items[i]
+        let openUrl = typeof topic["v2fun_urlscheme"] !== 'undefined' ? topic["v2fun_urlscheme"] : topic["url"]
         let payload = {
             device_key: device_key,
             title: `V2ex ${topic["node"]["title"]} 有新帖子`,
-            body: `${topic["title"]}\n回复数:${topic["replies"]}\n创建${topic["createdStr"]}\n回复时间:${topic["lastTouchedStr"]}\nurl:${topic["url"]}`,
+            body: `${topic["title"]}\n回复数:${topic["replies"]}\n创建${topic["createdStr"]}\n回复时间:${topic["lastTouchedStr"]}\nurl:${topic["url"]}\nv2fun:${openUrl}`,
             level: "passive",
             group: `V2ex-Node-${topic["node"]["title"]}`,
-            url: typeof topic["v2fun_urlscheme"] !== 'undefined' ? topic["v2fun_urlscheme"] : topic["url"],
+            url: openUrl,
             icon: topic["node"]["avatar"]
         }   
         messages.push({"bark": payload})
