@@ -1,0 +1,17 @@
+name: mac 电量磁贴
+desc: 用于显示指定设备的电量信息
+category: tiles
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png
+
+tiles:
+  - name: mbp-battery-tile
+    argument: '{"key":"wangqishengdeMacBook-Pro.local"}'
+    title: "初始化中"
+    content: "初始化中"
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png    
+    interval: 300    
+
+script-providers:
+  mbp-battery-tile:
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/tiles/battery.js
+    interval: 86400
