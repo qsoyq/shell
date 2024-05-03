@@ -9,6 +9,7 @@ tiles:
     title: "初始化中"
     content: "初始化中"
     icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png    
+    backgroundColor: "#178BD8"
     interval: 300    
 
 script-providers:

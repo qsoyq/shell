@@ -10,5 +10,7 @@ tiles:
     interval: 3600
 script-providers:
   currency-exchange-rate:
-    url: https://raw.githubusercontent.com/deezertidal/Surge_Module/master/files/rates.js
+    # url: https://raw.githubusercontent.com/deezertidal/Surge_Module/master/files/rates.js
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/tiles/rates.js
+    
     interval: 86400
