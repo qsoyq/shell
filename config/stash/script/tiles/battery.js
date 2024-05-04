@@ -32,8 +32,12 @@ function main(){
             if (body["state"]["content"]){
                 let updated = getLocalDateString(new Date(body["state"]["updated"] * 1000))
                 let content = `电量: ${body["state"]["content"]["battery"]}\n系统: ${body["state"]["content"]["system"]}\n更新时间: ${updated}`
+                let icon = getBodyArgument("icon")
                 object["title"] = `${body["state"]["content"]["hostname"]}`
                 object["content"] = content
+                if(icon){
+                    object['icon'] = icon
+                }
             }
         }
         $done(object)
