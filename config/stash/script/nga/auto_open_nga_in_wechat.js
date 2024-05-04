@@ -36,8 +36,9 @@ function main(){
     let uid = getBodyArgument("uid")
     
     if(cid && uid){
-        cookies=`ngaPassportUid=${uid}; ngaPassportCid=${cid}`
+        let cookies=`ngaPassportUid=${uid}; ngaPassportCid=${cid}`
         resp["headers"] = {"Cookie": cookies}
+        console.log(`Modify the request header to add the login state, cookies: ${cookies}`)
     }    
     let tid = getUrlArgument(url, "tid")
     let rand = getUrlArgument(url, "rand")
