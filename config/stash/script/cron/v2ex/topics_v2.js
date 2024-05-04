@@ -51,7 +51,7 @@ function makeMessages(items){
             body: `${topic["title"]}\n回复数:${topic["replies"]}\n创建${topic["createdStr"]}\n回复时间:${topic["lastTouchedStr"]}\nurl:${topic["url"]}\nv2fun:${openUrl}`,
             level: "passive",
             group: `V2ex-Node-${topic["node"]["title"]}`,
-            url: openUrl,
+            // url: openUrl,
             icon: topic["node"]["avatar"]
         }   
         messages.push({"bark": payload})

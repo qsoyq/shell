@@ -56,7 +56,7 @@ function makeMessages(items){
             body: `${item["subject"]}\n创建时间:${item["postdateStr"]}\n回复时间:${item["lastpostStr"]}\nurl:${item["url"]}\n${item["ios_app_scheme_url"]}`,
             level: "passive",
             group: group,
-            url: `${item["ios_app_scheme_url"]}`,
+            // url: `${item["ios_app_scheme_url"]}`,
             icon: typeof item["icon"] !== "undefined"? item["icon"] : "",
         }   
 
