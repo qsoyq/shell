@@ -20,9 +20,10 @@ function getUrlArgument(string, key){
 }
 
 function getBlodid(url){
-    let index = url.lastIndexOf('/')
+    url = new URL(url)
+    let index = url.pathname.lastIndexOf('/')
     if(index !== -1){
-        return url.substring(index + 1);
+        return url.pathname.substring(index + 1);
     }
     return null
 }
@@ -32,11 +33,12 @@ function main(){
     let resp = {}
     let url = $request.url
     console.log(`url: ${$request.url}`)
-    const isFromWechat = /MicroMessenger/.test(ua);
-    if(!isFromWechat){
-        $done(resp)
-        return
-    }
+    // let ua = $request.headers["User-Agent"]
+    // const isFromWechat = /MicroMessenger/.test(ua);
+    // if(!isFromWechat){
+    //     $done(resp)
+    //     return
+    // }
     let blogid = getBlodid(url)
     if(!blogid){
         console.error(`获取 blogid 失败, 当前 url: ${url}`)
