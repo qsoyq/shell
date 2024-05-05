@@ -1,0 +1,20 @@
+name: 微信内微博跳转到微信国际版
+desc: |-
+  - 在微信点开微博链接时跳转到微博国际版
+category: qsoyq
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
+http:
+  mitm:
+    - weibo.com
+  script:
+    - match: https://(weibo.com)/\d+/\w+
+      name: "微博-微信内微博跳转微博国际版"
+      type: request
+      require-body: false
+      timeout: 5
+      argument: ''
+
+script-providers:
+  "微博-微信内微博跳转微博国际版":
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/weibo/goto_weibointernational_detail.js
+    interval: 86400
