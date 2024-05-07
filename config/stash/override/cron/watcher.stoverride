@@ -1,0 +1,16 @@
+name: Web页面监控
+desc: |-
+  - https://bitwarden.19940731.xyz
+category: qsoyq
+# icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
+cron:
+  script:
+    - name: 网页运行监控
+      cron: '*/1 * * * *'
+      timeout: 300
+      argument: >-
+        {"url": "https://bitwarden.19940731.xyz"}
+script-providers:
+  "网页运行监控":
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+    interval: 86400
