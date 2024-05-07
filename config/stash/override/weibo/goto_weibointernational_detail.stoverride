@@ -8,7 +8,7 @@ http:
     # - weibo.com
     - m.weibo.cn
   script:
-    - match: https://(m.weibo.cn)/\d+/\w+
+    - match: https://(m.weibo.cn)/\w+/\d+
       name: "微博-微信内微博跳转微博国际版"
       type: request
       require-body: false
