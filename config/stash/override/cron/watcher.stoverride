@@ -1,16 +1,28 @@
 name: Web页面监控
 desc: |-
   - https://bitwarden.19940731.xyz
+  - https://proxy-tool.19940731.xyz/openapi.json
 category: qsoyq
 # icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
 cron:
   script:
-    - name: 网页运行监控
-      cron: '*/1 * * * *'
+    - name: 网页运行监控01
+      cron: '*/5 * * * *'
       timeout: 300
       argument: >-
         {"url": "https://bitwarden.19940731.xyz"}
+
+    - name: 网页运行监控02
+      cron: '*/5 * * * *'
+      timeout: 300
+      argument: >-
+        {"url": "https://proxy-tool.19940731.xyz/openapi.json"}
+        
 script-providers:
-  "网页运行监控":
+  "网页运行监控01":
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+    interval: 86400
+
+  "网页运行监控02":
     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
     interval: 86400

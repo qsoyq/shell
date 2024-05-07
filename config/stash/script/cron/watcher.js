@@ -18,12 +18,12 @@ function main(){
     if(!url){
         console.log(`url undefined`)
     }
-
+    console.log(`current url: ${url}`)
     $httpClient.get(url, (error, response, data)=>{
-        if(response && 200 <= Number(response["status"]) < 400){
-            
+        if(response && 200 <= Number(response["status"]) && Number(response["status"]) < 400){
+
         }else{
-            $notification.post($script.name, `监控页面异常， url: ${url}`, `${error}`)
+            $notification.post(`${$script.name}`, `监控页面响应异常`, `url: ${url}\n\n${error}`)
         }
         $done()
     })
