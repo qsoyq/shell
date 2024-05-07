@@ -55,6 +55,7 @@ function main(){
             $done()
         })
     }else{
+        console.log(`今日已签到, 跳过请求.`)
         $done()
     }
 }
