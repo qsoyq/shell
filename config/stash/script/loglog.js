@@ -6,6 +6,12 @@ function write(key, val){
     $persistentStore.write(val, key)
 }
 
+function isFromWechat(){
+    let ua = $request.headers["User-Agent"]
+    const _isFromWechat = /MicroMessenger/.test(ua);
+    return Boolean(_isFromWechat)
+}
+
 function randomChar(num) {
     const min = 65; // 'A' 的 ASCII 码
     const max = 90; // 'Z' 的 ASCII 码
