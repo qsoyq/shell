@@ -20,10 +20,11 @@ function main(){
     }
     console.log(`current url: ${url}`)
     $httpClient.get(url, (error, response, data)=>{
-        if(response && 200 <= Number(response["status"]) && Number(response["status"]) < 400){
+        let status = Number(response["status"])
+        if(response && 200 <= status && status < 400){
 
         }else{
-            $notification.post(`${$script.name}`, `监控页面响应异常`, `url: ${url}\n\n${error}`)
+            $notification.post(`${$script.name}`, `监控页面响应异常: ${status}`, `url: ${url}\n\n${error}`)
         }
         $done()
     })
