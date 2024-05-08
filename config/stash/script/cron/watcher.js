@@ -20,7 +20,10 @@ function main(){
     }
     console.log(`current url: ${url}`)
     $httpClient.get(url, (error, response, data)=>{
-        let status = Number(response["status"])
+        let status = -1
+        if (response){
+            status = Number(response["status"])
+        }
         if(response && 200 <= status && status < 400){
 
         }else{
