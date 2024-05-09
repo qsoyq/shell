@@ -41,6 +41,7 @@ function getPersistentKey(tid){
 
 function makeMessages(items){
     let device_key = getBodyArgument("barkToken")
+    let barkEndpoint = getBodyArgument("barkEndpoint")
     let messages = []
     for(let i=0;i<items.length;i++){
         let topic = items[i]
@@ -54,6 +55,9 @@ function makeMessages(items){
             url: openUrl,
             icon: topic["node"]["avatar"]
         }   
+        if(barkEndpoint){
+            payload["endpoint"] = barkEndpoint
+        }
         messages.push({"bark": payload})
     }
     return messages  

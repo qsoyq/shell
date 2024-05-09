@@ -43,6 +43,7 @@ function makeMessages(items){
     let device_key = getBodyArgument("barkToken")
     let groupBy = getBodyArgument("groupBy")
     let group = randomChar(16)
+    let barkEndpoint = getBodyArgument("barkEndpoint")
     let messages = []
     for(let i=0;i<items.length;i++){
         let item = items[i]
@@ -59,7 +60,9 @@ function makeMessages(items){
             url: `${item["ios_app_scheme_url"]}`,
             icon: typeof item["icon"] !== "undefined"? item["icon"] : "",
         }   
-
+        if(barkEndpoint){
+            payload["endpoint"] = barkEndpoint
+        }
         messages.push({"bark": payload})
     }
     return messages  
