@@ -29,7 +29,7 @@ function main(){
             console.log(`获取设备信息失败, ${error}`)
         }else{
             let body = JSON.parse(data)
-            if (body["state"]["content"]){
+            if (body["state"] && body["state"]["content"]){
                 let updated = getLocalDateString(new Date(body["state"]["updated"] * 1000))
                 let content = `电量: ${body["state"]["content"]["battery"]}\n系统: ${body["state"]["content"]["system"]}\n更新时间: ${updated}`
                 let icon = getBodyArgument("icon")
