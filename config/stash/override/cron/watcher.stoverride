@@ -11,31 +11,31 @@ cron:
   script:
     - name: 网页运行监控01
       cron: '*/3 * * * *'
-      timeout: 300
+      timeout: 3
       argument: >-
         {"url": "https://bitwarden.19940731.xyz"}
 
     - name: 网页运行监控02
       cron: '*/3 * * * *'
-      timeout: 300
+      timeout: 3
       argument: >-
         {"url": "https://proxy-tool.19940731.xyz/openapi.json"}
 
     - name: 网页运行监控03
       cron: '*/3 * * * *'
-      timeout: 300
+      timeout: 3
       argument: >-
         {"url": "https://warp-clash-api.19940731.xyz"}
         
     - name: 网页运行监控04
       cron: '*/3 * * * *'
-      timeout: 300
+      timeout: 3
       argument: >-
         {"url": "https://bark-server.19940731.xyz/ping"}        
 
     - name: 网页运行监控05
       cron: '*/3 * * * *'
-      timeout: 300
+      timeout: 3
       argument: >-
         {"url": "https://proxy-tool.onrender.com/ping"}
 
