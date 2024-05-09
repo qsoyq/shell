@@ -4,7 +4,7 @@ desc: |-
   - https://proxy-tool.19940731.xyz/openapi.json
   - https://warp-clash-api.19940731.xyz
   - https://bark-server.19940731.xyz/ping
-  - https://proxy-tool.onrender.com/ping
+  - https://proxy-tool-13ku.onrender.com/ping
 category: qsoyq
 # icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
 cron:
@@ -37,7 +37,7 @@ cron:
       cron: '*/3 * * * *'
       timeout: 3
       argument: >-
-        {"url": "https://proxy-tool.onrender.com/ping"}
+        {"url": "https://proxy-tool-13ku.onrender.com/ping"}
 
 script-providers:
   "网页运行监控01":
