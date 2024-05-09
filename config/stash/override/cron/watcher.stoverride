@@ -4,6 +4,7 @@ desc: |-
   - https://proxy-tool.19940731.xyz/openapi.json
   - https://warp-clash-api.19940731.xyz
   - https://bark-server.19940731.xyz/ping
+  - https://proxy-tool.onrender.com/ping
 category: qsoyq
 # icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
 cron:
@@ -32,6 +33,12 @@ cron:
       argument: >-
         {"url": "https://bark-server.19940731.xyz/ping"}        
 
+    - name: 网页运行监控05
+      cron: '*/3 * * * *'
+      timeout: 300
+      argument: >-
+        {"url": "https://proxy-tool.onrender.com/ping"}
+
 script-providers:
   "网页运行监控01":
     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
@@ -46,5 +53,9 @@ script-providers:
     interval: 86400
 
   "网页运行监控04":
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+    interval: 86400
+
+  "网页运行监控05":
     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
     interval: 86400
