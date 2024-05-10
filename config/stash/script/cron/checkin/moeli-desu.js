@@ -44,19 +44,19 @@ function getBodyArgument(key){
     return body[key]
 }
 
-function getLocalDateString(date){
+
+function getLocalTodayString(date){
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    return `${year}-${month}-${day} ${hours}:${minutes}`
+    return `${year}-${month}-${day}`
 }
 
 function ifRequest(){
-    let today = getLocalDateString(new Date())
+    let today = getLocalTodayString(new Date())
     let key = `${$script.name}-cron-${today}`
-    return Boolean($persistentStore.read(key))
+    console.log(`ifRequest: ${$persistentStore.read(key)}, ${Boolean($persistentStore.read(key))}`)
+    return !Boolean($persistentStore.read(key))
 }
 
 function main(){
@@ -110,8 +110,9 @@ function cron(){
             }else{
                 let body = JSON.parse(data)
                 console.log(`签到完成, ${body['msg']}`)
+                $notification.post($script.name, "签到成功", body["msg"])
                 let key = `${$script.name}-cron-${today}`
-                let today = getLocalDateString(new Date())
+                let today = getLocalTodayString(new Date())
                 $persistentStore.write(today, key)
             }
             $done({})

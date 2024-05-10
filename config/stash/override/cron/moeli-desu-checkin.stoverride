@@ -19,7 +19,7 @@ http:
 cron:
   script:
     - name: 梦璃签到
-      cron: '39 */1 * * *'
+      cron: '*/1 * * * *'
       timeout: 10
       argument: >-
 
