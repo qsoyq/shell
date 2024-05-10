@@ -1,6 +1,7 @@
 function parseCookie(cookie){
     if (typeof(cookie) !== "string"){
         console.log(`illegally cookie: ${cookie}`)
+        return
     }
     let body = {}
     cookie.split(";").forEach(element=>{

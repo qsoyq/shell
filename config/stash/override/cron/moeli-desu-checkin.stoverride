@@ -1,0 +1,32 @@
+name: 梦璃签到脚本
+desc: |-
+
+category: checkin
+icon: https://moeli-desu.com/favicon.ico
+http:
+  mitm:
+    - bbs.nga.cn
+    - ngabbs.com
+    - moeli-desu.com
+  script:
+    - match: https://moeli-desu.com/$
+      name: "梦璃获取Cookie"
+      type: request
+      require-body: false
+      timeout: 10
+      argument: ''
+
+cron:
+  script:
+    - name: 梦璃签到
+      cron: '39 */1 * * *'
+      timeout: 10
+      argument: >-
+
+script-providers:
+  "梦璃签到":
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/checkin/moeli-desu.js
+    interval: 86400
+  "梦璃获取Cookie":
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/checkin/moeli-desu.js
+    interval: 86400    

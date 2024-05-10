@@ -1,6 +1,7 @@
 function parseCookie(cookie){
     if (typeof(cookie) !== "string"){
         console.log(`illegally cookie: ${cookie}`)
+        return
     }
     let body = {}
     cookie.split(";").forEach(element=>{
@@ -59,7 +60,8 @@ function ifRequest(){
 }
 
 function main(){
-    if (typeof($script) !== 'undefined' && $script.name === 'request'){
+    console.log(`entrypoint main`)
+    if (typeof($script) !== 'undefined' && $script.type === 'request'){
         return request()
     }else{
         return cron()
@@ -67,26 +69,35 @@ function main(){
 }
 
 function request(){
-    let cookie = $request.headers["cookie"]
+    console.log(`entrypoint request`)
+    console.log(`url: ${$request.url}`)
+    let cookie = $request.headers["Cookie"]
     let cookieBody = parseCookie(cookie)
-    let wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60 = cookieBody["wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60"]
-    if(!wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60){
-        $notification.post($script.name, "获取 cookie 失败, 请先登录后刷新页面", error)
-        printObj($request.headers)
+    if(cookieBody){
+        let wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60 = cookieBody["wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60"]
+        if(!wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60){
+            $notification.post($script.name, "解析 cookie 失败", "请先登录后刷新页面")
+            printObj($request.headers)
+        }else{
+            setCookie("wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60", wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60)
+            $notification.post($script.name, "获取 cookie 成功", `${wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60}`)
+            console.log(`set cookie wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60: ${wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60}`)
+        }
     }else{
-        setCookie("wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60", wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60)
-        $notification.post($script.name, "获取 cookie 成功", error)        
-        console.log(`set cookie wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60: ${wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60}`)
+        $notification.post($script.name, "从 header 获取 cookie 失败", "请先登录后刷新页面")
+        printObj($request.headers)
     }
-    $done()
+
+    $done({})
     return
 }
 
 function cron(){
+    console.log(`entrypoint cron`)
     let wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60 = getCookie("wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60")
     if(!wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60){
         $notification.post(`${$script.name}`, `未获取到 cookie`, `请先登陆网站并确认收到获取 cookie 成功的通知`)
-        $done()
+        $done({})
         return
     }
     
@@ -103,11 +114,11 @@ function cron(){
                 let today = getLocalDateString(new Date())
                 $persistentStore.write(today, key)
             }
-            $done()
+            $done({})
         })
     }else{
         console.log(`今日已签到, 跳过请求.`)
-        $done()
+        $done({})
     }
 }
 main()
