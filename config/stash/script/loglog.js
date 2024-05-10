@@ -1,3 +1,26 @@
+function parseCookie(cookie){
+    if (typeof(cookie) !== "string"){
+        console.log(`illegally cookie: ${cookie}`)
+    }
+    let body = {}
+    cookie.split(";").forEach(element=>{
+        if(element){
+            // let arr = element.trim().split("=")
+            element = element.trim()
+            let index = element.indexOf("=")
+            if(index === -1){
+                console.log(`illegally cookie field: ${element}`)
+                return
+            }else{
+                let key = element.substring(0, index)
+                let value =  element.substring(index+1)
+                body[key] = value
+            }
+        }
+    })
+    return body
+}
+
 function read(key){
     $persistentStore.read(key)
 }
@@ -12,6 +35,10 @@ function getCookie(key){
 
 function setCookie(key, val){
     return $persistentStore.write(val, `Cookie.${key}`)
+}
+
+function notificationPost(){
+    $notification.post(`titile`, `subtitle`, `content`)
 }
 
 function isFromWechat(){
