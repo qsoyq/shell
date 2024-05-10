@@ -6,6 +6,14 @@ function write(key, val){
     $persistentStore.write(val, key)
 }
 
+function getCookie(key){
+    return $persistentStore.read(`Cookie.${key}`)
+}
+
+function setCookie(key, val){
+    return $persistentStore.write(val, `Cookie.${key}`)
+}
+
 function isFromWechat(){
     let ua = $request.headers["User-Agent"]
     const _isFromWechat = /MicroMessenger/.test(ua);
