@@ -157,43 +157,40 @@ function main(){
         $persistentStore.write(now, lastRunAtKey)
     }
     
-    if ($environment.system !== "iOS"){
-        $done({})
-    }else{
-        const roomList = getRoomList()
-        console.log(`isAlwaysPub func: ${isAlwaysPub}`)
-        let promiseList = []
-        if(isDebug){
-            let barkToken = getBarkToken()
-            console.log(`roomList: ${roomList}`)
-            console.log(`barkToken: ${barkToken}`)
-        }
-        
-        roomList.forEach((roomId)=>{
-            task = new Promise((resolve, reject) => {
-                handler(roomId, {resolve: resolve, reject: reject})
-            });
-            promiseList.push(task)    
-        })
-        
-        const allPromise = Promise.all(promiseList);
-        
-        allPromise
-        .then((results) => { 
-            console.log(`run successed`)
-            results.forEach((resolve)=>{
-                // console.log(resolve)
-            })
-            $done({})
-        })
-        .catch((error) => {
-            console.error(`run failed`); // 输出："失败！"
-            error.forEach((reject)=>{
-                // console.log(reject)
-            })
-            $done({})
-        })
+
+    const roomList = getRoomList()
+    console.log(`isAlwaysPub func: ${isAlwaysPub}`)
+    let promiseList = []
+    if(isDebug){
+        let barkToken = getBarkToken()
+        console.log(`roomList: ${roomList}`)
+        console.log(`barkToken: ${barkToken}`)
     }
+    
+    roomList.forEach((roomId)=>{
+        task = new Promise((resolve, reject) => {
+            handler(roomId, {resolve: resolve, reject: reject})
+        });
+        promiseList.push(task)    
+    })
+    
+    const allPromise = Promise.all(promiseList);
+    
+    allPromise
+    .then((results) => { 
+        console.log(`run successed`)
+        results.forEach((resolve)=>{
+            // console.log(resolve)
+        })
+        $done({})
+    })
+    .catch((error) => {
+        console.error(`run failed`); // 输出："失败！"
+        error.forEach((reject)=>{
+            // console.log(reject)
+        })
+        $done({})
+    })
 }
 
 main()
