@@ -50,10 +50,11 @@ function main(){
         uid: uid
     }
     url = "https://proxy-tool.19940731.xyz/api/api/checkin/flyairport/"
-    $httpClient.post({url: url, headers: {"content-type":"application/json"}, body: JSON.stringify(payload)}, (error, _, data)=>{
-        if(error){
-            console.log(`请求失败 ${error}`)
-            $notification.post($script.name, "签到失败", error)
+    $httpClient.post({url: url, headers: {"content-type":"application/json"}, body: JSON.stringify(payload)}, (error, response, data)=>{
+        let status = Number(response['status'])
+        if(error || status >=400 ){
+            console.log(`请求失败: ${status} ${error}`)
+            $notification.post($script.name, "签到失败", `${status} ${error}`)
         }else{
             let body = JSON.parse(data)
             console.log(`签到完成, ${body['msg']}`)
