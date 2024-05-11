@@ -125,8 +125,14 @@ function handler(roomId, ctx){
                 if(isDebug){
                     console.log(`为${anchor.uname}发送 bark 推送\nerror: ${error}\ndata:${data}`)
                 }
-                ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
-                $persistentStore.write(current.toString(), lastPubKey)
+                if(error || Number(response['status']) >= 300){
+                    console.log(`推送消息失败， status: ${response['status']}, error: ${error}`)
+                    ctx.reject(error)
+                }else{
+                    ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
+                    $persistentStore.write(current.toString(), lastPubKey)
+                }
+
             })
         }     
         if(getBodyArgument("isPushToBark")){
@@ -176,14 +182,14 @@ function main(){
         .then((results) => { 
             console.log(`run successed`)
             results.forEach((resolve)=>{
-                console.log(resolve)
+                // console.log(resolve)
             })
             $done({})
         })
         .catch((error) => {
             console.error(`run failed`); // 输出："失败！"
             error.forEach((reject)=>{
-                console.log(reject)
+                // console.log(reject)
             })
             $done({})
         })
