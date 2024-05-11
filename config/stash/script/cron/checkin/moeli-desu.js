@@ -53,6 +53,7 @@ function getLocalTodayString(date){
 }
 
 function ifRequest(){
+    return true
     let today = getLocalTodayString(new Date())
     let key = `${$script.name}-cron-${today}`
     console.log(`ifRequest: ${$persistentStore.read(key)}, ${Boolean($persistentStore.read(key))}`)
@@ -102,17 +103,25 @@ function cron(){
     }
     
     if (ifRequest()){
+        let headers = {
+            cookie: `wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60=${wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60}`,
+            Referer: "https://moeli-desu.com/",
+            "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        }
         url = "https://moeli-desu.com/wp-admin/admin-ajax.php?_nonce=ea114b93e0&action=0e139c4e4747d51618caca099e6c2353&type=goSign"
-        $httpClient.get({url: url, headers: {"cookie": wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60}}, (error, _, data)=>{
-            if(error){
-                console.log(`请求失败 ${error}`)
+        $httpClient.get({url: url, headers: headers}, (error, response, data)=>{
+            let status = Number(response['status'])
+            if(error || status >=400){
+                console.log(`请求失败 ${status}, ${error}, cookie: ${wordpress_logged_in_f7d7e7620d8803515838722d11ca0b60}`)
+                printObj(response['headers'])
                 $notification.post($script.name, "签到失败", error)
+                printObj(response)
             }else{
                 let body = JSON.parse(data)
-                console.log(`签到完成, ${body['msg']}`)
-                $notification.post($script.name, "签到成功", body["msg"])
-                let key = `${$script.name}-cron-${today}`
+                console.log(`签到完成, ${data}`)
+                $notification.post($script.name, "签到成功", body['msg'])
                 let today = getLocalTodayString(new Date())
+                let key = `${$script.name}-cron-${today}`                
                 $persistentStore.write(today, key)
             }
             $done({})

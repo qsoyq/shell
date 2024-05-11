@@ -103,6 +103,8 @@ function handler(roomId, ctx){
             let barkToken = getBarkToken()
             let description = removeHtmlTags(unescapeHtml(roomInfo.description))
             let openLiveRoom = `bilibili://live/${roomId}`
+            let body =  `${roomInfo.title}\n${roomInfo.live_time}\n${description}`
+            body = body.substring(0, 1024)
             let payload = {
                 title: `${anchor.uname}`,
                 body: `${roomInfo.title}\n${description}\n${roomInfo.live_time}`,
