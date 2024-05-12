@@ -107,7 +107,7 @@ function handler(roomId, ctx){
             body = body.substring(0, 1024)
             let payload = {
                 title: `${anchor.uname}`,
-                body: `${roomInfo.title}\n${description}\n${roomInfo.live_time}`,
+                body: body,
                 group: "BilibiliLive",
                 isArchive: "1",
                 copy: liveRoomLink,
@@ -126,7 +126,7 @@ function handler(roomId, ctx){
                     console.log(`为${anchor.uname}发送 bark 推送\nerror: ${error}\ndata:${data}`)
                 }
                 if(error || Number(response['status']) >= 300){
-                    console.log(`推送消息失败， status: ${response['status']}, error: ${error}`)
+                    console.log(`推送消息失败， ${anchor.uname} status: ${response['status']}, error: ${error}`)
                     ctx.reject(error)
                 }else{
                     ctx.resolve(`${anchor.uname} ${roomId} 已开播`)
