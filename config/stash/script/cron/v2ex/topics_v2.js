@@ -2,7 +2,6 @@
 相对 v1， 将多次 bark push 合并为一次
 {"nodeList":[],"barkToken":"","isAlwaysPub":false,"token":""}
 */
-
 function randomChar(num) {
     const min = 65; // 'A' 的 ASCII 码
     const max = 90; // 'Z' 的 ASCII 码
