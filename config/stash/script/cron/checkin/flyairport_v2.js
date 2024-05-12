@@ -12,10 +12,14 @@ function getLocalDateString(date){
     const day = date.getDate();
     return `${year}-${month}-${day}`
 }
+function getRequestCacheKey(){
+    let today = getLocalDateString(new Date())
+    let key = `flyairport-checkin-${today}`    
+    return key
+}
 
 function ifRequest(){
-    let today = getLocalDateString(new Date())
-    let key = `${$script.name}-${today}`
+    let key = getRequestCacheKey()
     return !Boolean($persistentStore.read(key))
 }
 
@@ -37,24 +41,24 @@ function main(){
         email: email,
         passwd: passwd
     }
+    let cacheKey = getRequestCacheKey()
     if (ifRequest()){
         url = "https://proxy-tool.19940731.xyz/api/api/checkin/flyairport/v2"
         $httpClient.post({url: url, headers: {"content-type":"application/json"}, body: JSON.stringify(payload)}, (error, _, data)=>{
             if(error){
                 console.log(`请求失败 ${error}`)
-                $notification.post($script.name, "签到失败", error)
+                $notification.post($script.name, "签到失败", `${cacheKey}\n${error}`)
             }else{
                 let body = JSON.parse(data)
-                console.log(`签到完成, ${body['msg']}`)
-                $notification.post($script.name, "签到成功", `${body['msg']}`)
-                let key = `${$script.name}-${today}`
+                console.log(`签到完成, ${cacheKey} ${body['msg']}`)
+                $notification.post($script.name, "签到成功", `${cacheKey}\n${body['msg']}`)
                 let today = getLocalDateString(new Date())
-                $persistentStore.write(today, key)
+                $persistentStore.write(today, cacheKey)
             }
             $done()
         })
     }else{
-        console.log(`今日已签到, 跳过请求.`)
+        console.log(`${cacheKey}已签到, 跳过请求.`)
         $done()
     }
 }
