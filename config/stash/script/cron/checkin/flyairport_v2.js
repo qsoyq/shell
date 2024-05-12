@@ -17,7 +17,7 @@ function getLocalDateString(date){
 
 function ifRequest(){
     let today = getLocalDateString(new Date())
-    let key = `${$script.name-today}`
+    let key = `${$script.name}-${today}`
     return Boolean($persistentStore.read(key))
 }
 
@@ -48,7 +48,8 @@ function main(){
             }else{
                 let body = JSON.parse(data)
                 console.log(`签到完成, ${body['msg']}`)
-                let key = `${$script.name-today}`
+                $notification.post($script.name, "签到成功", `${body['msg']}`)
+                let key = `${$script.name}-${today}`
                 let today = getLocalDateString(new Date())
                 $persistentStore.write(today, key)
             }
