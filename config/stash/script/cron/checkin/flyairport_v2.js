@@ -18,7 +18,7 @@ function getLocalDateString(date){
 function ifRequest(){
     let today = getLocalDateString(new Date())
     let key = `${$script.name}-${today}`
-    return Boolean($persistentStore.read(key))
+    return !Boolean($persistentStore.read(key))
 }
 
 function main(){
