@@ -123,8 +123,9 @@ function main(){
         // console.log(`payload: ${payload}`)
         // push
         $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{
-            if (error){
-                console.log(`推送消息失败: ${error}`)
+            let status = Number(response['status'])
+            if (error || status >= 400){
+                console.log(`推送消息失败: ${status} ${error}`)
                 $done({})
                 return 
             }
