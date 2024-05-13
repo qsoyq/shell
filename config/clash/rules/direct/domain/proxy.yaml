@@ -1,12 +1,8 @@
 payload:
  - '+.localhost'
  - '+.wushuangai.com'
- - '+.meituan.com'
- - '+.meituan.net'
- - '+.iphone-ld.apple.com'
  - '+.lcdn-locator.apple.com'
  - '+.lcdn-registration.apple.com'
- - '+.push.apple.com'
  - '+.argotunnel.com'
 
  # OrbStack
