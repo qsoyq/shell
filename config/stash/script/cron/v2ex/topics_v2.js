@@ -2,6 +2,7 @@
 相对 v1， 将多次 bark push 合并为一次
 {"nodeList":[],"barkToken":"","isAlwaysPub":false,"token":""}
 */
+
 function randomChar(num) {
     const min = 65; // 'A' 的 ASCII 码
     const max = 90; // 'Z' 的 ASCII 码
@@ -88,11 +89,13 @@ function main(){
         querystringArray.push(`node=${element}`)
     })
     let qs = querystringArray.join("&")
-    let url = `https://proxy-tool.19940731.xyz/api/v2ex/topics?${qs}`
+    let url = `https://proxy-tool-13ku.onrender.com/api/v2ex/topics?${qs}`
 
     $httpClient.get({url: url, headers: {"content-type": "application/json", "Authorization": token}}, (error, response, data)=>{
-        if(error){
-            console.log(`获取 v2ex 主题失败: ${error}, status: ${response.status}`)
+        let status = Number(response['status'])
+
+        if(error || status >= 400){
+            console.log(`获取 v2ex 主题失败: ${error}, status: ${status}, data: ${data}`)
             $done({})
             return
         }
@@ -118,7 +121,7 @@ function main(){
         console.log(`共有 ${items.length} 条新内容`)
         let messages = makeMessages(items)
         let payload = JSON.stringify({"messages": messages})
-        let url = "https://proxy-tool.19940731.xyz/api/notifications/push"
+        let url = "https://proxy-tool-13ku.onrender.com/api/notifications/push/v2"
         // console.log(`payload: ${payload}`)
         // push
         $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{
