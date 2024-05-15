@@ -6,6 +6,7 @@ icon: https://stash.wiki/favicon-32x32.png
 dns:
   fake-ip-filter:
     - +.argotunnel.com
+    - api.cloudflareclient.com
     - +.orb.local
     - '*.orb.local'
     - +.stun.*.*
