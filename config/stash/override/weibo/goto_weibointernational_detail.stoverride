@@ -5,10 +5,10 @@ category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
 http:
   mitm:
-    # - weibo.com
+    - weibo.com
     - m.weibo.cn
   script:
-    - match: https://(m.weibo.cn)/\w+/\d+
+    - match: https://(weibo.com|m.weibo.cn)/(status|\d+)/(\w+|\d+)(.?.+)?$
       name: "微博-微信内微博跳转微博国际版"
       type: request
       require-body: false
