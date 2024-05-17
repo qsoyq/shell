@@ -47,9 +47,10 @@ function main(){
     console.log(`url: ${url}`)
     if (isFromWechat){
         console.log(`url from wechat: ${url}`) 
+        let oldUa = $request.headers["User-Agent"]
         let headers = disableWexinUserAgent()
         resp["headers"] = headers
-        console.log(`ua: ${headers["User-Agent"]}`)
+        console.log(`old ua: ${oldUa}\nnew ua: ${headers["User-Agent"]}`)
     }
     $done(resp)
 }
