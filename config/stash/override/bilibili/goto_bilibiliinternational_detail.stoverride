@@ -1,0 +1,20 @@
+name: 哔哩哔哩国际版
+desc: |-
+  - 去除微信UserAgent
+category: qsoyq
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/bilibili.png
+http:
+  mitm:
+    - m.bilibili.com
+  script:
+    - match: https://m.bilibili.com
+      name: "哔哩哔哩国际版-微信修改"
+      type: request
+      require-body: false
+      timeout: 5
+      argument: ''
+
+script-providers:
+  "哔哩哔哩国际版-微信修改":
+    url: "https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/bilibili/goto_bilibiliinternational_detail.js"
+    interval: 86400
