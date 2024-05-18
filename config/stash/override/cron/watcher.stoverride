@@ -5,7 +5,7 @@ desc: |-
   - https://warp-clash-api.19940731.xyz
   - https://bark-server.19940731.xyz/ping
   - https://proxy-tool-13ku.onrender.com/ping
-  - https://mydocs.19940731.xyz
+  - https://docs.19940731.xyz
 category: qsoyq
 # icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
 cron:
@@ -44,7 +44,7 @@ cron:
       cron: '*/3 * * * *'
       timeout: 3
       argument: >-
-        {"url": "https://mydocs.19940731.xyz"}
+        {"url": "https://docs.19940731.xyz"}
 
 script-providers:
   "网页运行监控01":
