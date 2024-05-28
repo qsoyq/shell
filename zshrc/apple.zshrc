@@ -15,8 +15,10 @@ alias flushdns="dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 # alias dsstore="find $HOME -name '*.DS_Store' -type f -ls -delete"
 alias _dsstore_github="find $HOME/works/github -name '*.DS_Store' -type f -ls -delete"
 alias _dsstore_desktop="find $HOME/Desktop -name '*.DS_Store' -type f -ls -delete"
+alias _dsstore_movies="find $HOME/Movies -name '*.DS_Store' -type f -ls -delete"
+alias _dsstore_downloads="find $HOME/Downloads -name '*.DS_Store' -type f -ls -delete"
 alias _dsstore_works="find $HOME/works -name '*.DS_Store' -type f -ls -delete"
-alias dsstore="_dsstore_github && _dsstore_desktop && _dsstore_works"
+alias dsstore="_dsstore_github && _dsstore_desktop && _dsstore_works && _dsstore_movies && _dsstore_downloads"
 
 # Get WAN IP
 # alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
