@@ -24,8 +24,8 @@ function main(){
         if (response){
             status = Number(response["status"])
         }
-        if(response && 200 <= status && status < 400){
-
+        if(status <= 0 || (response && 200 <= status && status < 400)){
+            // status 为 0 表示客户端连接失败？
         }else{
             $notification.post(`${$script.name}`, `监控页面响应异常: ${status}`, `url: ${url}\n\n${error}`)
         }
