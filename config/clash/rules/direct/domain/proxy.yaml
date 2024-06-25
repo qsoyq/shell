@@ -5,6 +5,7 @@ payload:
  - '+.lcdn-registration.apple.com'
  - '+.argotunnel.com'
  - 'teldrive.19940731.xyz'
+ - 'teldrive-upload.19940731.xyz'
 
  # OrbStack
  - '+.orb.local'
