@@ -22,23 +22,23 @@ cron:
       argument: >-
         {"url": "https://proxy-tool.19940731.xyz/openapi.json"}
 
-    - name: 网页运行监控03
-      cron: '*/3 * * * *'
-      timeout: 3
-      argument: >-
-        {"url": "https://warp-clash-api.19940731.xyz"}
+    # - name: 网页运行监控03
+    #   cron: '*/3 * * * *'
+    #   timeout: 3
+    #   argument: >-
+    #     {"url": "https://warp-clash-api.19940731.xyz"}
         
-    - name: 网页运行监控04
-      cron: '*/3 * * * *'
-      timeout: 3
-      argument: >-
-        {"url": "https://bark-server.19940731.xyz/ping"}        
+    # - name: 网页运行监控04
+    #   cron: '*/3 * * * *'
+    #   timeout: 3
+    #   argument: >-
+    #     {"url": "https://bark-server.19940731.xyz/ping"}        
 
-    - name: 网页运行监控05
-      cron: '*/3 * * * *'
-      timeout: 3
-      argument: >-
-        {"url": "https://proxy-tool-13ku.onrender.com/ping"}
+    # - name: 网页运行监控05
+    #   cron: '*/3 * * * *'
+    #   timeout: 3
+    #   argument: >-
+    #     {"url": "https://proxy-tool-13ku.onrender.com/ping"}
 
     - name: 网页运行监控06
       cron: '*/3 * * * *'
