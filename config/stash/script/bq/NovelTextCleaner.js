@@ -9,11 +9,12 @@ function rewriteResponse(body){
     const domParser = new DOMParser();
     const document = domParser.parseFromString(body, 'text/html');
     const metaKeywords = document.querySelectorAll('meta[name="keywords"]')
+    const device = document.querySelector('meta[name="applicable-device"')
 
-    if(metaKeywords && metaKeywords.length===1){
-        let title = metaKeywords[0].content.split(",")[0]
-        console.log(`title: ${title}`)
-
+    if(metaKeywords && metaKeywords.length===1 && metaKeywords[0].content){
+        let keywords = metaKeywords[0].content.split(",")
+        let title = keywords.length >= 2 && device === "mobile" ? keywords[1] : keywords[0];
+        console.log(`title: ${title}, keyworkds: ${keywords}`)
         let element = document.getElementById("chaptercontent");
         element.innerHTML = element.innerHTML.replace(new RegExp(title, 'g'), "");
     }else{
