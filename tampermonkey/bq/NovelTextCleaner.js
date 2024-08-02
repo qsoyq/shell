@@ -21,7 +21,6 @@
     if(metaKeywords && metaKeywords.length===1){
         let title = metaKeywords[0].content.split(",")[0]
         console.log(`title: ${title}`)
-        replaceTextInElements('chaptercontent', "", '');
         replaceTextInElements('chaptercontent', title, '');
     }
 
