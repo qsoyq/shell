@@ -44,8 +44,8 @@ function main(){
         console.log(`本次跳过`)
     }else{
         let urlscheme = `weibointernational://detail?mblogid=${blogid}`
-        // https://proxy-tool.19940731.xyz/redoc#tag/network.url/operation/redirect_api_network_url_redirect_get
-        let openUrl = `https://proxy-tool.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(urlscheme)}`
+        // https://p.19940731.xyz/redoc#tag/network.url/operation/redirect_api_network_url_redirect_get
+        let openUrl = `https://p.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(urlscheme)}`
         let disableOpenApp = getBodyArgument("disableOpenApp")
         if(!disableOpenApp){
             $notification.post("微博国际版", urlscheme, urlscheme, {url: openUrl})

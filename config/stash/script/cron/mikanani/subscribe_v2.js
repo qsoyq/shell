@@ -59,7 +59,7 @@ function main(){
         return
     }    
     
-    let url = `https://proxy-tool.19940731.xyz/api/mikanani/rss/?token=${mikananiToken}`
+    let url = `https://p.19940731.xyz/api/mikanani/rss/?token=${mikananiToken}`
 
     $httpClient.get({url: url, headers: {"content-type": "application/json"}}, (error, response, data)=>{
         if(error){
@@ -84,7 +84,7 @@ function main(){
         console.log(`共有 ${items.length} 部番剧更新`)
         let messages = makeMessages(items)
         let payload = JSON.stringify({"messages": messages})
-        let url = "https://proxy-tool.19940731.xyz/api/notifications/push"
+        let url = "https://p.19940731.xyz/api/notifications/push"
         console.log(`payload: ${payload}`)
         // push
         $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{

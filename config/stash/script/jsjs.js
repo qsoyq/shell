@@ -6,7 +6,7 @@ function main(){
             $done({})
             return
         }
-        url = "https://proxy-tool.19940731.xyz/api/convert/xml/json"
+        url = "https://p.19940731.xyz/api/convert/xml/json"
         let payload = JSON.stringify({content: xmlBody})
         $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{
             if(error){

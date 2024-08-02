@@ -51,7 +51,7 @@ const isAlwaysPub = getBodyArgument("isAlwaysPub")
 function handler(roomId, ctx){
     let lastPubKey = `${$script.name}lastPub${roomId}`
     let liveRoomLink = `https://live.bilibili.com/${roomId}`
-    let url = `https://proxy-tool.19940731.xyz/api/bilibili/live/room/${roomId}`
+    let url = `https://p.19940731.xyz/api/bilibili/live/room/${roomId}`
 
     $httpClient.get(url, (error, response, data) => {
         if (error) {

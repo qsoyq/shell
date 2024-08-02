@@ -49,7 +49,7 @@ function main(){
         expire_in: expire_in,
         uid: uid
     }
-    url = "https://proxy-tool.19940731.xyz/api/api/checkin/flyairport/"
+    url = "https://p.19940731.xyz/api/api/checkin/flyairport/"
     $httpClient.post({url: url, headers: {"content-type":"application/json"}, body: JSON.stringify(payload)}, (error, response, data)=>{
         let status = Number(response['status'])
         if(error || status >=400 ){

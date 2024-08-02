@@ -118,7 +118,7 @@ function main(){
     }    
 
     let isAlwaysPub = getBodyArgument("isAlwaysPub")
-    let url = `https://proxy-tool.19940731.xyz/api/v2ex/nodes/${node}/topics`
+    let url = `https://p.19940731.xyz/api/v2ex/nodes/${node}/topics`
     $httpClient.get({url: url, headers: {"content-type": "application/json", "Authorization": token}}, (error, response, data)=>{
         if(error){
             console.log(`获取 v2ex 主题: ${error}, status: ${response.status}`)

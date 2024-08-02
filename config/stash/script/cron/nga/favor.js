@@ -140,7 +140,7 @@ function main(){
     }    
     
     let isAlwaysPub = getBodyArgument("isAlwaysPub")
-    let url = `https://proxy-tool.19940731.xyz/api/nga/threads?favor=${favor}&order_by=lastpostdesc`
+    let url = `https://p.19940731.xyz/api/nga/threads?favor=${favor}&order_by=lastpostdesc`
     $httpClient.get({url: url, headers: {"content-type": "application/json", "uid": uid, "cid": cid}}, (error, response, data)=>{
         if(error){
             console.log(`获取 nga 帖子失败: ${error}, status: ${response.status}`)

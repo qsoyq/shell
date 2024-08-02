@@ -112,7 +112,7 @@ function main(){
     }    
     
     let isAlwaysPub = getBodyArgument("isAlwaysPub")
-    let url = `https://proxy-tool.19940731.xyz/api/mikanani/rss?token=${mikananiToken}`
+    let url = `https://p.19940731.xyz/api/mikanani/rss?token=${mikananiToken}`
     $httpClient.get({url: url, headers: {"content-type": "application/json"}}, (error, response, data)=>{
         if(error){
             console.log(`获取 mikanani rss 订阅失败: ${error}, status: ${response.status}`)

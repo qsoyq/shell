@@ -23,7 +23,7 @@ function main(){
         $done(object)
         return 
     }
-    let url = `https://proxy-tool.19940731.xyz/api/store/memory/${key}`
+    let url = `https://p.19940731.xyz/api/store/memory/${key}`
     $httpClient.get(url, (error, response, data)=> {
         if(error){
             console.log(`获取设备信息失败, ${error}`)

@@ -44,8 +44,8 @@ function ifPush(tid, last_touched){
 }
 
 function makeMessages(topics){
-    // https://proxy-tool.19940731.xyz/redoc#tag/notifications.push
-    // https://proxy-tool.19940731.xyz/redoc#tag/v2ex.my/operation/my_topics_api_v2ex_my_topics_get
+    // https://p.19940731.xyz/redoc#tag/notifications.push
+    // https://p.19940731.xyz/redoc#tag/v2ex.my/operation/my_topics_api_v2ex_my_topics_get
     let messages = []
     let device_key = getBarkToken()
     topics.forEach(element => {
@@ -72,7 +72,7 @@ function main(){
         console.log(`sessionKey is not exists.`)
         return 
     }
-    let url = "https://proxy-tool.19940731.xyz/api/v2ex/my/topics"
+    let url = "https://p.19940731.xyz/api/v2ex/my/topics"
     $httpClient.get({url: url, headers: {"content-type": "application/json", "A2": sessionKey}}, (error, response, data)=>{
         if (error){
             $done({})
@@ -96,7 +96,7 @@ function main(){
         }
         console.log(`发现${messages.length}个主题有新回复`)
         let payload = JSON.stringify({messages: messages})
-        let url = "https://proxy-tool.19940731.xyz/api/notifications/push"
+        let url = "https://p.19940731.xyz/api/notifications/push"
         $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{
             if (error){
                 console.log(`推送消息失败: ${error}`)

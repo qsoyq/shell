@@ -1,7 +1,7 @@
 name: Web页面监控
 desc: |-
   - https://bitwarden.19940731.xyz
-  - https://proxy-tool.19940731.xyz/openapi.json
+  - https://p.19940731.xyz/openapi.json
   - https://warp-clash-api.19940731.xyz
   - https://bark-server.19940731.xyz/ping
   - https://proxy-tool-13ku.onrender.com/ping
@@ -20,7 +20,7 @@ cron:
       cron: '*/3 * * * *'
       timeout: 3
       argument: >-
-        {"url": "https://proxy-tool.19940731.xyz/openapi.json"}
+        {"url": "https://p.19940731.xyz/openapi.json"}
 
     # - name: 网页运行监控03
     #   cron: '*/3 * * * *'

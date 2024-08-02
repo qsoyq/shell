@@ -101,7 +101,7 @@ function main(){
     })
     querystringArray.push(`order_by=lastpostdesc`)
     let qs = querystringArray.join("&")
-    let url = `https://proxy-tool.19940731.xyz/api/nga/threads/v2?${qs}`
+    let url = `https://p.19940731.xyz/api/nga/threads/v2?${qs}`
 
     $httpClient.get({url: url, headers: {"content-type": "application/json", "uid": uid, "cid": cid}}, (error, response, data)=>{
         if(error){
@@ -130,7 +130,7 @@ function main(){
         console.log(`共有 ${items.length} 条新内容`)
         let messages = makeMessages(items)
         let payload = JSON.stringify({"messages": messages})
-        let url = "https://proxy-tool.19940731.xyz/api/notifications/push"
+        let url = "https://p.19940731.xyz/api/notifications/push"
         // console.log(`payload: ${payload}`)
         // push
         $httpClient.post({url: url, headers: {"content-type": "application/json"}, body: payload}, (error, response, data)=>{

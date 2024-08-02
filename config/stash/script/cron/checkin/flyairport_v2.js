@@ -43,7 +43,7 @@ function main(){
     }
     let cacheKey = getRequestCacheKey()
     if (ifRequest()){
-        url = "https://proxy-tool.19940731.xyz/api/api/checkin/flyairport/v2"
+        url = "https://p.19940731.xyz/api/api/checkin/flyairport/v2"
         $httpClient.post({url: url, headers: {"content-type":"application/json"}, body: JSON.stringify(payload)}, (error, _, data)=>{
             if(error){
                 console.log(`请求失败 ${error}`)
