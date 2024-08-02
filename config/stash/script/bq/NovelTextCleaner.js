@@ -13,7 +13,7 @@ function rewriteResponse(body){
 
     if(metaKeywords && metaKeywords.length===1 && metaKeywords[0].content){
         let keywords = metaKeywords[0].content.split(",")
-        let title = keywords.length >= 2 && device === "mobile" ? keywords[1] : keywords[0];
+        let title = keywords.length >= 2 && device && device.content === "mobile" ? keywords[1] : keywords[0]
         console.log(`title: ${title}, keyworkds: ${keywords}`)
         let element = document.getElementById("chaptercontent");
         element.innerHTML = element.innerHTML.replace(new RegExp(title, 'g'), "");
