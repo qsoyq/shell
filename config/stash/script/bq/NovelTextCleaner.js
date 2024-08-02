@@ -16,7 +16,11 @@ function rewriteResponse(body){
         let title = keywords.length >= 2 && device && device.content === "mobile" ? keywords[1] : keywords[0]
         console.log(`title: ${title}, keyworkds: ${keywords}`)
         let element = document.getElementById("chaptercontent");
-        element.innerHTML = element.innerHTML.replace(new RegExp(title, 'g'), "");
+        if (element){
+            element.innerHTML = element.innerHTML.replace(new RegExp(title, 'g'), "");
+        }else{
+            console.log(`未定位到小说文本内容，url: ${$request.url}`)
+        }
     }else{
         console.log(`替换失败, metaKeywords: ${metaKeywords}, length: ${metaKeywords.length}`)
         console.log(`body:\n${body}`)
