@@ -69,9 +69,15 @@ function getLocalDateString(date){
     return `${year}-${month}-${day} ${hours}:${minutes}`
 }
 
-const printObj = function(body){
+function printObj(body, prefix){
+    if(!prefix){
+        prefix = "==>"
+    }
     for (const key in body) {
-        console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
+        console.log(`${prefix} Key: ${key}, Value: ${body[key]}, Type ${typeof body[key]}`);
+        if(typeof body[key]==='object'){
+            printObj(body[key], `==${prefix}`)
+        }
     }    
 }
 
@@ -89,6 +95,22 @@ function getArgumentObject(key){
     }
     let body = JSON.parse($argument)
     return body
+}
+
+async function ping() {
+    function _ping(callback) {
+        let url = "https://p.19940731.xyz/ping"
+        $httpClient.get(url, (error, response, data) => {
+            console.log(`error: ${error}, response: ${response}, typeof data: ${typeof data}`)
+            callback({'error':error, 'response':response,'data':data})
+        })
+    }    
+
+    return new Promise((resolve, reject) => {
+        _ping((result) => {
+            resolve(result);
+        });
+    });
 }
 
 function main(){
