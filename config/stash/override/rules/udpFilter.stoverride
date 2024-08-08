@@ -1,4 +1,4 @@
-name: udpFilter
+name: UDP流量控制
 desc: |-
   - UDP 流量管理
 category: rules
