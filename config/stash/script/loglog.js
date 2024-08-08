@@ -1,3 +1,32 @@
+async function request(method, params) {
+    return new Promise((resolve, reject) => {
+        $httpClient[method.toLowerCase()](params, (error, response, data) => {
+            if (error) {
+                console.error(`Error: ${error}, Response: ${JSON.stringify(response)}, Data: ${data}`);
+                reject({ error, response, data });
+            } else {
+                resolve({ error, response, data });
+            }
+        });
+    });
+}
+
+async function get(params) {
+    return request('GET', params);
+}
+
+async function post(params) {
+    return request('POST', params);
+}
+
+async function put(params) {
+    return request('PUT', params);
+}
+
+async function delete_(params) {
+    return request('DELETE', params);
+}
+
 function parseCookie(cookie){
     if (typeof(cookie) !== "string"){
         console.log(`illegally cookie: ${cookie}`)
