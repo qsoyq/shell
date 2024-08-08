@@ -1,3 +1,4 @@
+
 function getBodyArgument(key){
     if (typeof $argument === "undefined"){
         return undefined
@@ -29,12 +30,16 @@ function getBlodid(url){
 }
 
 function main(){
-    let resp = {}
     let url = $request.url
     console.log(`url: ${$request.url}`)
     let blogid = getBlodid(url)
     if(!blogid){
-        console.error(`获取 blogid 失败, 当前 url: ${url}`)
+        console.log(`获取 blogid 失败, 当前 url: ${url}`)
+    }
+    if(blogid === 'baiduad' || blogid === 'banner'){
+        console.log(`非预期 blogid, 跳过`)
+        $done({})
+        return 
     }
     let current = new Date().getTime()
     let key = `${$script.name} - ${blogid}`
@@ -53,7 +58,7 @@ function main(){
         $persistentStore.write(String(current), key)
     }
 
-    $done(resp)
+    $done({})
 }
 
 main()
