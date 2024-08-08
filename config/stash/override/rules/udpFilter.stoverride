@@ -5,7 +5,7 @@ category: rules
 icon: https://stash.wiki/favicon-32x32.png
 
 rules:
-  - SCRIPT,instagram-quic,Instgram
+  - SCRIPT,instagram-quic,Instagram
   - SCRIPT,udp-reject,REJECT
 
 script:
