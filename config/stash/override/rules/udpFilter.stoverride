@@ -1,0 +1,14 @@
+name: udpFilter
+desc: |-
+  - UDP 流量管理
+category: rules
+icon: https://stash.wiki/favicon-32x32.png
+
+rules:
+  - SCRIPT,instagram-quic,Instgram
+  - SCRIPT,udp-reject,REJECT
+
+script:
+  shortcuts: # 可以在 rule 中引用
+    udp-reject: network == 'udp' # 阻止余下所有 udp 流量
+    instagram-quic: network == 'udp' and dst_port == 443 and match_geosite('instagram') # 匹配 Instagram 的 QUIC
