@@ -2,7 +2,6 @@ name: Web页面监控
 desc: |-
   - https://bitwarden.19940731.xyz
   - https://p.19940731.xyz/openapi.json
-  - https://warp-clash-api.19940731.xyz
   - https://bark-server.19940731.xyz/ping
   - https://proxy-tool-13ku.onrender.com/ping
   - https://docs.19940731.xyz
@@ -10,17 +9,37 @@ category: qsoyq
 # icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png
 cron:
   script:
-    - name: 网页运行监控01
+    # - name: 网页运行监控
+    #   cron: '*/3 * * * *'
+    #   timeout: 60
+    #   argument: >-
+    #     {
+    #       "urls": 
+    #               [
+    #                 "https://bitwarden.19940731.xyz", 
+    #                 "https://p.19940731.xyz/openapi.json", 
+    #                 "https://bark-server.19940731.xyz/ping", 
+    #                 "https://proxy-tool-13ku.onrender.com/ping",
+    #                 "https://docs.19940731.xyz"
+    #               ]
+    #     }  
+    - name: 网页运行监控
       cron: '*/3 * * * *'
-      timeout: 3
+      timeout: 60
       argument: >-
-        {"url": "https://bitwarden.19940731.xyz"}
+        {"urls":["https://bitwarden.19940731.xyz", "https://p.19940731.xyz/openapi.json", "https://bark-server.19940731.xyz/ping", "https://proxy-tool-13ku.onrender.com/ping","https://docs.19940731.xyz"]}      
 
-    - name: 网页运行监控02
-      cron: '*/3 * * * *'
-      timeout: 3
-      argument: >-
-        {"url": "https://p.19940731.xyz/openapi.json"}
+    # - name: 网页运行监控01
+    #   cron: '*/3 * * * *'
+    #   timeout: 3
+    #   argument: >-
+    #     {"url": "https://bitwarden.19940731.xyz"}
+
+    # - name: 网页运行监控02
+    #   cron: '*/3 * * * *'
+    #   timeout: 3
+    #   argument: >-
+    #     {"url": "https://p.19940731.xyz/openapi.json"}
 
     # - name: 网页运行监控03
     #   cron: '*/3 * * * *'
@@ -40,33 +59,37 @@ cron:
     #   argument: >-
     #     {"url": "https://proxy-tool-13ku.onrender.com/ping"}
 
-    - name: 网页运行监控06
-      cron: '*/3 * * * *'
-      timeout: 3
-      argument: >-
-        {"url": "https://docs.19940731.xyz"}
+    # - name: 网页运行监控06
+    #   cron: '*/3 * * * *'
+    #   timeout: 3
+    #   argument: >-
+    #     {"url": "https://docs.19940731.xyz"}
 
 script-providers:
-  "网页运行监控01":
+  "网页运行监控":
     url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
     interval: 86400
 
-  "网页运行监控02":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
-    interval: 86400
+  # "网页运行监控01":
+  #   url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+  #   interval: 86400
 
-  "网页运行监控03":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
-    interval: 86400
+  # "网页运行监控02":
+  #   url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+  #   interval: 86400
 
-  "网页运行监控04":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
-    interval: 86400
+  # "网页运行监控03":
+  #   url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+  #   interval: 86400
 
-  "网页运行监控05":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
-    interval: 86400
+  # "网页运行监控04":
+  #   url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+  #   interval: 86400
 
-  "网页运行监控06":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
-    interval: 86400
+  # "网页运行监控05":
+  #   url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+  #   interval: 86400
+
+  # "网页运行监控06":
+  #   url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+  #   interval: 86400

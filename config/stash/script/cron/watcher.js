@@ -1,7 +1,42 @@
 // 监控网页状态， 网页不可访问时弹出通知
-function printObj(body){
+async function request(method, params) {
+    return new Promise((resolve, reject) => {
+        $httpClient[method.toLowerCase()](params, (error, response, data) => {
+            if (error) {
+                console.error(`Error: ${error}, Response: ${JSON.stringify(response)}, Data: ${data}`);
+                reject({ error, response, data });
+            } else {
+                resolve({ error, response, data });
+            }
+        });
+    });
+}
+
+async function get(params) {
+    return request('GET', params);
+}
+
+async function post(params) {
+    return request('POST', params);
+}
+
+async function put(params) {
+    return request('PUT', params);
+}
+
+async function delete_(params) {
+    return request('DELETE', params);
+}
+
+function printObj(body, prefix){
+    if(!prefix){
+        prefix = "==>"
+    }
     for (const key in body) {
-        console.log(`    ==> Key: ${key}, Value: ${body[key]}`);
+        console.log(`${prefix} Key: ${key}, Value: ${body[key]}, Type ${typeof body[key]}`);
+        if(typeof body[key]==='object'){
+            printObj(body[key], `==${prefix}`)
+        }
     }    
 }
 
@@ -13,24 +48,28 @@ function getBodyArgument(key){
     return body[key]
 }
 
-function main(){
-    let url = getBodyArgument('url')
-    if(!url){
-        console.log(`url undefined`)
+async function main(){
+    let urls = getBodyArgument('urls')
+    if(!urls){
+        console.log(`urls undefined`)
+        $done({})
+        return 
     }
-    console.log(`current url: ${url}`)
-    $httpClient.get(url, (error, response, data)=>{
-        let status = -1
-        if (response){
-            status = Number(response["status"])
-        }
+
+    printObj(urls)
+    for(const url of urls){
+        console.log(`current url: ${url}`)
+        let resp = await get(url)
+        let response = resp.response
+        let status = response.status
+        let error = resp.error
         if(status <= 0 || (response && 200 <= status && status < 400)){
             // status 为 0 表示客户端连接失败？
         }else{
-            $notification.post(`${$script.name}`, `监控页面响应异常: ${status}`, `url: ${url}\n\n${error}`)
-        }
-        $done()
-    })
+            $notification.post(`${$script.name}`, `监控页面响应异常: ${status}`, `url: ${url}\n\n${error}`)            
+        }        
+    }
+    $done({})
 }
 
 main()
