@@ -1,0 +1,99 @@
+name: 去他妈的开屏
+desc: |-
+category: AD
+# icon: https://www.100.me/favicon.ico
+
+http:
+  mitm:
+    # 叮咚买菜
+    - maicai.api.ddxq.mobi
+
+    # 哔哩哔哩
+    - app.bilibili.com
+
+    # https://raw.githubusercontent.com/ddgksf2013/Scripts/master/amdc.js
+    # /***********************************************
+    # > 应用名称：墨鱼自用amdc脚本
+    # > 脚本作者：@ddgksf2013
+    # > 微信账号：墨鱼手记
+    # > 更新时间：2024-01-21
+    # > 通知频道：https://t.me/ddgksf2021
+    # > 贡献投稿：https://t.me/ddgksf2013_bot
+    # > 问题反馈：ddgksf2013@163.com
+    # > 特别提醒：如需转载请注明出处，谢谢合作！
+    # ***********************************************/
+    # //使用AMDC的APP有：咸鱼、淘宝、盒马、高德、菜鸟、飞猪
+    - amdc.m.taobao.com
+
+    # 便利蜂
+    - cvsnotify-api.blibee.com
+
+    # 斗鱼
+    - capi.douyucdn.cn
+
+    # 盒马
+    - acs.m.taobao.com
+    - acs-m.freshippo.com
+
+    # 肯德基
+    - res.kfc.com.cn
+    - dynamicad.kfc.com.cn
+
+    # 麦当劳
+    - img.mcd.cn
+    - api.mcd.cn
+
+    # 什么值得买
+    - app-api.smzdm.com
+
+    # 淘宝
+    - gw.alicdn.com
+    - heic.alicdn.com
+
+  url-rewrite:
+    # 叮咚买菜
+    - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject-200
+    - ^https://maicai.api.ddxq.mobi/advert/getPreloadAd\?ad_id - reject-200
+    - ^https://maicai.api.ddxq.mobi/vip/getVipAd - reject-200
+
+    # 哔哩哔哩
+    - ^https?://app.bilibili.com/x/v2/splash/show - reject-200
+
+    # 便利蜂
+    - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 - reject-200
+
+    # 斗鱼
+    - ^https?://capi.douyucdn.cn/api/v1/getStartSend - reject-200
+
+    # 盒马
+    - ^https?://acs.m.taobao.com/gw/mtop.wdk.render.querysinglepage - reject-200
+    - ^https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage - reject-200
+
+    # 肯德基
+    - ^https?://res.kfc.com.cn/advertisement/ - reject-200
+    - ^https？://dynamicad.kfc.com.cn/api/app5/homepage/ai/popup - reject-200    
+
+    # 麦当劳
+    - ^https://api.mcd.cn/bff/portal/home/splash - reject # 开屏广告
+    - ^https://api.mcd.cn/bff/portal/richpop - reject # 弹窗广告
+    - ^https://api.mcd.cn/bff/portal/home/hotActivity - reject # 首页热门活动    
+
+    # 什么值得买
+    - https://app-api.smzdm.com/util/loading - reject # 开屏广告
+    - https://app-api.smzdm.com/util/update - reject # 弹窗广告 + (热更新?)
+
+    # 淘宝
+    - ^https?://(gw|heic).alicdn.com/imgextra/i\d/\d*/?[\w!]+-\d-(octopus|tps-1125-1602).(jp|pn)g_(1\d{3}|9\d{2})x(1\d{3}|9\d{2})q[59]0 - reject # 开屏广告
+
+  script:
+    - match: https?://amdc.m.taobao.com
+      name: amdc
+      type: response
+      require-body: true
+      max-size: -1
+      timeout: 60
+
+script-providers:
+  amdc:
+    url: https://github.com/ddgksf2013/Scripts/raw/master/amdc.js
+    interval: 86400
