@@ -1,7 +1,12 @@
-name: 去他妈的开屏
+# 肯德基失效
+# 麦当劳待测试
+
+name: 去他妈的广告
 desc: |-
 category: AD
-# icon: https://www.100.me/favicon.ico
+# icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
+icon: https://telegraph.19940731.xyz/file/73d1e436c3797eb8972a3.gif
+
 
 http:
   mitm:
@@ -97,3 +102,4 @@ script-providers:
   amdc:
     url: https://github.com/ddgksf2013/Scripts/raw/master/amdc.js
     interval: 86400
+

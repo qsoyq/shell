@@ -1,6 +1,6 @@
 name: antiad
-desc: 去广告规则
-category: privacy-protection-tools
+desc: |-
+category: AD
 icon: "https://avatars.githubusercontent.com/u/58900766?s=48&v=4"
 rule-providers:
   anti-AD:
