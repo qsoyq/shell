@@ -1,6 +1,7 @@
 name: loglog
 desc: |-
   记录请求和响应
+icon: https://telegraph.19940731.xyz/file/08c3674a4553537a84c49.png
 category: script
 http:
   mitm:
