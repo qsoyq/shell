@@ -1,0 +1,21 @@
+name: loglog
+desc: |-
+  记录请求和响应
+category: script
+http:
+  mitm:
+    - stash.wiki
+
+  script:
+    - match: https://stash.wiki
+      name: "loglog"
+      type: response
+      require-body: true
+      timeout: 5
+      argument: >-
+        {"isOutputBody": false}
+
+script-providers:
+  "loglog":
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/loglog.js
+    interval: 86400

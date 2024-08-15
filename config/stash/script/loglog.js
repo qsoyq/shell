@@ -58,23 +58,23 @@ async function delete_(params) {
  * @param {string} cookie 
  * @returns {object|null} 当返回为 null 表示解析失败
  */
-function parseCookie(cookie){
-    if (typeof(cookie) !== "string"){
+function parseCookie(cookie) {
+    if (typeof (cookie) !== "string") {
         console.log(`illegally cookie: ${cookie}`)
         return null
     }
     let body = {}
-    cookie.split(";").forEach(element=>{
-        if(element){
+    cookie.split(";").forEach(element => {
+        if (element) {
             // let arr = element.trim().split("=")
             element = element.trim()
             let index = element.indexOf("=")
-            if(index === -1){
+            if (index === -1) {
                 console.log(`illegally cookie field: ${element}`)
                 return null
-            }else{
+            } else {
                 let key = element.substring(0, index)
-                let value =  element.substring(index+1)
+                let value = element.substring(index + 1)
                 body[key] = value
             }
         }
@@ -85,7 +85,7 @@ function parseCookie(cookie){
  * 读取 stash 内部持久化存储的值
  * @param {string} key 
  */
-function read(key){
+function read(key) {
     $persistentStore.read(key)
 }
 
@@ -94,7 +94,7 @@ function read(key){
  * @param {string} key 
  * @param {string} val 
  */
-function write(key, val){
+function write(key, val) {
     $persistentStore.write(val, key)
 }
 
@@ -103,7 +103,7 @@ function write(key, val){
  * @param {string} key 
  * @returns {string}
  */
-function getCookie(key){
+function getCookie(key) {
     return $persistentStore.read(`Cookie.${key}`)
 }
 
@@ -113,7 +113,7 @@ function getCookie(key){
  * @param {string} val 
  * @returns 
  */
-function setCookie(key, val){
+function setCookie(key, val) {
     return $persistentStore.write(val, `Cookie.${key}`)
 }
 /**
@@ -123,7 +123,7 @@ function setCookie(key, val){
  * @param {string} content 
  * @param {string|undefined} url 
  */
-function notificationPost(title, subtitle, content, url){
+function notificationPost(title, subtitle, content, url) {
     const params = url ? { url } : {};
     $notification.post(title, subtitle, content, params)
 }
@@ -132,8 +132,8 @@ function notificationPost(title, subtitle, content, url){
  * 判断当前请求是否来自微信
  * @returns {bool} 
  */
-function isWechat(){
-    if(typeof $request === 'undefined'){
+function isWechat() {
+    if (typeof $request === 'undefined') {
         return false
     }
     let ua = $request.headers["User-Agent"].toLowerCase()
@@ -149,7 +149,7 @@ function randomChar(num) {
     const min = 65; // 'A' 的 ASCII 码
     const max = 90; // 'Z' 的 ASCII 码
 
-    return Array.from({ length: num }, () => 
+    return Array.from({ length: num }, () =>
         String.fromCharCode(Math.floor(Math.random() * (max - min + 1)) + min)
     ).join('');
 }
@@ -159,7 +159,7 @@ function randomChar(num) {
  * @param {Date} date 
  * @returns {string} 表示当前时间的字符串
  */
-function getLocalDateString(date){
+function getLocalDateString(date) {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -225,9 +225,45 @@ function getPersistentArgument(key) {
     return body?.[key] ?? $persistentStore.read(key);
 }
 
-async function main(){
-    console.log(`${getLocalDateString(new Date())}`)
-    // $notification.post(`titile`, `subtitle`, `content`)
-    $done({})
+/**
+ * 返回当前的脚本类型
+ * @returns 
+ */
+function getScriptType() {
+    return typeof $script !== 'undefined' ? $script.type : 'undefined'
 }
-main()
+
+function requestLog(uid) {
+    if (getScriptType() === 'request') {
+
+    }
+}
+
+function responseLog(uid) {
+    if (getScriptType() === 'response') {
+        let isOutputBody = getScriptArgument("isOutputBody")
+        request = $request
+        response = $response
+        console.log(`${uid} request: ${request.url}, ${request.method} ${response.status}`)
+        if (isOutputBody) {
+            visitAll(request)
+            visitAll(response)
+        }
+    }
+}
+
+async function main() {
+    let scriptType = getScriptType()
+    let uid = randomChar(32)
+    console.log(`${uid} script type: ${scriptType}`)
+    console.log(``)
+    requestLog(uid)
+    responseLog(uid)
+}
+
+try {
+    main()
+} catch (error) {
+    console.log(error)
+}
+$done({})
