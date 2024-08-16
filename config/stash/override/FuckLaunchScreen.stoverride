@@ -6,8 +6,6 @@ desc: |-
 category: AD
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
-
-
 http:
   mitm:
     # 叮咚买菜
@@ -77,12 +75,12 @@ http:
     # 肯德基
     - ^https?://res.kfc.com.cn/advertisement/ - reject-200
     - ^https?://res.kfc.com.cn/CRM/kfcad/apphome6/\w+.json\? - reject-dict
-    - ^https?://dynamicad.kfc.com.cn/api/app5/homepage/ai/popup - reject-200    
+    - ^https?://dynamicad.kfc.com.cn/api/app5/homepage/ai/popup - reject-200
 
     # 麦当劳
     - ^https://api.mcd.cn/bff/portal/home/splash - reject # 开屏广告
     - ^https://api.mcd.cn/bff/portal/richpop - reject # 弹窗广告
-    - ^https://api.mcd.cn/bff/portal/home/hotActivity - reject # 首页热门活动    
+    - ^https://api.mcd.cn/bff/portal/home/hotActivity - reject # 首页热门活动
 
     # 什么值得买
     - https://app-api.smzdm.com/util/loading - reject # 开屏广告
@@ -104,3 +102,14 @@ script-providers:
     url: https://github.com/ddgksf2013/Scripts/raw/master/amdc.js
     interval: 86400
 
+rule-providers:
+  anti-AD:
+    behavior: domain
+    format: yaml
+    interval: 86400
+    type: http
+    url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-clash.yaml
+
+rules:
+  # 可跳过番茄小说广告
+  - RULE-SET,anti-AD,REJECT
