@@ -318,7 +318,7 @@ async function getChatGPTCountryCode() {
         let value = element.split('=')[1]
         map[key] = value
     })
-    return `ChatGPT Country Code: ${countryCodeToEmoji(map['loc'])}${map['loc']}`
+    return `ChatGPT: ${countryCodeToEmoji(map['loc'])}${map['loc']}`
 }
 
 async function parseChatGPTiOS() {
