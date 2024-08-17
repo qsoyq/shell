@@ -233,6 +233,21 @@ function getScriptType() {
     return typeof $script !== 'undefined' ? $script.type : 'undefined'
 }
 
+/**
+ * 将地区代码转换为对应的 emoji
+ * @param {string} countryCode 
+ * @returns 
+ */
+function countryCodeToEmoji(countryCode) {
+    // Ensure the country code is uppercase
+    const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 0x1F1E6 + char.charCodeAt(0) - 'A'.charCodeAt(0));
+
+    return String.fromCodePoint(...codePoints);
+}
+
 async function parseBilibiliChinaMainland() {
     let res = await get("https://api.bilibili.com/pgc/player/web/playurl?avid=82846771&qn=0&type=&otype=json&ep_id=307247&fourk=1&fnver=0&fnval=16&module=bangumi")
     if (res.error) {
@@ -285,7 +300,7 @@ async function getChatGPTCountryCode() {
         let value = element.split('=')[1]
         map[key] = value
     })
-    return `ChatGPT Country Code: ${map['loc']}`
+    return `ChatGPT Country Code: ${countryCodeToEmoji(map['loc'])}${map['loc']}`
 }
 
 async function parseChatGPTiOS() {
