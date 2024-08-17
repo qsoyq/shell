@@ -8,12 +8,12 @@ http:
     - weibo.com
     - m.weibo.cn
   script:
-    - match: https://(weibo.com|m.weibo.cn)/(status|\d+)/(\w+|\d+)(.?.+)?$
+    - match: https://(weibo.com|m.weibo.cn)
       name: "微博国际版URLScheme"
       type: request
       require-body: false
       timeout: 5
-      argument: ''
+      argument: ""
 
 script-providers:
   "微博国际版URLScheme":
