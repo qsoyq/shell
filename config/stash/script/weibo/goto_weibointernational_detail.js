@@ -13,13 +13,15 @@ function getUrlArgument(string, key) {
     return params.get(key)
 }
 
-async function main() {
+/**
+ * 匹配用互详情页
+ * @returns 
+ */
+function userMatch() {
+    // 访问用户页面
     let url = $request.url
-    console.log(`url: ${$request.url}`)
-    // 根据 url 判断执行功能
     let userMatch = url.match(/^https?:\/\/(m.weibo.cn|weibo.com)\/u\/(\d+)(.\w+=?\w*)?/)
     if (userMatch) {
-        // 访问用户页面
         let uid = userMatch[2]
         let current = new Date().getTime()
         let key = `${$script.name} - userMatch - ${uid}`
@@ -37,10 +39,16 @@ async function main() {
             }
             $persistentStore.write(String(current), key)
         }
-        return
     }
+}
 
+/**
+ * 匹配微博详情页
+ * @returns 
+ */
+function blogMatch() {
     // 访问微博详情
+    let url = $request.url
     let detailMatch = url.match(/^https:\/\/(weibo.com|m.weibo.cn)\/(status|\d+)\/(\w+|\d+)(.?.+)?$/)
     if (detailMatch) {
         let uid = detailMatch[3]
@@ -60,9 +68,16 @@ async function main() {
             }
             $persistentStore.write(String(current), key)
         }
-        return
     }
 }
+
+
+async function main() {
+    console.log(`url: ${$request.url}`)
+    userMatch()
+    blogMatch()
+}
+
 try {
     main()
 } catch (e) {
