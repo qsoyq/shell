@@ -234,17 +234,33 @@ function getScriptType() {
 }
 
 /**
- * 将地区代码转换为对应的 emoji
+ * 
  * @param {string} countryCode 
  * @returns 
  */
 function countryCodeToEmoji(countryCode) {
-    // Ensure the country code is uppercase
-    const codePoints = countryCode
-        .toUpperCase()
-        .split('')
-        .map(char => 0x1F1E6 + char.charCodeAt(0) - 'A'.charCodeAt(0));
+    // 将代码转为大写
+    countryCode = countryCode.toUpperCase();
 
+    // 如果是三位代码，转换为两位代码
+    const threeToTwo = {
+        'USA': 'US',
+        'CAN': 'CA',
+        'GBR': 'GB',
+        'FRA': 'FR',
+        'DEU': 'DE',
+        // 继续添加你需要支持的三位代码
+    };
+
+    // 如果代码长度为3，尝试查找转换表
+    if (countryCode.length === 3) {
+        countryCode = threeToTwo[countryCode] || countryCode.slice(0, 2);
+    }
+
+    // 将两位代码转换为相应的Unicode字符
+    const codePoints = [...countryCode].map(char => 127397 + char.charCodeAt());
+
+    // 将Unicode字符转换为emoji
     return String.fromCodePoint(...codePoints);
 }
 

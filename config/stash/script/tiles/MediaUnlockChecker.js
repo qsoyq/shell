@@ -241,12 +241,28 @@ function getScriptType() {
  * @returns 
  */
 function countryCodeToEmoji(countryCode) {
-    // Ensure the country code is uppercase
-    const codePoints = countryCode
-        .toUpperCase()
-        .split('')
-        .map(char => 0x1F1E6 + char.charCodeAt(0) - 'A'.charCodeAt(0));
+    // 将代码转为大写
+    countryCode = countryCode.toUpperCase();
 
+    // 如果是三位代码，转换为两位代码
+    const threeToTwo = {
+        'USA': 'US',
+        'CAN': 'CA',
+        'GBR': 'GB',
+        'FRA': 'FR',
+        'DEU': 'DE',
+        // 继续添加你需要支持的三位代码
+    };
+
+    // 如果代码长度为3，尝试查找转换表
+    if (countryCode.length === 3) {
+        countryCode = threeToTwo[countryCode] || countryCode.slice(0, 2);
+    }
+
+    // 将两位代码转换为相应的Unicode字符
+    const codePoints = [...countryCode].map(char => 127397 + char.charCodeAt());
+
+    // 将Unicode字符转换为emoji
     return String.fromCodePoint(...codePoints);
 }
 
@@ -337,6 +353,28 @@ async function parseChatGPTWeb() {
     }
 }
 
+async function parseGemini() {
+    let url = 'https://gemini.google.com'
+    let res = await get(url)
+
+    if (typeof res.data !== 'string') {
+        return 'Gemini: Failed'
+    }
+    let isOk = res.data.includes('45631641,null,true') ? "Yes" : "";
+
+    // Equivalent of grep -o ',2,1,200,"[A-Z]\{3\}"' | sed 's/,2,1,200,"//;s/"//' || echo ""
+    let countrycode = "";
+    const regex = /,2,1,200,"([A-Z]{3})"/;
+    const match = res.data.match(regex);
+    let result = isOk ? "Yes" : "No"
+    if (match) {
+        countrycode = match[1];  // Extract the country code (3-letter code)
+        return `Gemini: ${result} ${countryCodeToEmoji(countrycode)}${countrycode}`
+    } else {
+        return `Gemini: ${result}`
+    }
+}
+
 async function main() {
     console.log()
     let content = ''
@@ -346,6 +384,7 @@ async function main() {
     content = `${content}\n${await getChatGPTCountryCode()}`
     content = `${content}\n${await parseChatGPTiOS()}`
     content = `${content}\n${await parseChatGPTWeb()}`
+    content = `${content}\n${await parseGemini()}`
     console.log(content)
     const panel = {
         title: `流媒体解锁检测`,
