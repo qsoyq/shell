@@ -1,3 +1,5 @@
+// 基于 https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/check.sh
+
 /**
  * 对异步回调的 http 调用包装成 async 函数
  * @param {string} method 
