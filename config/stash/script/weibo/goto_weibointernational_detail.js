@@ -49,7 +49,7 @@ function userMatch() {
 function blogMatch() {
     // 访问微博详情
     let url = $request.url
-    let detailMatch = url.match(/^https:\/\/(weibo.com|m.weibo.cn)\/(status|\d+)\/(\w+|\d+)(.?.+)?$/)
+    let detailMatch = url.match(/^https:\/\/(weibo.com|m.weibo.cn)\/(status)\/(\d+)(.?.+)?$/)
     if (detailMatch) {
         let uid = detailMatch[3]
         let current = new Date().getTime()
