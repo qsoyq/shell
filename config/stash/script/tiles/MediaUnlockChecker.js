@@ -10,7 +10,7 @@ async function request(method, params) {
     return new Promise((resolve, reject) => {
         $httpClient[method.toLowerCase()](params, (error, response, data) => {
             if (error) {
-                console.error(`Error: ${error}, Response: ${JSON.stringify(response)}, Data: ${data}`);
+                console.log(`Error: ${error}, Response: ${JSON.stringify(response)}, Data: ${data}`);
                 reject({ error, response, data });
             } else {
                 resolve({ error, response, data });
@@ -162,6 +162,9 @@ function randomChar(num) {
  * @returns {string} 表示当前时间的字符串
  */
 function getLocalDateString(date) {
+    if (!date) {
+        date = new Date()
+    }
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -311,7 +314,6 @@ async function parseTiktok() {
 async function getChatGPTCountryCode() {
     let url = 'https://chat.openai.com/cdn-cgi/trace'
     let res = await get(url)
-    visitAll(res)
     let map = {}
     res.data.split('\n').forEach(element => {
         let key = element.split('=')[0]
@@ -323,14 +325,18 @@ async function getChatGPTCountryCode() {
 
 async function parseChatGPTiOS() {
     let url = 'https://ios.chat.openai.com/'
-    let res = await get({ url: url, timeout: 3 })
+    let res = await get(url)
     if (typeof res.data === 'string') {
         // visitAll(res)
         console.log(`parseChatGPTiOS result: ${res.response.status}, ${res.data}`)
         if (res.data.toLowerCase().includes("You may be connected to a disallowed ISP".toLowerCase())) {
-            return 'ChatGPT iOS: No'
-        } else {
+            return 'ChatGPT iOS: Disallowed ISP'
+        } else if (res.data.toLowerCase().includes("Request is not allowed. Please try again later.".toLowerCase())) {
             return 'ChatGPT iOS: Yes'
+        } else if (res.data.toLowerCase().includes("Sorry, you have been blocked".toLowerCase())) {
+            return 'ChatGPT iOS: Blocked'
+        } else {
+            return 'ChatGPT iOS: Failed'
         }
     } else {
         return 'ChatGPT iOS: Failed'
@@ -342,9 +348,9 @@ async function parseChatGPTWeb() {
     let res = await get(url)
     if (typeof res.data === 'string') {
         // visitAll(res)
-        console.log(`parseChatGPTiOS result: ${res.response.status}, ${res.data}`)
+        console.log(`parseChatGPTWeb result: ${res.response.status}, ${res.data}`)
         if (res.data.toLowerCase().includes("unsupported_country".toLowerCase())) {
-            return 'ChatGPT Web: No'
+            return 'ChatGPT Web: Unsupported Country'
         } else {
             return 'ChatGPT Web: Yes'
         }
@@ -376,27 +382,28 @@ async function parseGemini() {
 }
 
 async function main() {
-    console.log()
-    let content = ''
-    content = `${await parseBilibiliChinaMainland()}`
-    content = `${content}\n${await parseBilibiliHKMCTW()}`
-    content = `${content}\n${await parseTiktok()}`
-    content = `${content}\n${await getChatGPTCountryCode()}`
-    content = `${content}\n${await parseChatGPTiOS()}`
-    content = `${content}\n${await parseChatGPTWeb()}`
-    content = `${content}\n${await parseGemini()}`
-    console.log(content)
-    const panel = {
-        title: `流媒体解锁检测`,
-        content: content
-        // icon: params.icon,
-        // "icon-color": params.color
-    };
-    $done(panel);
+    try {
+        let content = ''
+        content = `${await parseBilibiliChinaMainland()}`
+        content = `${content}\n${await parseBilibiliHKMCTW()}`
+        content = `${content}\n${await parseTiktok()}`
+        content = `${content}\n${await getChatGPTCountryCode()}`
+        content = `${content}\n${await parseChatGPTiOS()}`
+        content = `${content}\n${await parseChatGPTWeb()}`
+        content = `${content}\n${await parseGemini()}`
+        content = `${content}\n执行时间: ${getLocalDateString(new Date())}`
+        console.log(content)
+        const panel = {
+            title: `流媒体解锁检测`,
+            content: content
+            // icon: params.icon,
+            // "icon-color": params.color
+        };
+        $done(panel);
+    } catch (error) {
+        console.log(`catch error: ${error}`)
+        $done({})
+    }
+
 }
-try {
-    main()
-} catch (error) {
-    console.log(error)
-    $done({})
-}
+main()
