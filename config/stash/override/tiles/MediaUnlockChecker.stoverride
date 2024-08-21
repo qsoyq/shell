@@ -5,6 +5,7 @@ icon: https://telegraph.19940731.xyz/file/7044fd6b39224ecfd42ab.png
 
 tiles:
   - name: MediaUnlockChecker
+    backgroundColor: "#178BD8"
     interval: 1800
 
 script-providers:
