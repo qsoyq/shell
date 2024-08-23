@@ -381,6 +381,42 @@ async function parseGemini() {
     }
 }
 
+async function parseYoutubePremium() {
+    /**
+     * 从网页中提取 country-code
+     * @param {*} text 
+     * @returns 
+     */
+    function parseYoutubePremiumCountryCode(htmlString) {
+        try {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(htmlString, 'text/html');
+            let ele = doc.getElementById("country-code")
+            if (ele) {
+                return ele.textContent.trim()
+            }
+        } catch (error) {
+            console.log(`parseCountryCode error: ${error}`)
+        }
+    }
+    let url = 'https://www.youtube.com/premium'
+    let res = await get(url)
+
+    if (typeof res.data !== 'string') {
+        return 'Youtube Premium: Failed'
+    }
+
+    if (res.data.toLowerCase().includes('YouTube Premium is not available in your country'.toLowerCase())) {
+        return `Youtube Premium: No`
+
+    } else if (res.data.toLowerCase().includes("ad-free")) {
+        let countryCode = parseYoutubePremiumCountryCode(res.data)
+        let region = `, Region: ${countryCodeToEmoji(countryCode)}${countryCode}` ? countryCode : ``
+        return `Youtube Premium: Yes${region}`
+    }
+    return 'Youtube Premium: Failed'
+}
+
 async function main() {
     try {
         let content = ''
@@ -391,6 +427,7 @@ async function main() {
         content = `${content}\n${await parseChatGPTiOS()}`
         content = `${content}\n${await parseChatGPTWeb()}`
         content = `${content}\n${await parseGemini()}`
+        content = `${content}\n${await parseYoutubePremium()}`
         content = `${content}\n执行时间: ${getLocalDateString(new Date())}`
         console.log(content)
         const panel = {
