@@ -291,18 +291,17 @@ async function parseBilibiliHKMCTW() {
     let res = await get("https://api.bilibili.com/pgc/player/web/playurl?avid=18281381&cid=29892777&qn=0&type=&otype=json&ep_id=183799&fourk=1&fnver=0&fnval=16&module=bangumi")
     if (res.error) {
         console.log(res.error)
-        printObj(res)
+        visitAll(res)
         return '哔哩哔哩港澳台: Failed'
-    } else {
-        let body = JSON.parse(res.data)
+    }
+    let body = JSON.parse(res.data)
 
-        if (body.code === 0) {
-            return '哔哩哔哩港澳台: Yes'
-        } else if (body.code === -10403) {
-            return '哔哩哔哩港澳台: No'
-        } else {
-            return '哔哩哔哩港澳台: Failed'
-        }
+    if (body.code === 0) {
+        return '哔哩哔哩港澳台: Yes'
+    } else if (body.code === -10403) {
+        return '哔哩哔哩港澳台: No'
+    } else {
+        return '哔哩哔哩港澳台: Failed'
     }
 }
 
@@ -419,28 +418,35 @@ async function parseYoutubePremium() {
 
 async function main() {
     try {
-        let content = ''
-        content = `${await parseBilibiliChinaMainland()}`
-        content = `${content}\n${await parseBilibiliHKMCTW()}`
-        content = `${content}\n${await parseTiktok()}`
-        content = `${content}\n${await getChatGPTCountryCode()}`
-        content = `${content}\n${await parseChatGPTiOS()}`
-        content = `${content}\n${await parseChatGPTWeb()}`
-        content = `${content}\n${await parseGemini()}`
-        content = `${content}\n${await parseYoutubePremium()}`
-        content = `${content}\n执行时间: ${getLocalDateString(new Date())}`
-        console.log(content)
+        console.log("Starting the parallel execution...");
+        let contents = await Promise.all([
+            parseBilibiliHKMCTW(),
+            parseTiktok(),
+            getChatGPTCountryCode(),
+            parseChatGPTiOS(),
+            parseChatGPTWeb(),
+            parseGemini(),
+            parseYoutubePremium(),
+        ]);
+
+        console.log("All promises resolved.");
+
+        let content = contents.join('\n');
+        content += `\n执行时间: ${getLocalDateString(new Date())}`;
+
+        console.log("Final content prepared:");
+        console.log(content);
+
         const panel = {
             title: `流媒体解锁检测`,
             content: content
-            // icon: params.icon,
-            // "icon-color": params.color
         };
+
         $done(panel);
     } catch (error) {
-        console.log(`catch error: ${error}`)
-        $done({})
+        console.error(`Error caught: ${error}`);
+        $done({});
     }
-
 }
-main()
+
+main();
