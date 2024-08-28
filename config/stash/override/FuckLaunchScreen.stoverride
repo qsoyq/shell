@@ -53,6 +53,9 @@ http:
     - gw.alicdn.com
     - heic.alicdn.com
 
+    # 微博国际版
+    - api.weibo.cn
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject-200
@@ -88,6 +91,9 @@ http:
 
     # 淘宝
     - ^https?://(gw|heic).alicdn.com/imgextra/i\d/\d*/?[\w!]+-\d-(octopus|tps-1125-1602).(jp|pn)g_(1\d{3}|9\d{2})x(1\d{3}|9\d{2})q[59]0 - reject # 开屏广告
+
+    # 移除微博国际版首页和帖子内广告
+    - ^https://api.weibo.cn/2/ad/weibointl - reject
 
   script:
     - match: https?://amdc.m.taobao.com
