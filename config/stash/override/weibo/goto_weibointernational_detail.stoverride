@@ -7,6 +7,10 @@ http:
   mitm:
     - weibo.com
     - m.weibo.cn
+    - api.weibo.cn
+  url-rewrite:
+    # 移除帖子内广告
+    - ^https://api.weibo.cn/2/ad/weibointl - reject
   script:
     - match: https://(weibo.com|m.weibo.cn)
       name: "微博国际版URLScheme"
