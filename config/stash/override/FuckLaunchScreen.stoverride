@@ -10,6 +10,7 @@ http:
   mitm:
     # 叮咚买菜
     - maicai.api.ddxq.mobi
+    - pub.ddimg.mobi
 
     # 哔哩哔哩
     - app.bilibili.com
@@ -61,7 +62,9 @@ http:
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject-200
     - ^https://maicai.api.ddxq.mobi/advert/getPreloadAd\?ad_id - reject-200
     - ^https://maicai.api.ddxq.mobi/vip/getVipAd - reject-200
+    - ^https://pub.ddimg.mobi/compass-admin/9797569a74f1417da3362a3c70fedd8e.png - reject
 
+    # https://pub.ddimg.mobi/compass-admin/9797569a74f1417da3362a3c70fedd8e.png?width=750&height=1624
     # 哔哩哔哩
     - ^https?://app.bilibili.com/x/v2/splash/show - reject-200
 
