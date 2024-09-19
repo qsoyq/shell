@@ -195,6 +195,18 @@ function visitAll(body, prefix = "", visited = new WeakSet()) {
         }
     }
 }
+/**
+ * 解析 json 字符串， 失败返回 null
+ * @param {*} string 
+ * @returns 
+ */
+function parseJsonBody(string) {
+    try {
+        return JSON.parse(string)
+    } catch (e) {
+        return null
+    }
+}
 
 /**
  * 读取脚本参数
