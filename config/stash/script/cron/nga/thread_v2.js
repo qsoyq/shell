@@ -1,8 +1,9 @@
 /*
 相对 v1， 将多次 bark push 合并为一次
 {"groupBy":"name","barkToken":"","isAlwaysPub":false,"fidList":[],"uid":"","cid":""}
-*/
 
+2024-09-22: 支持 `groupLabel`参数
+*/
 function randomChar(num) {
     const min = 65; // 'A' 的 ASCII 码
     const max = 90; // 'Z' 的 ASCII 码
@@ -58,10 +59,15 @@ function makeMessages(items) {
     let group = randomChar(16)
     let barkEndpoint = getBodyArgument("barkEndpoint")
     let messages = []
+    let groupLabel = getBodyArgument('groupLabel')
     for (let i = 0; i < items.length; i++) {
         let item = items[i]
         if (typeof groupBy !== 'undefined' && groupBy === 'name') {
             group = `NGA-${item['fname']}`
+        }
+
+        if (groupLabel) {
+            group = groupLabel
         }
 
         let payload = {
@@ -167,4 +173,10 @@ function main() {
         })
     })
 }
-main()
+try {
+    main()
+} catch (e) {
+    console.log(`exception: ${e}`)
+    $done({})
+}
+
