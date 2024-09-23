@@ -7,6 +7,11 @@ category: AD
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
 http:
+  force-http-engine:
+    # 叮咚买菜
+    - "maicai.api.ddxq.mobi"
+    - "pub.ddimg.mobi"
+
   mitm:
     # 叮咚买菜
     - maicai.api.ddxq.mobi
