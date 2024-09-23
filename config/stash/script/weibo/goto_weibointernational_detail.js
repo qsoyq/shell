@@ -50,11 +50,23 @@ function blogMatch() {
     // 访问微博详情
     let url = $request.url
     let detailMatch = url.match(/^https:\/\/(weibo.com|m.weibo.cn)\/(status|detail)\/(\d+)(.?.+)?$/)
+    let uid, key, lastSeen
+    let current = new Date().getTime()
     if (detailMatch) {
-        let uid = detailMatch[3]
-        let current = new Date().getTime()
-        let key = `${$script.name} - blogMatch - ${uid}`
-        let lastSeen = $persistentStore.read(key)
+        uid = detailMatch[3]
+        key = `${$script.name} - blogMatch - ${uid}`
+        lastSeen = $persistentStore.read(key)
+    }
+    if (!detailMatch) {
+        detailMatch = url.match(/https:\/\/(weibo.com|m.weibo.cn)\/\d+\/(\w+)(#\w+)?/)
+        if (detailMatch) {
+            uid = detailMatch[2]
+            key = `${$script.name} - blogMatch - ${uid}`
+            lastSeen = $persistentStore.read(key)
+        }
+    }
+
+    if (detailMatch) {
         console.log(`lastSeen ${uid}: ${lastSeen}`)
         if (lastSeen && (Number(current) - lastSeen) < (10 * 1000)) {
             console.log(`本次跳过`)
