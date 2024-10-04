@@ -1,6 +1,7 @@
-name: Nga微信解锁
+name: NGA
 desc: |-
-  - 在微信点开nga链接时发出可跳转到app的stash通知
+  - 微信内置浏览器访问 NGA 弹出跳转通知
+  - 微信内置浏览器访问 nga 写入用户 Cookie
 category: qsoyq
 icon: https://bbs.nga.cn/favicon.ico
 http:
@@ -8,13 +9,14 @@ http:
     - bbs.nga.cn
     - ngabbs.com
     - nga.178.com
+    - +.nga.178.com
   script:
     - match: https://(bbs.nga.cn|ngabbs.com|nga.178.com)/read.php
       name: "NGA-微信内通知提醒插件"
       type: request
       require-body: false
       timeout: 5
-      argument: ''
+      argument: ""
 
 script-providers:
   "NGA-微信内通知提醒插件":
