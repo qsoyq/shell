@@ -81,6 +81,7 @@ http:
     # 盒马
     - ^https?://acs.m.taobao.com/gw/mtop.wdk.render.querysinglepage - reject-200
     - ^https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage - reject-200
+    - ^https?://wdk-unity.alibabausercontent.com/frontend/common/20240929/d0080be19219db69be5ecf2127dc745e.mp4 - reject
 
     # 肯德基
     - ^https?://res.kfc.com.cn/advertisement/ - reject-200
