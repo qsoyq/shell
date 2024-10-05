@@ -67,8 +67,7 @@ http:
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject-200
     - ^https://maicai.api.ddxq.mobi/advert/getPreloadAd\?ad_id - reject-200
     - ^https://maicai.api.ddxq.mobi/vip/getVipAd - reject-200
-    - ^https://pub.ddimg.mobi/compass-admin/\w+.png\?width=750&height=1624 - reject-img
-    - ^https://pub.ddimg.mobi/compass-admin/\w+.png\?height=1624&width=750 - reject-img
+    - ^https://pub.ddimg.mobi/compass-admin/\w+.(png|jpg)\?(height=1624&width=750|width=750&height=1624) - reject-img
 
     # 哔哩哔哩
     - ^https?://app.bilibili.com/x/v2/splash/show - reject-200
