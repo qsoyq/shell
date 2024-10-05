@@ -34,6 +34,9 @@ alias m1ipa="sudo xattr -dr com.apple.quarantine"
 alias ipadir="open ~/Library/Group\ Containers/K36BKF7T3D.group.com.apple.configurator/Library"
 alias airport="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
+# Battery Percentage
+alias battpct="pmset -g batt | grep -o '[0-9]*%' | tr -d '%'"
+
 
 # WiFI
 # networksetup -listallhardwareports

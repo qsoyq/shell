@@ -12,6 +12,8 @@ alias reload=". ~/.zshrc"
 alias envactive="set -o allexport && . .env"
 alias grep='grep --color=auto'
 alias timestamp='date +%s'
+alias datetime="date \"+%Y-%m-%d %H:%M:%S\""
+alias today="date \"+%Y-%m-%d\""
 alias history="history 1000"
 
 db_set(){
