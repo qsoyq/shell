@@ -64,29 +64,29 @@ http:
 
   url-rewrite:
     # 叮咚买菜
-    - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject-200
-    - ^https://maicai.api.ddxq.mobi/advert/getPreloadAd\?ad_id - reject-200
-    - ^https://maicai.api.ddxq.mobi/vip/getVipAd - reject-200
+    - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
+    - ^https://maicai.api.ddxq.mobi/advert/getPreloadAd\?ad_id - reject
+    - ^https://maicai.api.ddxq.mobi/vip/getVipAd - reject
     - ^https://pub.ddimg.mobi/compass-admin/\w+.(png|jpg)\?(height=1624&width=750|width=750&height=1624) - reject-img
 
     # 哔哩哔哩
-    - ^https?://app.bilibili.com/x/v2/splash/show - reject-200
+    - ^https?://app.bilibili.com/x/v2/splash/show - reject
 
     # 便利蜂
-    - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 - reject-200
+    - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 - reject
 
     # 斗鱼
-    - ^https?://capi.douyucdn.cn/api/v1/getStartSend - reject-200
+    - ^https?://capi.douyucdn.cn/api/v1/getStartSend - reject
 
     # 盒马
-    - ^https?://acs.m.taobao.com/gw/mtop.wdk.render.querysinglepage - reject-200
-    - ^https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage - reject-200
+    - ^https?://acs.m.taobao.com/gw/mtop.wdk.render.querysinglepage - reject
+    - ^https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage - reject
     - ^https?://wdk-unity.alibabausercontent.com/frontend/common/20240929/d0080be19219db69be5ecf2127dc745e.mp4 - reject
 
     # 肯德基
-    - ^https?://res.kfc.com.cn/advertisement/ - reject-200
+    - ^https?://res.kfc.com.cn/advertisement/ - reject
     - ^https?://res.kfc.com.cn/CRM/kfcad/apphome6/\w+.json\? - reject-dict
-    - ^https?://dynamicad.kfc.com.cn/api/app5/homepage/ai/popup - reject-200
+    - ^https?://dynamicad.kfc.com.cn/api/app5/homepage/ai/popup - reject
 
     # 麦当劳
     - ^https://api.mcd.cn/bff/portal/home/splash - reject # 开屏广告
