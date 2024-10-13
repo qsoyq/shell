@@ -25,6 +25,46 @@ db_get(){
 }
 
 
+# 定义 Zsh 函数
+remove_duplicates() {
+    # 检查是否传入了目录参数
+    if [[ -z "$1" ]]; then
+        echo "请提供一个目录作为参数。"
+        echo "用法: remove_duplicates /path/to/directory"
+        return 1
+    fi
+
+    # 获取用户提供的目录
+    local target_dir="$1"
+
+    # 检查目录是否存在
+    if [[ ! -d "$target_dir" ]]; then
+        echo "目录 $target_dir 不存在。"
+        return 1
+    fi
+
+    # 创建一个关联数组保存哈希值和文件路径的映射
+    typeset -A filehashes
+
+    # 查找所有文件，计算它们的MD5哈希值
+    find "$target_dir" -type f | while read -r file; do
+        # 计算文件的MD5哈希值
+        local hash
+        hash=$(md5 -q "$file")
+        
+        # 如果哈希值已经存在，说明是重复文件，删除它
+        if [[ -n "${filehashes[$hash]}" ]]; then
+            echo "删除重复文件: $file"
+            trash "$file"
+        else
+            # 否则，记录该文件的哈希值
+            filehashes[$hash]="$file"
+        fi
+    done
+}
+
+# 将函数保存到 .zshrc 文件中以便每次启动时生效
+
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=1000
 SAVEHIST=100000
