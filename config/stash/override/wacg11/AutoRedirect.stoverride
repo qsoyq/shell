@@ -1,0 +1,18 @@
+name: wacg11自动跳转
+desc: |-
+category: qsoyq
+http:
+  mitm:
+    - wacg11.com
+
+  script:
+    - match: https?://wacg11.com/\?path=/archives/\d+/
+      name: wacg11
+      type: request
+      require-body: false
+      timeout: 60
+
+script-providers:
+  wacg11:
+    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/wacg11/AutoRedirect.js
+    interval: 86400
