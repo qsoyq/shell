@@ -8,7 +8,7 @@ http:
   script:
     - match: https?://wacg11.com/\?path=/archives/\d+/
       name: wacg11
-      type: request
+      type: response
       require-body: false
       timeout: 60
 

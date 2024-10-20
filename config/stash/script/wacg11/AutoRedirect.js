@@ -295,6 +295,32 @@ function responseLog(uid) {
     }
 }
 
+// function main() {
+//     let scriptType = getScriptType()
+//     let uid = randomChar(32)
+//     console.log(`${uid} script type: ${scriptType}`)
+//     console.log(``)
+//     requestLog(uid)
+//     responseLog(uid)
+
+//     if (scriptType === 'request') {
+//         // 省略不必要的手动跳转
+//         // https://wacg11.com/?path=/archives/123456/ => https://against.wnmcpqa.com/archives/123456/
+//         console.log(`[${uid}]当前 url: ${$request.url}`)
+
+//         let path = new URL($request.url).searchParams.get("path");
+//         if (path) {
+//             let url = `https://against.wnmcpqa.com${path}`
+//             console.log(`[${uid}] new url: ${url}`)
+//             return $done({ url: url })
+//         } else {
+//             console.log(`[${uid}] 未匹配到 path 参数`)
+//             return $done({})
+//         }
+//     } else {
+//         return $done({})
+//     }
+// }
 function main() {
     let scriptType = getScriptType()
     let uid = randomChar(32)
@@ -303,16 +329,16 @@ function main() {
     requestLog(uid)
     responseLog(uid)
 
-    if (scriptType === 'request') {
+    if (scriptType === 'response') {
         // 省略不必要的手动跳转
         // https://wacg11.com/?path=/archives/123456/ => https://against.wnmcpqa.com/archives/123456/
-        console.log(`[${uid}]当前 url: ${$request.url}`)
+        console.log(`[${uid}] 当前 url: ${$request.url}`)
 
         let path = new URL($request.url).searchParams.get("path");
         if (path) {
             let url = `https://against.wnmcpqa.com${path}`
             console.log(`[${uid}] new url: ${url}`)
-            return $done({ url: url })
+            return $done({ status: 307, headers: { Location: url }, body: "" })
         } else {
             console.log(`[${uid}] 未匹配到 path 参数`)
             return $done({})
