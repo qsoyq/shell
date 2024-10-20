@@ -63,6 +63,44 @@ remove_duplicates() {
     done
 }
 
+# /Users/qs/Documents/obsidian/obsidian/Journal/Pasted Image 20241014150712.jpeg
+# upload_file_to_telegraph /Users/qs/Documents/obsidian/obsidian/Journal/Pasted\ Image\ 20241014150712.jpeg
+# 定义文件上传函数
+upload_file_to_telegraph() {
+    local file_path=$1
+    local host="https://telegraph.19940731.xyz"
+    
+    # 检查文件是否存在
+    if [ ! -f "$file_path" ]; then
+        echo "File not found: $file_path"
+        return 1
+    fi
+
+    # 使用 curl 上传文件
+    local response=$(curl -s -F "file=@$file_path" "$host"/upload)
+
+    # 从 JSON 响应中提取 error 字段
+    local error=$(echo "$response" | jq -r '.[0].error')
+
+    if [[ "$error" != "null" ]]; then
+        echo "$error"
+        return 1
+    fi    
+
+    # 从 JSON 响应中提取 src 字段的值
+    local src=$(echo "$response" | jq -r '.[0].src')
+
+    # 检查是否成功提取到 src 值
+    if [[ -z "$src" || "$src" == "null" ]]; then
+        echo "Error: 'src' not found in the response"
+        return 1
+    fi
+
+    # 返回完整的 src URL
+    echo "![]($host$src)"
+    return 0
+}
+
 # 将函数保存到 .zshrc 文件中以便每次启动时生效
 
 HISTFILE="$HOME/.zsh_history"
