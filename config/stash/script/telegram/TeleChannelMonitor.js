@@ -372,14 +372,15 @@ function makePushMessages(groupMessages) {
     // groupMessages 现在是包含所有 channelMessages 的数组
     for (const group of groupMessages) {
         for (const message of group) {
+            let url = `tg://resolve?domain=${message.username}&post=${message.msgid}&single`
             let payload = {
                 device_key: barkToken,
                 title: message.channelName,
-                body: message.text,
+                body: `${message.text}\n\n${url}`,
                 group: barkGroup,
                 level: level,
                 icon: message.head,
-                url: `tg://resolve?domain=${message.username}&post=${message.msgid}&single`
+                url: url
             }
             messages.push({ bark: payload })
         }
