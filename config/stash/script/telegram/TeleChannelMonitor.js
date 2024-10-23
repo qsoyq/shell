@@ -295,18 +295,166 @@ function responseLog(uid) {
     }
 }
 
-async function main() {
-    let scriptType = getScriptType()
-    let uid = randomChar(32)
-    console.log(`${uid} script type: ${scriptType}`)
-    console.log(``)
-    requestLog(uid)
-    responseLog(uid)
+/**
+ * 
+ * @param {Document} document 
+ * @returns 
+ */
+function parseMessages(document) {
+    let resp = []
+    let headImg = document.querySelector("body > header > div > div.tgme_header_info > a.tgme_header_link > i > img").attributes.src.textContent
+    let channelName = document.querySelector("body > header > div > div.tgme_header_info > a.tgme_header_link > div.tgme_header_title_wrap > div.tgme_header_title > span").textContent
+    li = document.querySelectorAll("body > main > div > section > div .tgme_widget_message")
+    li.forEach(ele => {
+        let _arr = ele.attributes["data-post"].value.split('/')
+        let username = _arr[0]
+        let msgid = _arr[1]
+        let title
+        let text
+        let textTag = ele.querySelector(".js-message_text")
+        if (textTag) {
+            if (ele.querySelector(".js-message_text>b")) {
+                title = ele.querySelector(".js-message_text>b").outerText
+            }
+            if (ele.querySelector(".js-message_text")) {
+                text = ele.querySelector(".js-message_text").outerText
+            }
+        }
+        resp.push({ head: headImg, channelName, username, msgid, title, text })
+    })
+    return resp
 }
+
+/**
+ * 请求频道消息网页，解析并返回响应的消息组
+ * @param {string} channel 
+ * @returns 
+ */
+async function getChannelMessages(channel) {
+    console.log(`正在访问频道: ${channel}`)
+    let onceMaxSize = getScriptArgument("onceMaxSize") || 10
+    let url = `https://t.me/s/${channel}`
+    let lastMessageID = getPersistentArgument(`TelegramLastMessageId-${channel}`)
+    if (lastMessageID) {
+        lastMessageID = Number(lastMessageID)
+        url += `?after=${lastMessageID}`
+    }
+
+    try {
+        console.log(`channel url: ${url}`)
+        let res = await get(url)
+        // 如果你要处理 `res`，可以在这里添加逻辑
+        if (res.error) {
+            console.log(`request ${channel} failed. error: ${error}`)
+        } else {
+            let document = new DOMParser().parseFromString(res.data, 'text/html');
+            let channelMessages = parseMessages(document).filter(element => !lastMessageID || element.msgid > lastMessageID);
+            console.log(`get channel ${channel} message count: ${channelMessages.length}`)
+            return channelMessages.slice(0, onceMaxSize)
+        }
+    } catch (error) {
+        console.error(`Error fetching data for channel ${channel}:`, error)
+    }
+}
+
+/**
+ * 
+ * @param {array} groupMessages 
+ * @returns 
+ */
+function makePushMessages(groupMessages) {
+    console.log(`make push messages`)
+    let barkToken = getScriptArgument("barkToken")
+    let barkGroup = getScriptArgument("barkGroup") || "Telegram"
+    let level = getScriptArgument("level") || "passive"
+
+    let messages = []
+    // groupMessages 现在是包含所有 channelMessages 的数组
+    for (const group of groupMessages) {
+        for (const message of group) {
+            let payload = {
+                device_key: barkToken,
+                title: message.channelName,
+                body: message.text,
+                group: barkGroup,
+                level: level,
+                icon: message.head,
+                url: `tg://resolve?domain=${message.username}&post=${message.msgid}&single`
+            }
+            messages.push({ bark: payload })
+        }
+    }
+    return messages
+}
+
+async function main() {
+    try {
+        let scriptType = getScriptType()
+        let uid = randomChar(32)
+        console.log(`${uid} script type: ${scriptType}`)
+        console.log(``)
+        requestLog(uid)
+        responseLog(uid)
+
+        // 遍历频道
+        let channels = getScriptArgument("channels")
+        let groupMessages = []
+        // 使用 Promise.all 并行获取所有频道的消息
+        try {
+            groupMessages = await Promise.all(
+                channels.map(async channel => await getChannelMessages(channel))
+            );
+        } catch (error) {
+            console.log(`get channel messages error: ${error}`)
+            $done({})
+            return
+        }
+
+
+        let messages = makePushMessages(groupMessages)
+        if (messages.length === 0) {
+            $done({})
+            return
+        }
+
+        let body = JSON.stringify({ messages: messages }, null, 4)
+        // console.log(`body: ${body}`)
+        let res
+        try {
+            res = await post({ url: 'https://p.19940731.xyz/api/notifications/push/v2', headers: { 'Content-Type': "application/json" }, body: body })
+            console.log(`push success`)
+        } catch (error) {
+            console.log(`push messages error: ${error}`)
+            $done({})
+            return
+        }
+
+        if (res.error) {
+            console.log(`push messages to bark failed. error: ${res.error}`)
+        }
+
+        // 写入本地持久化    
+        console.log(`write local persistent`)
+        for (const messages of groupMessages) {
+            if (messages.length !== 0) {
+                let lastMessage = messages.at(-1)
+                console.log(`更新 ${lastMessage.username} 缓存成功.`)
+                writePersistentArgument(`TelegramLastMessageId-${lastMessage.username}`, lastMessage.msgid)
+            }
+        }
+        $done({})
+        return
+    } catch (error) {
+        console.log(`run main function error ${error}`)
+        $done({})
+    }
+}
+
+
 
 try {
     main()
 } catch (error) {
     console.log(error)
+    $done({})
 }
-$done({})
