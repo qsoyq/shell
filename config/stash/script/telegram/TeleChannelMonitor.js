@@ -367,9 +367,7 @@ function makePushMessages(groupMessages) {
     let barkToken = getScriptArgument("barkToken")
     let barkGroup = getScriptArgument("barkGroup") || "Telegram"
     let level = getScriptArgument("level") || "passive"
-
     let messages = []
-    // groupMessages 现在是包含所有 channelMessages 的数组
     for (const group of groupMessages) {
         for (const message of group) {
             let url = `tg://resolve?domain=${message.username}&post=${message.msgid}&single`
@@ -416,6 +414,8 @@ async function main() {
             $done({})
             return
         }
+        groupMessages = groupMessages.filter(element => typeof element !== 'undefined')
+
         let messages = makePushMessages(groupMessages)
         if (messages.length === 0) {
             $done({})
