@@ -348,9 +348,9 @@ async function getChannelMessages(channel) {
             console.log(`request ${channel} failed. error: ${error}`)
         } else {
             let document = new DOMParser().parseFromString(res.data, 'text/html');
-            let channelMessages = parseMessages(document).filter(element => !lastMessageID || element.msgid > lastMessageID);
+            let channelMessages = parseMessages(document).filter(element => !lastMessageID || element.msgid > lastMessageID).slice(0, onceMaxSize)
             console.log(`get channel ${channel} message count: ${channelMessages.length}`)
-            return channelMessages.slice(0, onceMaxSize)
+            return channelMessages
         }
     } catch (error) {
         console.error(`Error fetching data for channel ${channel}:`, error)
