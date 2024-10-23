@@ -353,7 +353,7 @@ async function getChannelMessages(channel) {
             return channelMessages
         }
     } catch (error) {
-        console.error(`Error fetching data for channel ${channel}:`, error)
+        console.log(`Error fetching data for channel ${channel}:`, error)
     }
 }
 
