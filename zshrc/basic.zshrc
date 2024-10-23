@@ -15,6 +15,7 @@ alias timestamp='date +%s'
 alias datetime="date \"+%Y-%m-%d %H:%M:%S\""
 alias today="date \"+%Y-%m-%d\""
 alias history="history 1000"
+alias tarfix="gtar --mtime='2024-01-01' --sort=name --numeric-owner -czf"
 
 db_set(){
     echo "$1,$2" >> ~/.database.kv
