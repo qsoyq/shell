@@ -411,7 +411,11 @@ async function main() {
             return
         }
 
-
+        if (!groupMessages) {
+            console.log(`invali groupMessages: ${groupMessages}`)
+            $done({})
+            return
+        }
         let messages = makePushMessages(groupMessages)
         if (messages.length === 0) {
             $done({})

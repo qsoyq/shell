@@ -1,6 +1,7 @@
 name: wacg11自动跳转
 desc: |-
 category: qsoyq
+icon: https://against.wqbyvazj.com/favicon.ico
 http:
   mitm:
     - wacg11.com
