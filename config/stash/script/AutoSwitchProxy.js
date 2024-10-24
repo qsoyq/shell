@@ -309,17 +309,34 @@ function responseLog(uid) {
 }
 
 async function main() {
-    let scriptType = getScriptType()
-    let uid = randomChar(32)
-    console.log(`${uid} script type: ${scriptType}`)
-    console.log(``)
-    requestLog(uid)
-    responseLog(uid)
+    try {
+        let selector = mustGetScriptArgument("selector")
+        let name = mustGetScriptArgument("name")
+        let host = mustGetScriptArgument("host")
+        let url = `http://${host}/proxies/${selector}`
+        let payload = JSON.stringify({ name })
+        let res = await put({ url: url, body: payload, headers: { "Content-Type": "application/json" } })
+        if (res.error) {
+            console.log(`request failed. error: ${error}`)
+        } else {
+            switch (res.response.status) {
+                case 204:
+                    console.log(`节点切换成功, ${selector} -> ${name}`)
+                    break
+                case 404:
+                    console.log(`selector 参数有误, 当前值为 ${selector}`)
+                    break
+                case 400:
+                    console.log(`name 参数有误, 当前值为 ${name}`)
+                    break
+                default:
+                    console.log(`未知结果`)
+                    visitAll(res)
+            }
+        }
+    } catch (error) {
+        console.log(`error: ${error}`)
+    }
+    $done({})
 }
-
-try {
-    main()
-} catch (error) {
-    console.log(error)
-}
-$done({})
+main()
