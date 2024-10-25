@@ -126,4 +126,4 @@ rule-providers:
 
 rules:
   # 可跳过番茄小说广告
-  - RULE-SET,anti-AD,REJECT
+  - RULE-SET,anti-AD,REJECT-DROP
