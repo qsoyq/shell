@@ -1,17 +1,57 @@
+/** @namespace loglog */
+
 /**
- * 对异步回调的 http 调用包装成 async 函数
- * @param {string} method 
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @typedef {Object} loglog.HTTPResponse
+ * @property {string|null} error - 错误信息，如果没有错误则为 null
+ * @property {object} response - HTTP 响应对象
+ * @property {string|null} data - 返回的数据，如果没有数据则为 null
+ */
+
+/**
+ * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * 回调函数类型，接受错误、响应和数据作为参数。
+ * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
+ * @param {Object} response - HTTP 响应对象
+ * @param {string|null} data - 返回的数据，可以是字符串或者 null
+ */
+
+/**
+ * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ */
+
+/**
+ * @typedef {Object} loglog.HttpClient
+ * @property {loglog.HTTPMethod} get - 发送 GET 请求
+ * @property {loglog.HTTPMethod} post - 发送 POST 请求
+ * @property {loglog.HTTPMethod} put - 发送 PUT 请求
+ * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ */
+
+/** @type {loglog.HttpClient} */
+var $httpClient;
+
+var $request, $notification, $argument, $persistentStore, $script
+
+/** @type {function(Object):void} */
+var $done
+
+/**
+ * 对异步回调的 HTTP 调用包装成 async 函数
+ * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
+ * @param {Object} params - 请求参数对象，包含请求所需的各类信息
+ * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        $httpClient[method.toLowerCase()](params, (error, response, data) => {
+        /** @type {loglog.HTTPMethod} */
+        const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
+        httpMethod(params, (error, response, data) => {
             if (error) {
                 console.log(`Error: ${error}, Response: ${JSON.stringify(response)}, Data: ${data}`);
-                reject({ error, response, data });
+                reject({ error, response, data }); // 请求失败，拒绝 Promise
             } else {
-                resolve({ error, response, data });
+                resolve({ error, response, data }); // 请求成功，解析 Promise
             }
         });
     });
@@ -19,8 +59,8 @@ async function request(method, params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<loglog.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -28,8 +68,8 @@ async function get(params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<loglog.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -37,8 +77,8 @@ async function post(params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<loglog.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -46,8 +86,8 @@ async function put(params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<loglog.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -130,7 +170,7 @@ function notificationPost(title, subtitle, content, url) {
 
 /**
  * 判断当前请求是否来自微信
- * @returns {bool} 
+ * @returns {Boolean} 
  */
 function isWechat() {
     if (typeof $request === 'undefined') {
@@ -211,7 +251,7 @@ function parseJsonBody(string) {
 /**
  * 读取脚本参数
  * @param {string} key 
- * @returns {string}
+ * @returns {any|undefined|null}
  */
 function getScriptArgument(key) {
     if (typeof $argument === "undefined") {
@@ -231,6 +271,8 @@ function getScriptArgument(key) {
 /**
  * 从环境中读取参数， 且参数不可为空，否则抛出异常
  * @param {string} key 
+ * @returns {any}
+ * @throws {Error} 如果找不到对应的参数值，或参数值为 `null` 或 `undefined`，则抛出一个包含错误信息的异常。* 
  */
 function mustGetScriptArgument(key) {
     let val = getScriptArgument(key)
@@ -283,43 +325,22 @@ function countryCodeToEmoji(countryCode) {
     }
 
     // 将两位代码转换为相应的Unicode字符
-    const codePoints = [...countryCode].map(char => 127397 + char.charCodeAt());
+    const codePoints = [...countryCode].map(char => 127397 + char.charCodeAt(0));
 
     // 将Unicode字符转换为emoji
     return String.fromCodePoint(...codePoints);
 }
 
-function requestLog(uid) {
-    if (getScriptType() === 'request') {
-
-    }
-}
-
-function responseLog(uid) {
-    if (getScriptType() === 'response') {
-        let isOutputBody = getScriptArgument("isOutputBody")
-        request = $request
-        response = $response
-        console.log(`${uid} request: ${request.url}, ${request.method} ${response.status}`)
-        if (isOutputBody) {
-            visitAll(request)
-            visitAll(response)
-        }
-    }
-}
 
 async function main() {
-    let scriptType = getScriptType()
-    let uid = randomChar(32)
-    console.log(`${uid} script type: ${scriptType}`)
-    console.log(``)
-    requestLog(uid)
-    responseLog(uid)
+    try {
+
+    } catch (error) {
+        console.log(`error:${error}`)
+    }
+    $done({})
+
+
 }
 
-try {
-    main()
-} catch (error) {
-    console.log(error)
-}
-$done({})
+main()

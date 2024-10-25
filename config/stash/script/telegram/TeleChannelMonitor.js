@@ -1,12 +1,14 @@
+/** @namespace TeleChannelMonitor */
+
 /**
- * @typedef {Object} HTTPResponse
+ * @typedef {Object} TeleChannelMonitor.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} TeleChannelMonitor.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -14,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, HTTPCallback): HTTPResponse} HTTPMethod
+ * @typedef {function(Object, TeleChannelMonitor.HTTPCallback): TeleChannelMonitor.HTTPResponse} TeleChannelMonitor.HTTPMethod
  */
 
 /**
- * @typedef {Object} HttpClient
- * @property {HTTPMethod} get - 发送 GET 请求
- * @property {HTTPMethod} post - 发送 POST 请求
- * @property {HTTPMethod} put - 发送 PUT 请求
- * @property {HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} TeleChannelMonitor.HttpClient
+ * @property {TeleChannelMonitor.HTTPMethod} get - 发送 GET 请求
+ * @property {TeleChannelMonitor.HTTPMethod} post - 发送 POST 请求
+ * @property {TeleChannelMonitor.HTTPMethod} put - 发送 PUT 请求
+ * @property {TeleChannelMonitor.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {HttpClient} */
+/** @type {TeleChannelMonitor.HttpClient} */
 var $httpClient;
 
 var $request, $notification, $argument, $persistentStore, $script
@@ -37,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<TeleChannelMonitor.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {HTTPMethod} */
+        /** @type {TeleChannelMonitor.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -58,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<HTTPResponse>}
+ * @returns {Promise<TeleChannelMonitor.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -67,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<HTTPResponse>}
+ * @returns {Promise<TeleChannelMonitor.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -76,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<HTTPResponse>}
+ * @returns {Promise<TeleChannelMonitor.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -85,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<HTTPResponse>}
+ * @returns {Promise<TeleChannelMonitor.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -329,11 +331,6 @@ function countryCodeToEmoji(countryCode) {
     return String.fromCodePoint(...codePoints);
 }
 
-function requestLog(uid) {
-    if (getScriptType() === 'request') {
-
-    }
-}
 
 /**
  * 
@@ -449,51 +446,41 @@ async function main() {
                 channels.map(async channel => await getChannelMessages(channel))
             );
         } catch (error) {
-            console.log(`get channel messages error: ${error}`)
-            $done({})
-            return
+            throw `get channel messages error: ${error}`
         }
 
         if (!groupMessages) {
-            console.log(`invali groupMessages: ${groupMessages}`)
-            $done({})
-            return
+            throw `invali groupMessages: ${groupMessages}`
         }
         groupMessages = groupMessages.filter(element => typeof element !== 'undefined')
 
         let messages = makePushMessages(groupMessages)
-        if (messages.length === 0) {
-            $done({})
-            return
-        }
+        if (messages.length !== 0) {
+            let body = JSON.stringify({ messages: messages }, null, 4)
+            // console.log(`body: ${body}`)
+            let res
+            try {
+                res = await post({ url: 'https://p.19940731.xyz/api/notifications/push/v2', headers: { 'Content-Type': "application/json" }, body: body })
+                console.log(`push success`)
+            } catch (error) {
+                throw `push messages error: ${error}`
+            }
 
-        let body = JSON.stringify({ messages: messages }, null, 4)
-        // console.log(`body: ${body}`)
-        let res
-        try {
-            res = await post({ url: 'https://p.19940731.xyz/api/notifications/push/v2', headers: { 'Content-Type': "application/json" }, body: body })
-            console.log(`push success`)
-        } catch (error) {
-            console.log(`push messages error: ${error}`)
-            $done({})
-            return
-        }
+            if (res.error) {
+                throw `push messages to bark failed. error: ${res.error}`
+            }
 
-        if (res.error) {
-            console.log(`push messages to bark failed. error: ${res.error}`)
-        }
-
-        // 写入本地持久化    
-        console.log(`write local persistent`)
-        for (const messages of groupMessages) {
-            if (messages.length !== 0) {
-                let lastMessage = messages.at(-1)
-                console.log(`更新 ${lastMessage.username} 缓存成功.`)
-                writePersistentArgument(`TelegramLastMessageId-${lastMessage.username}`, lastMessage.msgid)
+            // 写入本地持久化    
+            console.log(`write local persistent`)
+            for (const messages of groupMessages) {
+                if (messages.length !== 0) {
+                    let lastMessage = messages.at(-1)
+                    console.log(`更新 ${lastMessage.username} 缓存成功.`)
+                    writePersistentArgument(`TelegramLastMessageId-${lastMessage.username}`, lastMessage.msgid)
+                }
             }
         }
         $done({})
-        return
     } catch (error) {
         console.log(`run main function error ${error}`)
         $done({})
