@@ -409,12 +409,18 @@ function makePushMessages(groupMessages) {
     let barkToken = getScriptArgument("barkToken")
     let barkGroup = getScriptArgument("barkGroup") || "Telegram"
     let level = getScriptArgument("level") || "passive"
+    /** @type {string[]} */
+    let activeKeywords = getScriptArgument("activeKeywords") || []
     let messages = []
     for (const group of groupMessages) {
         for (const message of group) {
             let url = `tg://resolve?domain=${message.username}&post=${message.msgid}&single`
-            if (typeof message.text === 'string' && message.text.includes("#小程序://支付有优惠")) {
-                level = 'active'
+            if (activeKeywords) {
+                activeKeywords.forEach(element => {
+                    if (typeof message.text === 'string' && message.text.includes(element)) {
+                        level = 'active'
+                    }
+                })
             }
             let payload = {
                 device_key: barkToken,
