@@ -1,17 +1,55 @@
 /**
- * 对异步回调的 http 调用包装成 async 函数
- * @param {string} method 
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @typedef {Object} HTTPResponse
+ * @property {string|null} error - 错误信息，如果没有错误则为 null
+ * @property {object} response - HTTP 响应对象
+ * @property {string|null} data - 返回的数据，如果没有数据则为 null
+ */
+
+/**
+ * @typedef {function(Error|string|null, Object, string|null): void} HTTPCallback
+ * 回调函数类型，接受错误、响应和数据作为参数。
+ * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
+ * @param {Object} response - HTTP 响应对象
+ * @param {string|null} data - 返回的数据，可以是字符串或者 null
+ */
+
+/**
+ * @typedef {function(Object, HTTPCallback): HTTPResponse} HTTPMethod
+ */
+
+/**
+ * @typedef {Object} HttpClient
+ * @property {HTTPMethod} get - 发送 GET 请求
+ * @property {HTTPMethod} post - 发送 POST 请求
+ * @property {HTTPMethod} put - 发送 PUT 请求
+ * @property {HTTPMethod} delete - 发送 DELETE 请求
+ */
+
+/** @type {HttpClient} */
+var $httpClient;
+
+var $request, $notification, $argument, $persistentStore, $script
+
+/** @type {function(Object):void} */
+var $done
+
+/**
+ * 对异步回调的 HTTP 调用包装成 async 函数
+ * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
+ * @param {Object} params - 请求参数对象，包含请求所需的各类信息
+ * @returns {Promise<HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        $httpClient[method.toLowerCase()](params, (error, response, data) => {
+        /** @type {HTTPMethod} */
+        const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
+        httpMethod(params, (error, response, data) => {
             if (error) {
-                console.error(`Error: ${error}, Response: ${JSON.stringify(response)}, Data: ${data}`);
-                reject({ error, response, data });
+                console.log(`Error: ${error}, Response: ${JSON.stringify(response)}, Data: ${data}`);
+                reject({ error, response, data }); // 请求失败，拒绝 Promise
             } else {
-                resolve({ error, response, data });
+                resolve({ error, response, data }); // 请求成功，解析 Promise
             }
         });
     });
@@ -19,8 +57,8 @@ async function request(method, params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -28,8 +66,8 @@ async function get(params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -37,8 +75,8 @@ async function post(params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -46,8 +84,8 @@ async function put(params) {
 
 /**
  * 请求封装
- * @param {object} params 请求参数
- * @returns {object} 包含 error, response, data 的对象
+ * @param {object} params
+ * @returns {Promise<HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -130,7 +168,7 @@ function notificationPost(title, subtitle, content, url) {
 
 /**
  * 判断当前请求是否来自微信
- * @returns {bool} 
+ * @returns {Boolean} 
  */
 function isWechat() {
     if (typeof $request === 'undefined') {
@@ -211,7 +249,7 @@ function parseJsonBody(string) {
 /**
  * 读取脚本参数
  * @param {string} key 
- * @returns {string}
+ * @returns {any|undefined|null}
  */
 function getScriptArgument(key) {
     if (typeof $argument === "undefined") {
@@ -226,6 +264,21 @@ function getScriptArgument(key) {
         return null; // JSON 解析失败返回 null
     }
     return body[key]
+}
+
+/**
+ * 从环境中读取参数， 且参数不可为空，否则抛出异常
+ * @param {string} key 
+ * @returns {any}
+ * @throws {Error} 如果找不到对应的参数值，或参数值为 `null` 或 `undefined`，则抛出一个包含错误信息的异常。* 
+ */
+function mustGetScriptArgument(key) {
+    let val = getScriptArgument(key)
+    if (val === null || val === undefined) {
+        console.log(`can't find value for ${key}`)
+        throw `can't find value for ${key}`
+    }
+    return val
 }
 
 /**
@@ -270,7 +323,7 @@ function countryCodeToEmoji(countryCode) {
     }
 
     // 将两位代码转换为相应的Unicode字符
-    const codePoints = [...countryCode].map(char => 127397 + char.charCodeAt());
+    const codePoints = [...countryCode].map(char => 127397 + char.charCodeAt(0));
 
     // 将Unicode字符转换为emoji
     return String.fromCodePoint(...codePoints);
@@ -282,19 +335,6 @@ function requestLog(uid) {
     }
 }
 
-function responseLog(uid) {
-    if (getScriptType() === 'response') {
-        let isOutputBody = getScriptArgument("isOutputBody")
-        request = $request
-        response = $response
-        console.log(`${uid} request: ${request.url}, ${request.method} ${response.status}`)
-        if (isOutputBody) {
-            visitAll(request)
-            visitAll(response)
-        }
-    }
-}
-
 /**
  * 
  * @param {Document} document 
@@ -302,9 +342,9 @@ function responseLog(uid) {
  */
 function parseMessages(document) {
     let resp = []
-    let headImg = document.querySelector("body > header > div > div.tgme_header_info > a.tgme_header_link > i > img").attributes.src.textContent
-    let channelName = document.querySelector("body > header > div > div.tgme_header_info > a.tgme_header_link > div.tgme_header_title_wrap > div.tgme_header_title > span").textContent
-    li = document.querySelectorAll("body > main > div > section > div .tgme_widget_message")
+    let headImg = document.querySelector("body > header > div > div.tgme_header_info > a.tgme_header_link > i > img")?.attributes?.getNamedItem("src")?.textContent
+    let channelName = document.querySelector("body > header > div > div.tgme_header_info > a.tgme_header_link > div.tgme_header_title_wrap > div.tgme_header_title > span")?.textContent
+    let li = document.querySelectorAll("body > main > div > section > div .tgme_widget_message")
     li.forEach(ele => {
         let _arr = ele.attributes["data-post"].value.split('/')
         let username = _arr[0]
@@ -314,10 +354,12 @@ function parseMessages(document) {
         let textTag = ele.querySelector(".js-message_text")
         if (textTag) {
             if (ele.querySelector(".js-message_text>b")) {
-                title = ele.querySelector(".js-message_text>b").outerText
+                // @ts-ignore
+                title = ele.querySelector(".js-message_text>b")?.outerText || ""
             }
             if (ele.querySelector(".js-message_text")) {
-                text = ele.querySelector(".js-message_text").outerText
+                // @ts-ignore
+                text = ele.querySelector(".js-message_text")?.outerText || ""
             }
         }
         resp.push({ head: headImg, channelName, username, msgid, title, text })
@@ -327,14 +369,14 @@ function parseMessages(document) {
 
 /**
  * 请求频道消息网页，解析并返回响应的消息组
- * @param {string} channel 
+ * @param {number} channel 
  * @returns 
  */
 async function getChannelMessages(channel) {
     console.log(`正在访问频道: ${channel}`)
-    let onceMaxSize = getScriptArgument("onceMaxSize") || 10
+    let onceMaxSize = Number(getScriptArgument("onceMaxSize") || 10)
     let url = `https://t.me/s/${channel}`
-    let lastMessageID = getPersistentArgument(`TelegramLastMessageId-${channel}`)
+    let lastMessageID = Number(getPersistentArgument(`TelegramLastMessageId-${channel}`) || 0)
     if (lastMessageID) {
         lastMessageID = Number(lastMessageID)
         url += `?after=${lastMessageID}`
@@ -345,12 +387,15 @@ async function getChannelMessages(channel) {
         let res = await get(url)
         // 如果你要处理 `res`，可以在这里添加逻辑
         if (res.error) {
-            console.log(`request ${channel} failed. error: ${error}`)
+            console.log(`request ${channel} failed. error: ${res.error}`)
         } else {
-            let document = new DOMParser().parseFromString(res.data, 'text/html');
-            let channelMessages = parseMessages(document).filter(element => !lastMessageID || element.msgid > lastMessageID).slice(0, onceMaxSize)
-            console.log(`get channel ${channel} message count: ${channelMessages.length}`)
-            return channelMessages
+            if (res.data) {
+                let document = new DOMParser().parseFromString(res.data, 'text/html');
+                let channelMessages = parseMessages(document).filter(element => !lastMessageID || element.msgid > lastMessageID).slice(0, onceMaxSize)
+                console.log(`get channel ${channel} message count: ${channelMessages.length}`)
+                return channelMessages
+            }
+
         }
     } catch (error) {
         console.log(`Error fetching data for channel ${channel}:`, error)
@@ -371,6 +416,9 @@ function makePushMessages(groupMessages) {
     for (const group of groupMessages) {
         for (const message of group) {
             let url = `tg://resolve?domain=${message.username}&post=${message.msgid}&single`
+            if (typeof message.text === 'string' && message.text.includes("#小程序://支付有优惠")) {
+                level = 'active'
+            }
             let payload = {
                 device_key: barkToken,
                 title: message.channelName,
@@ -388,15 +436,12 @@ function makePushMessages(groupMessages) {
 
 async function main() {
     try {
-        let scriptType = getScriptType()
-        let uid = randomChar(32)
-        console.log(`${uid} script type: ${scriptType}`)
-        console.log(``)
-        requestLog(uid)
-        responseLog(uid)
-
         // 遍历频道
-        let channels = getScriptArgument("channels")
+        /** @type {number[]} */
+        let channels = mustGetScriptArgument("channels")
+        if (typeof channels !== 'object') {
+            throw `invalid channles: ${channels}`
+        }
         let groupMessages = []
         // 使用 Promise.all 并行获取所有频道的消息
         try {
@@ -454,12 +499,4 @@ async function main() {
         $done({})
     }
 }
-
-
-
-try {
-    main()
-} catch (error) {
-    console.log(error)
-    $done({})
-}
+main()
