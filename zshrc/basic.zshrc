@@ -16,6 +16,7 @@ alias datetime="date \"+%Y-%m-%d %H:%M:%S\""
 alias today="date \"+%Y-%m-%d\""
 alias history="history 1000"
 alias tarfix="gtar --mtime='2024-01-01' --sort=name --numeric-owner -czf"
+alias uuid="python -c 'import uuid;print(uuid.uuid4().hex)'"
 
 db_set(){
     echo "$1,$2" >> ~/.database.kv
