@@ -331,16 +331,13 @@ function countryCodeToEmoji(countryCode) {
     return String.fromCodePoint(...codePoints);
 }
 
-
 async function main() {
     try {
 
     } catch (error) {
-        console.log(`error:${error}`)
+        console.log(`error: ${error}`)
     }
     $done({})
-
-
 }
 
 main()
