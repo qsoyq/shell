@@ -340,7 +340,7 @@ async function main() {
             visitAll($request)
             let command = `curl -X ${$request.method} "${$request.url}"`
             for (const [key, value] of Object.entries($request.headers)) {
-                command = `${command} \\\n  -H"${key}: ${value}"`
+                command = `${command} \\\n  -H"${key}: ${value.replace(/"/g, '\\"')}"`
             }
             if ($request.body) {
                 let body = (typeof $request.body === 'object') ? (new TextDecoder('utf-8')).decode(new Uint8Array($request.body)) : $request.body;
