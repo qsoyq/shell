@@ -30,7 +30,7 @@
 /** @type {loglog.HttpClient} */
 var $httpClient;
 
-var $request, $notification, $argument, $persistentStore, $script
+var $request, $response, $notification, $argument, $persistentStore, $script
 
 /** @type {function(Object):void} */
 var $done

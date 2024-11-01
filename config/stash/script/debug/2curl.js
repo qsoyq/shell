@@ -30,7 +30,7 @@
 /** @type {iCurl.HttpClient} */
 var $httpClient;
 
-var $request, $notification, $argument, $persistentStore, $script
+var $request, $response, $notification, $argument, $persistentStore, $script
 
 /** @type {function(Object):void} */
 var $done
@@ -161,7 +161,7 @@ function setCookie(key, val) {
  * @param {string} title 
  * @param {string} subtitle 
  * @param {string} content 
- * @param {string|undefined} url 
+ * @param {string|undefined} [url] 
  */
 function notificationPost(title, subtitle, content, url) {
     const params = url ? { url } : {};
@@ -348,6 +348,42 @@ async function main() {
             }
             console.log(`curl command: ${command}`)
             console.log(`${"=".repeat(20)}`)
+
+            if (type === 'response') {
+                let flag = getScriptArgument("enableHttpResponseBodyPrint") || false
+                if (flag) {
+                    console.log(`${"=".repeat(20)}`)
+                    let body = (typeof $response.body === 'object') ? (new TextDecoder('utf-8')).decode(new Uint8Array($response.body)) : $response.body;
+                    console.log(`response body: ${body}`)
+                    console.log(`${"=".repeat(20)}`)
+                }
+
+                flag = getScriptArgument("enableHttpResponseHeadersPrint") || false
+                if (flag) {
+                    console.log(`${"=".repeat(20)}`)
+                    visitAll($response.headers)
+                    console.log(`${"=".repeat(20)}`)
+                }
+            }
+
+            let httpRequestUrlSearchNotify = getScriptArgument("httpRequestUrlSearchNotify") || []
+            if (httpRequestUrlSearchNotify) {
+                const params = new URLSearchParams($request.url);
+                params.forEach((value, key) => {
+                    if (value && httpRequestUrlSearchNotify.includes(key.toLowerCase())) {
+                        notificationPost(`2Curl`, `Search: ${key}=${value}`, `${$request.url}`)
+                    }
+                });
+            }
+
+            let httpRequestHeadersNotify = getScriptArgument("httpRequestHeadersNotify") || []
+            if (httpRequestHeadersNotify) {
+                for (const [key, value] of Object.entries($request.headers)) {
+                    if (value && httpRequestHeadersNotify.includes(key.toLowerCase())) {
+                        notificationPost(`2Curl`, `Header: ${key}=${value}`, `${$request.url}`)
+                    }
+                }
+            }
         }
     } catch (error) {
         console.log(`error:${error}`)
