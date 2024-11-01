@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace ddxq */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} ddxq.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} ddxq.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, ddxq.HTTPCallback): ddxq.HTTPResponse} ddxq.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} ddxq.HttpClient
+ * @property {ddxq.HTTPMethod} get - 发送 GET 请求
+ * @property {ddxq.HTTPMethod} post - 发送 POST 请求
+ * @property {ddxq.HTTPMethod} put - 发送 PUT 请求
+ * @property {ddxq.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {ddxq.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<ddxq.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {ddxq.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<ddxq.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<ddxq.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<ddxq.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<ddxq.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -248,7 +248,6 @@ function parseJsonBody(string) {
         return null
     }
 }
-
 /**
  * 读取脚本参数
  * @param {string} key 
@@ -334,9 +333,104 @@ function countryCodeToEmoji(countryCode) {
 
 async function main() {
     try {
+        let type = getScriptType()
+        if (type === 'cron') {
+            let ddxq = getScriptArgument("ddxq")
+            let bark = getScriptArgument("bark")
+            let cookie = ddxq?.cookie
+            let station_id = ddxq?.station_id
 
+            /** @type {string[]} */
+            let productList = ddxq?.productList || []
+            let localPersistentProductList = []
+            let pushMessages = []
+            for (const id of productList) {
+                let url = `https://maicai.api.ddxq.mobi/guide-service/productApi/productDetail/info?id=${id}&station_id=${station_id}`
+                let res = await get({ url: url, headers: { "Cookie": cookie } })
+                if (res.error || !res.data) {
+                    console.log(`请求商品详细数据失败, 商品 id: ${id}, error: ${res.error}`)
+                    continue
+                }
+                let data = (typeof res.data === 'object') ? (new TextDecoder('utf-8')).decode(new Uint8Array(res.data)) : res.data;
+                let body = parseJsonBody(data)
+                let content = ''
+                let detail = body?.data?.detail
+                if (!detail) {
+                    if (body?.msg) {
+                        console.log(`获取商品数据失败, error: ${body.msg}`)
+                        console.log(`id: ${id}, station_id: ${station_id}`)
+                        continue
+                    } else {
+                        console.log(`data: ${data}`)
+                        console.log(`body: ${body}`)
+                        throw `parse json body error: ${typeof body}`
+                    }
+
+                }
+                let localPersistentKey = `ddxq-product-${station_id}-${id}`
+                let lastProduct = getPersistentArgument(localPersistentKey)
+                let lastProductDetail = {}
+
+                if (lastProduct) {
+                    lastProductDetail = parseJsonBody(lastProduct)
+                }
+
+                let notify = 0
+                if (lastProduct) {
+                    if (Number(lastProductDetail.stock_number) === 0 && detail.stock_number !== 0) {
+                        notify = 1
+                        content = `商品 ${detail.product_name} 已补货， 当前库存: ${detail.stock_number}`
+                    }
+
+                    if (Number(lastProductDetail.price) !== Number(detail.price)) {
+                        notify = 1
+                        content = `商品 ${detail.product_name} \n价格发生变化: ${lastProductDetail.price} -> ${detail.price}`
+                    }
+
+                } else {
+                    notify = 1
+                    content = `${content}\n 商品 ${detail.product_name} 已添加订阅.\n`
+                }
+
+                detail['station_id'] = station_id
+                localPersistentProductList.push(detail)
+
+                if (notify) {
+                    let deeplink = `ddxq://product/detail?id=${id}`
+                    content = `${content}\n 原始价格:${detail.origin_price}\n当前价格:${detail.price}\n会员价格:${detail.vip_price}\n商品库存(疑似): ${detail.stock_number}\n网页链接: ${detail.web_url}`
+                    content = `${content}\n\ndeeplink: ${deeplink}`
+                    if (bark) {
+                        let token = bark?.token
+                        let msg = {
+                            device_key: token,
+                            title: "订阅商品发生变化",
+                            body: content,
+                            level: bark?.level || "active",
+                            icon: bark?.icon || detail.small_image,
+                            group: bark?.group || "ddxq",
+                            url: deeplink,
+                            endpoint: bark?.endpoint || "https://api.day.app/push"
+                        }
+                        pushMessages.push({ bark: msg })
+                    }
+                }
+            }
+            if (pushMessages) {
+                let url = "https://p.19940731.xyz/api/notifications/push/v2"
+                let res = await post({ url: url, body: JSON.stringify({ messages: pushMessages }), headers: { "content-type": 'application/json' } })
+                if (res.error) {
+                    throw `推送通知失败: error: ${res.error}`
+                }
+            }
+            localPersistentProductList.forEach(x => {
+                let localPersistentKey = `ddxq-product-${x.station_id}-${x.id}`
+                writePersistentArgument(localPersistentKey, JSON.stringify(x))
+            })
+
+        }
     } catch (error) {
         console.log(`error: ${error}`)
+        $done({})
     }
     $done({})
 }
