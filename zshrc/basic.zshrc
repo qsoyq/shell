@@ -18,6 +18,33 @@ alias history="history 1000"
 alias tarfix="gtar --mtime='2024-01-01' --sort=name --numeric-owner -czf"
 alias uuid="python -c 'import uuid;print(uuid.uuid4().hex)'"
 
+urlsafe_base64() {
+    python3 -c "import base64; print(base64.urlsafe_b64encode('$1'.encode()).decode())"
+}
+
+urlencode() {
+    python3 -c "import urllib.parse; print(urllib.parse.quote_plus('$1'))"
+}
+
+ddxq_search() {
+    export keyword=$(urlencode $1)
+    curl -X GET "https://maicai.api.ddxq.mobi/search/searchProduct?keyword=${keyword}&page=${page}&station_id=${station_id}" \
+        -H "Cookie: ${cookie}"|jq '.data.result_list[] | select(.product_name != null) | 
+        {
+            "id": .id,
+            "商品名称": .product_name,
+            "商品库存": .stock_number,
+            "会员价格": .vip_price,
+            "原始价格": .origin_price,
+            "当前价格": .price,
+            "商品图片": .small_image,
+            "网页链接": .web_url,
+            "是否缺货提醒": .is_stockout_notify,  
+            "阿里小程序地址": .ali_applet_url,
+            "微信小程序地址": .wx_applet_url
+        }'
+}
+
 db_set(){
     echo "$1,$2" >> ~/.database.kv
 }
