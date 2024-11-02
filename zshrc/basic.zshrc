@@ -33,7 +33,9 @@ ddxq_search() {
         {
             "id": .id,
             "商品名称": .product_name,
-            "商品库存": .stock_number,
+            "清仓库存": .extMap.expiring_stock,
+            "是否缺货": .stockout,
+            "库存编码": .stock_number,
             "会员价格": .vip_price,
             "原始价格": .origin_price,
             "当前价格": .price,
