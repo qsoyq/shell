@@ -354,16 +354,14 @@ async function main() {
                 for (const regexp of regexps) {
                     let search = regexp?.search
                     let replace = regexp?.replace
+                    console.log(`search: ${search}, replace: ${replace}`)
                     if (search && replace) {
                         body = body.replace(new RegExp(search, 'g'), replace);
                     }
-
                 }
                 return $done({ body: body })
             }
-
         }
-
     } catch (error) {
         console.log(`error: ${error}`)
         $done({})

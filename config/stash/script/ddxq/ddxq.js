@@ -374,21 +374,32 @@ async function main() {
                 if (lastProduct) {
                     lastProductDetail = parseJsonBody(lastProduct)
                 }
-
+                let title
                 let notify = 0
+                let expiring_stock = detail?.extMap?.expiring_stock
+
                 if (lastProduct) {
                     if (Number(lastProductDetail.stock_number) === 0 && detail.stock_number !== 0) {
                         notify = 1
+                        title = `订单商品已补货`
                         content = `商品 ${detail.product_name} 已补货， 当前库存: ${detail.stock_number}`
                     }
 
-                    if (Number(lastProductDetail.price) !== Number(detail.price)) {
+                    if (Number(lastProductDetail.stock_number) !== 0 && detail.stock_number === 0) {
                         notify = 1
-                        content = `商品 ${detail.product_name} \n价格发生变化: ${lastProductDetail.price} -> ${detail.price}`
+                        title = `订单商品缺货`
+                        content = `商品 ${detail.product_name} 已售罄`
+                    }
+
+                    if (Number(lastProductDetail.price) > Number(detail.price)) {
+                        notify = 1
+                        title = `订单商品已降价`
+                        content = `商品 ${detail.product_name} \n已降价: ${lastProductDetail.price} -> ${detail.price}`
                     }
 
                 } else {
                     notify = 1
+                    title = '订单商品新增订阅'
                     content = `${content}\n 商品 ${detail.product_name} 已添加订阅.\n`
                 }
 
@@ -396,14 +407,19 @@ async function main() {
                 localPersistentProductList.push(detail)
 
                 if (notify) {
+
                     let deeplink = `ddxq://product/detail?id=${id}`
                     content = `${content}\n 原始价格:${detail.origin_price}\n当前价格:${detail.price}\n会员价格:${detail.vip_price}\n商品库存(疑似): ${detail.stock_number}\n网页链接: ${detail.web_url}`
+                    if (expiring_stock) {
+                        content = `${content}\n商品正参与清仓, 当前剩余数量: ${expiring_stock}`
+                    }
+                    content = `${content}\n站点id: ${station_id}\n商品 id: ${id}`
                     content = `${content}\n\ndeeplink: ${deeplink}`
                     if (bark) {
                         let token = bark?.token
                         let msg = {
                             device_key: token,
-                            title: "订阅商品发生变化",
+                            title: title,
                             body: content,
                             level: bark?.level || "active",
                             icon: bark?.icon || detail.small_image,
