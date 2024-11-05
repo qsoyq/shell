@@ -369,7 +369,8 @@ async function main() {
             await handler(_page)
         }
     } catch (error) {
-        console.log(`error: ${error}`)
+        let message = error?.message || error
+        console.log(`error: ${message}`)
         $done({})
     }
     $done({})
@@ -405,6 +406,7 @@ async function handler(page) {
                 throw "访问排行榜新发布数据失败， 请检查 cookie 有效期"
             }
             articleList = articleList.filter(article => article.category !== "AI美女");
+            articleList = articleList.filter(article => article.title); // https://xx.knit.bid/zh-hant/article/27525/ 部分网页无可见标题
             console.log(`article count: ${articleList.length}`)
             let force = getScriptArgument("force") || false
             for (const article of articleList) {
@@ -485,5 +487,4 @@ async function handler(page) {
         throw error
     }
 }
-
 main()
