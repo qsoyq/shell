@@ -357,8 +357,23 @@ function splitArrayIntoChunks(array, chunkSize) {
     return result;
 }
 
+/**
+ * 返回从 from 到 to 递增或递减的数组，步长为 1
+ * @param {number} from 
+ * @param {number} to 
+ * @returns 
+ */
 function generateArray(from, to) {
-    return Array.from({ length: to - from + 1 }, (_, i) => from + i);
+    const start = Math.min(from, to);
+    const end = Math.max(from, to);
+
+    // 如果 from 大于 to，生成逆序数组
+    if (from > to) {
+        return Array.from({ length: end - start + 1 }, (_, i) => end - i);
+    } else {
+        // 否则生成顺序数组
+        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    }
 }
 
 async function main() {
