@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace knit.bid */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} knit.bid.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} knit.bid.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, knit.bid.HTTPCallback): knit.bid.HTTPResponse} knit.bid.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} knit.bid.HttpClient
+ * @property {knit.bid.HTTPMethod} get - 发送 GET 请求
+ * @property {knit.bid.HTTPMethod} post - 发送 POST 请求
+ * @property {knit.bid.HTTPMethod} put - 发送 PUT 请求
+ * @property {knit.bid.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {knit.bid.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<knit.bid.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {knit.bid.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<knit.bid.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<knit.bid.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<knit.bid.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<knit.bid.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -340,13 +340,150 @@ function getScriptResponseBody() {
     return body
 }
 
+/**
+ * 将一个数组拆分成多个子数组
+ * @param {*} array 
+ * @param {*} chunkSize 
+ * @returns 
+ */
+function splitArrayIntoChunks(array, chunkSize) {
+    const result = [];
+
+    for (let i = 0; i < array.length; i += chunkSize) {
+        const chunk = array.slice(i, i + chunkSize);
+        result.push(chunk);
+    }
+
+    return result;
+}
+
+function generateArray(from, to) {
+    return Array.from({ length: to - from + 1 }, (_, i) => from + i);
+}
+
 async function main() {
     try {
-
+        let page = getScriptArgument("page") || { "from": 1, "to": 1 }
+        let pages = generateArray(page.from, page.to)
+        for (const _page of pages) {
+            await handler(_page)
+        }
     } catch (error) {
         console.log(`error: ${error}`)
+        $done({})
     }
     $done({})
+}
+
+
+async function handler(page) {
+    try {
+        let headers = getScriptArgument('headers')
+        if (!headers) {
+            throw '未配置 cookie 等参数, 无法绕过 cf 验证'
+        }
+
+        let url = `https://xx.knit.bid/zh-hant/sort/new/?page=${page}`
+        let res = await get({ url, headers })
+        if (res.error) {
+            throw `请求排行榜新发布失败: ${res.error}, ${res.data}`
+        }
+        if (res.data) {
+            let domParser = new DOMParser();
+            let document = domParser.parseFromString(res.data, 'text/html');
+            let host = 'https://xx.knit.bid'
+            let articleList = Array.from(document.querySelectorAll("#main > div.excerpts-wrapper > div > article"))
+                .map(article => {
+                    const title = article.querySelector("h2 > a")?.attributes["title"].textContent;
+                    const category = article.querySelector("div > a.imgbox-a")?.attributes["title"].textContent.trim();
+                    const href = `${host}${article.querySelector("div > a.imgbox")?.attributes["href"].textContent}`;
+                    const time = article.querySelector("footer > a > time")?.textContent;
+                    return { title, category, href, time };
+                })
+            if (page === 1 && articleList.length === 0) {
+                notificationPost("爱妹子", '数据下拉失败', '访问排行榜新发布数据失败， 请检查 cookie 有效期')
+                throw "访问排行榜新发布数据失败， 请检查 cookie 有效期"
+            }
+            articleList = articleList.filter(article => article.category !== "AI美女");
+            console.log(`article count: ${articleList.length}`)
+            let force = getScriptArgument("force") || false
+            for (const article of articleList) {
+                let keyname = `xx.knit.bid-${article.category}-${article.title}-${article.time}`
+                if (force !== true && getPersistentArgument(keyname)) {
+                    console.log(`${article.title} skip`)
+                    continue
+                }
+                let page = 1
+                let imgList = []
+                while (true) {
+                    let url = `${article.href}?page=${page}`
+                    let res = await get({ url, headers })
+                    if (res.error || !res.data) {
+                        throw `请求页面数据失败: ${res.error}, ${article.title}, ${article.time}, ${article.href}`
+                    }
+                    let domParser = new DOMParser();
+                    let document = domParser.parseFromString(res.data, 'text/html');
+                    let host = 'https://xx.knit.bid'
+                    let srcList = Array.from(document.querySelectorAll("#img-box > p > img")).map(img => {
+                        let src = `${host}${img.attributes["data-src"].textContent}`
+                        return { src }
+                    })
+                    if (srcList.length > 0) {
+                        imgList.push(...srcList)
+                        page += 1
+                    } else {
+                        break
+                    }
+                }
+                console.log(`title: ${article.title}, image count: ${imgList.length}`)
+                let telegram = getScriptArgument('telegram')
+                let telegraph = getScriptArgument("telegra.ph")
+                let telegraphHost = telegraph?.host || "https://telegra.ph"
+                if (telegraph && telegram) {
+                    // 发布文章
+                    let content = imgList.map(img => {
+                        return { tag: "img", attrs: { src: img.src } }
+                    })
+
+                    let payload = {
+                        access_token: telegraph.access_token,
+                        title: article.title,
+                        content: content
+                    }
+                    let url = "https://api.telegra.ph/createPage"
+                    let result = await post({ url: url, body: JSON.stringify(payload), headers: { "Content-Type": "application/json" } })
+                    let pagePath = parseJsonBody(result.data)?.result?.path
+                    if (!pagePath) {
+                        throw `create telegrap page failed. error: ${result.error}, data: ${result.data}`
+                    }
+                    pagePath = `${telegraphHost}/${pagePath}`
+                    console.log(`${article.title}: ${pagePath}`)
+
+                    // 发送单条消息
+                    let messages = [{
+                        telegram: {
+                            bot_id: telegram.bot_id,
+                            chat_id: telegram.chat_id,
+                            message: {
+                                text: `<a href="${pagePath}">${article.title}</a>\n\n${article.href}`,
+                                parse_mode: "HTML"
+                            }
+                        }
+                    }]
+                    url = 'https://p.19940731.xyz/api/notifications/push/v3'
+                    let res = await post({ url, body: JSON.stringify({ messages: messages }), headers: { "content-type": "application/json" } })
+                    if (res.error || res.response.status >= 400) {
+                        throw `[push] error: ${res.error}, data: ${res.data}`
+                    }
+
+                    console.log(`[push] success.`)
+                    writePersistentArgument(keyname, keyname)
+                }
+            }
+        }
+    } catch (error) {
+        throw error
+    }
 }
 
 main()
