@@ -7,11 +7,6 @@ category: AD
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
 http:
-  force-http-engine:
-    # 叮咚买菜
-    - "maicai.api.ddxq.mobi"
-    - "pub.ddimg.mobi"
-
   mitm:
     # 叮咚买菜
     - maicai.api.ddxq.mobi
@@ -72,9 +67,6 @@ http:
     # 哔哩哔哩
     - ^https?://app.bilibili.com/x/v2/splash/show - reject
 
-    # 便利蜂
-    - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 - reject
-
     # 斗鱼
     - ^https?://capi.douyucdn.cn/api/v1/getStartSend - reject
 
@@ -102,6 +94,28 @@ http:
 
     # 移除微博国际版首页和帖子内广告
     - ^https://api.weibo.cn/2/ad/weibointl - reject
+    # - "*.sinaimg.cn"
+    # - "*.weibo.cn"
+    # - "*.weibo.com"
+    # - a1.alibabausercontent.com
+    # - "*.adbkwai.com"
+    # - "msg.umengcloud.com"
+    # - "cnlogs.umeng.com"
+    # - adukwai.com
+    # - https?://msg.umengcloud.com - reject
+    # - https?://cnlogs.umeng.com - reject
+    # - https?://bootrealtime.uve.weibo.com - reject
+    # - https?://.*.?adbkwai.com - reject
+    # - https://bootpreload.uve.weibo.com/v1/ad/preload - reject
+    # - https://api.weibo.cn/2/ad/weibointl - reject
+    # - https://adstrategy.biz.weibo.com/v3/strategy/ad - reject
+    # - https://a1.alibabausercontent.com/prod/feupload/user/5mcuu - reject
+    # - https://weibointl.api.weibo.cn/portal.php - reject
+
+  body-rewrite:
+    # 便利蜂
+    # - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 - reject
+    - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 response-jq .data.HomeLoadNew.adItems=[]
 
   script:
     - match: https?://amdc.m.taobao.com
@@ -126,4 +140,4 @@ rule-providers:
 
 rules:
   # 可跳过番茄小说广告
-  - RULE-SET,anti-AD,REJECT-DROP
+  - RULE-SET,anti-AD,REJECT
