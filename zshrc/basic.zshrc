@@ -30,6 +30,10 @@ urldecode() {
     python3 -c "import urllib.parse; print(urllib.parse.unquote_plus('$1'))"
 }
 
+magnet_url(){
+    echo "magnet:?xt=urn:btih:$1"
+}
+
 ddxq_search() {
     export keyword=$(urlencode $1)
     curl -X GET "https://maicai.api.ddxq.mobi/search/searchProduct?keyword=${keyword}&page=${page}&station_id=${station_id}" \
