@@ -384,8 +384,11 @@ async function main() {
             await handler(_page)
         }
     } catch (error) {
-        let message = error?.message || error
-        console.log(`error: ${message}`)
+        if (typeof error === 'object') {
+            visitAll(error, 'error')
+        } else {
+            console.log(`error: ${error}`)
+        }
         $done({})
     }
     $done({})
