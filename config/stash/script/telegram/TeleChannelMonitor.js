@@ -1,3 +1,5 @@
+// 2024.11.09 更新: 通过参数 `blockKeywords`, 忽略消息
+
 /** @namespace TeleChannelMonitor */
 
 /**
@@ -434,6 +436,18 @@ function makePushMessages(groupMessages) {
             messages.push({ bark: payload })
         }
     }
+    let blockKeywords = getScriptArgument("blockKeywords") || []
+    messages = messages.filter(message => {
+        if (blockKeywords) {
+            for (const keyword of blockKeywords) {
+                if (message.bark.body.includes(keyword)) {
+                    return false
+                }
+            }
+        }
+        return true
+    })
+
     return messages
 }
 
