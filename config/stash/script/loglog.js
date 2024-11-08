@@ -200,6 +200,9 @@ function randomChar(num) {
  * @returns {string} 表示当前时间的字符串
  */
 function getLocalDateString(date) {
+    if (typeof date === 'undefined') {
+        date = new Date()
+    }
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();

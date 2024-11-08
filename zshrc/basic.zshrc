@@ -3,6 +3,7 @@ export FPATH="$HOME/.zfunc:$FPATH"
 export FPATH="$HOME/works/github/shell/zfunc/basic.zfunc:$FPATH"
 
 export PATH="$HOME/bin:$PATH"
+export PATH="/usr/sbin:$PATH"
 export PATH="/System/Cryptexes/App/usr/bin:$PATH"
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 
