@@ -493,7 +493,7 @@ async function main() {
         }
 
     } catch (error) {
-        console.log(`error: ${error}`)
+        console.log(`[Error]: ${error}`)
 
     } finally {
         $done({})
