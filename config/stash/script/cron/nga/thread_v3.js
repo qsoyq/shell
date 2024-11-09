@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace cron.nga.v3 */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} cron.nga.v3.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} cron.nga.v3.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, cron.nga.v3.HTTPCallback): cron.nga.v3.HTTPResponse} cron.nga.v3.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} cron.nga.v3.HttpClient
+ * @property {cron.nga.v3.HTTPMethod} get - 发送 GET 请求
+ * @property {cron.nga.v3.HTTPMethod} post - 发送 POST 请求
+ * @property {cron.nga.v3.HTTPMethod} put - 发送 PUT 请求
+ * @property {cron.nga.v3.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {cron.nga.v3.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<cron.nga.v3.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {cron.nga.v3.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<cron.nga.v3.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<cron.nga.v3.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<cron.nga.v3.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<cron.nga.v3.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -400,14 +400,101 @@ function telegramEscapeMarkdownV2(text) {
 
 async function main() {
     try {
+        let telegram = getScriptArgument("telegram")
+        let bark = getScriptArgument("bark")
+        let fidList = getScriptArgument("fidList") || []
+        let uid = getScriptArgument("uid") || ""
+        let cid = getScriptArgument("cid") || ""
+        let debug = getScriptArgument("debug") || false
+        let force = getScriptArgument("force") || false
+        let onceMax = getScriptArgument("onceMax")
 
+
+        let querystringArray = Array.from(fidList.map(fid => {
+            return `fid=${fid}`
+        }))
+        querystringArray.push(`order_by=lastpostdesc`)
+        let qs = querystringArray.join("&")
+        if (debug) {
+            console.log(`querystringArray: ${qs}`)
+        }
+        let url = `https://p.19940731.xyz/api/nga/threads/v2?${qs}`
+        let res = await get({ url: url, headers: { "content-type": "application/json", "uid": uid, "cid": cid } })
+        if (res.error || res.response.status >= 400) {
+            throw `request nga threads error: ${res.data}`
+        }
+        let body = parseJsonBody(res.data)
+        if (debug) {
+            console.log(`response body: ${res.data}`)
+        }
+        body.data.forEach((/** @type {{ threads: any[]; }} */ item) => {
+            item.threads = item.threads.filter(thread => {
+                if (force) {
+                    return true
+                }
+                let keyname = `nga-threads-${thread.tid}`
+                return !getPersistentArgument(keyname);
+            })
+            if (onceMax) {
+                item.threads = item.threads.slice(0, onceMax)
+            }
+        })
+
+
+        if (debug) {
+            console.log(`本次共有 ${body.data.length} 条数据待推送`)
+        }
+
+        let messages = []
+        if (telegram) {
+            let bot_id = telegram?.bot_id
+            let chat_id = telegram?.chat_id
+            if (!bot_id || !chat_id) {
+                throw `telegram.bot_id or telegram.chat_id invalid`
+            }
+            body.data.forEach((/** @type {{ threads: any; }} */ item) => {
+                for (const thread of item.threads) {
+                    let redirectUrl = `https://p.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(thread.ios_app_scheme_url)}`
+                    let title = telegramEscapeMarkdownV2(`NGA ${thread["fname"]} 有新帖子`)
+                    title = `${title}\n[${thread.subject}](${redirectUrl})\n`
+                    let content = telegramEscapeMarkdownV2(`创建时间:${thread.postdateStr}\n回复时间:${thread.lastpostStr}\nurl:${thread.url}\n${thread.ios_app_scheme_url}`)
+                    let payload = {
+                        bot_id: bot_id,
+                        chat_id: chat_id,
+                        message: {
+                            text: `${title}\n\n${content}`,
+
+                            parse_mode: "MarkdownV2"
+                        }
+                    }
+                    messages.push({ telegram: payload })
+                }
+            })
+
+        }
+        if (messages) {
+            let url = 'https://p.19940731.xyz/api/notifications/push/v3'
+            let res = await post({ url: url, body: JSON.stringify({ messages: messages }), headers: { "content-type": "application/json" } })
+            if (debug) {
+                console.log(`push body: ${JSON.stringify({ messages: messages })}`)
+            }
+            if (res.error || res.response.status >= 400) {
+                throw `push notifications error: ${res.data}`
+            }
+            body.data.forEach((/** @type {{ threads: any[]; }} */ item) => {
+                item.threads.forEach(thread => {
+                    let keyname = `nga-threads-${thread.tid}`
+                    writePersistentArgument(keyname, keyname)
+                })
+            })
+
+        }
     } catch (error) {
         console.log(`error: ${error}`)
+
     } finally {
         $done({})
     }
-
 }
 
 main()
-
