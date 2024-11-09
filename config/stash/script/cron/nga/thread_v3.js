@@ -398,15 +398,71 @@ function telegramEscapeMarkdownV2(text) {
     return escapedText;
 }
 
+/**
+ * @param {{ [x: string]: any; tid: any; subject: any; ios_app_scheme_url: string | number | boolean; postdateStr: any; lastpostStr: any; url: any; }} thread
+ */
+async function push(thread) {
+    let force = getScriptArgument("force")
+    let debug = getScriptArgument('debug')
+    let telegram = getScriptArgument("telegram")
+
+    let keyname = `nga-threads-${thread.tid}`
+    let cache = getPersistentArgument(keyname)
+
+    if (debug) {
+        console.log(`[Cache] 读取缓存成功， title: ${thread.subject}, ${cache}`)
+    }
+
+    if (cache && !force) {
+        console.log(`[Cache] skip, title: ${thread.subject}`)
+        return
+    }
+
+    let messages = []
+
+    if (telegram.bot_id && telegram.chat_id) {
+        let redirectUrl = `https://p.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(thread.ios_app_scheme_url)}`
+        let title = telegramEscapeMarkdownV2(`NGA ${thread["fname"]} 有新帖子`)
+        title = `${title}\n[${thread.subject}](${thread.url})\n\n[跳转到 App](${redirectUrl})`
+        let content = telegramEscapeMarkdownV2(`创建时间:${thread.postdateStr}\n回复时间:${thread.lastpostStr}`)
+        let payload = {
+            bot_id: telegram.bot_id,
+            chat_id: telegram.chat_id,
+            message: {
+                text: `${title}\n\n${content}`,
+                parse_mode: "MarkdownV2"
+            }
+        }
+        messages.push({ telegram: payload })
+    }
+
+    if (messages) {
+        let url = 'https://p.19940731.xyz/api/notifications/push/v3'
+        let res = await post({ url: url, body: JSON.stringify({ messages: messages }), headers: { "content-type": "application/json" } })
+        if (debug) {
+            console.log(`[Request] push body: ${JSON.stringify({ messages: messages })}`)
+            console.log(`[Response] push body: ${res.data}`)
+        }
+        if (res.error || res.response.status >= 400) {
+            throw `push notifications error: ${res.data}`
+        }
+    }
+
+
+    writePersistentArgument(keyname, keyname)
+    if (debug) {
+        console.log(`[Cache] 写入缓存成功， title: ${thread.subject}, ${keyname}`)
+    }
+
+
+}
+
 async function main() {
     try {
-        let telegram = getScriptArgument("telegram")
-        let bark = getScriptArgument("bark")
         let fidList = getScriptArgument("fidList") || []
         let uid = getScriptArgument("uid") || ""
         let cid = getScriptArgument("cid") || ""
         let debug = getScriptArgument("debug") || false
-        let force = getScriptArgument("force") || false
         let onceMax = getScriptArgument("onceMax")
 
 
@@ -416,7 +472,7 @@ async function main() {
         querystringArray.push(`order_by=lastpostdesc`)
         let qs = querystringArray.join("&")
         if (debug) {
-            console.log(`querystringArray: ${qs}`)
+            console.log(`[Request] threads querystringArray: ${qs}`)
         }
         let url = `https://p.19940731.xyz/api/nga/threads/v2?${qs}`
         let res = await get({ url: url, headers: { "content-type": "application/json", "uid": uid, "cid": cid } })
@@ -425,70 +481,17 @@ async function main() {
         }
         let body = parseJsonBody(res.data)
         if (debug) {
-            console.log(`response body: ${res.data}`)
+            console.log(`[Response] threads response body: ${res.data}`)
         }
-        body.data.forEach((/** @type {{ threads: any[]; }} */ item) => {
-            item.threads = item.threads.filter(thread => {
-                if (force) {
-                    return true
-                }
-                let keyname = `nga-threads-${thread.tid}`
-                return !getPersistentArgument(keyname);
-            })
+        for (const item of body.data) {
             if (onceMax) {
                 item.threads = item.threads.slice(0, onceMax)
             }
-        })
-
-
-        if (debug) {
-            console.log(`本次共有 ${body.data.length} 条数据待推送`)
+            for (const thread of item.threads) {
+                await push(thread)
+            }
         }
 
-        let messages = []
-        if (telegram) {
-            let bot_id = telegram?.bot_id
-            let chat_id = telegram?.chat_id
-            if (!bot_id || !chat_id) {
-                throw `telegram.bot_id or telegram.chat_id invalid`
-            }
-            body.data.forEach((/** @type {{ threads: any; }} */ item) => {
-                for (const thread of item.threads) {
-                    let redirectUrl = `https://p.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(thread.ios_app_scheme_url)}`
-                    let title = telegramEscapeMarkdownV2(`NGA ${thread["fname"]} 有新帖子`)
-                    title = `${title}\n[${thread.subject}](${redirectUrl})\n`
-                    let content = telegramEscapeMarkdownV2(`创建时间:${thread.postdateStr}\n回复时间:${thread.lastpostStr}\nurl:${thread.url}\n${thread.ios_app_scheme_url}`)
-                    let payload = {
-                        bot_id: bot_id,
-                        chat_id: chat_id,
-                        message: {
-                            text: `${title}\n\n${content}`,
-
-                            parse_mode: "MarkdownV2"
-                        }
-                    }
-                    messages.push({ telegram: payload })
-                }
-            })
-
-        }
-        if (messages) {
-            let url = 'https://p.19940731.xyz/api/notifications/push/v3'
-            let res = await post({ url: url, body: JSON.stringify({ messages: messages }), headers: { "content-type": "application/json" } })
-            if (debug) {
-                console.log(`push body: ${JSON.stringify({ messages: messages })}`)
-            }
-            if (res.error || res.response.status >= 400) {
-                throw `push notifications error: ${res.data}`
-            }
-            body.data.forEach((/** @type {{ threads: any[]; }} */ item) => {
-                item.threads.forEach(thread => {
-                    let keyname = `nga-threads-${thread.tid}`
-                    writePersistentArgument(keyname, keyname)
-                })
-            })
-
-        }
     } catch (error) {
         console.log(`error: ${error}`)
 
@@ -496,5 +499,4 @@ async function main() {
         $done({})
     }
 }
-
 main()
