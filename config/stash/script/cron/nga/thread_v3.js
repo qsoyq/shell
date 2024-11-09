@@ -423,7 +423,8 @@ async function push(thread) {
     if (telegram.bot_id && telegram.chat_id) {
         let redirectUrl = `https://p.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(thread.ios_app_scheme_url)}`
         let title = telegramEscapeMarkdownV2(`NGA ${thread["fname"]} 有新帖子`)
-        title = `${title}\n[${thread.subject}](${thread.url})\n\n[跳转到 App](${redirectUrl})`
+        let subject = telegramEscapeMarkdownV2(thread.subject)
+        title = `${title}\n[${subject}](${thread.url})\n\n[跳转到 App](${redirectUrl})`
         let content = telegramEscapeMarkdownV2(`创建时间:${thread.postdateStr}\n回复时间:${thread.lastpostStr}`)
         let payload = {
             bot_id: telegram.bot_id,
@@ -499,4 +500,5 @@ async function main() {
         $done({})
     }
 }
+
 main()
