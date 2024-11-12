@@ -21,6 +21,8 @@ alias _dsstore_downloads="find $HOME/Downloads -name '*.DS_Store' -type f -ls -d
 alias _dsstore_works="find $HOME/works -name '*.DS_Store' -type f -ls -delete"
 alias dsstore="_dsstore_github && _dsstore_desktop && _dsstore_works && _dsstore_movies && _dsstore_downloads && _dsstore_documents"
 
+alias MobileSync="cd /Users/qs/Library/Application\ Support/MobileSync/Backup"
+
 # Get WAN IP
 # alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 

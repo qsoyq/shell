@@ -64,6 +64,10 @@ db_get(){
     grep "^$1," ~/.database.kv | sed -e "s/^$1,//" | tail -n 1
 }
 
+localip_by_mac(){
+    echo $(arp -a | grep $1 | awk '{print $2}' | tr -d '()')
+}
+
 
 # 定义 Zsh 函数
 remove_duplicates() {
