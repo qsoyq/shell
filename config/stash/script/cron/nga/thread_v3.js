@@ -405,6 +405,7 @@ async function push(thread) {
     let force = getScriptArgument("force")
     let debug = getScriptArgument('debug')
     let telegram = getScriptArgument("telegram")
+    let APNs = getScriptArgument('APNs')
 
     let keyname = `nga-threads-${thread.tid}`
     let cache = getPersistentArgument(keyname)
@@ -437,6 +438,26 @@ async function push(thread) {
         messages.push({ telegram: payload })
     }
 
+    if (APNs) {
+        let group = APNs?.group || "nga-threads"
+        let payload = {
+            "group": group,
+            "url": thread.ios_app_scheme_url,
+            "device_token": APNs.device_token,
+            "aps": {
+                "alert": {
+                    "title": `NGA ${thread["fname"]} 有新帖子`,
+                    "body": `${thread.subject}\n\nurl:${thread["url"]}\n\n${thread["ios_app_scheme_url"]}`
+                },
+                "thread-id": group
+            }
+        }
+        if (thread.icon.startsWith("http")) {
+            payload.icon = thread.icon
+        }
+        messages.push({ apple: payload })
+    }
+
     if (messages) {
         let url = 'https://p.19940731.xyz/api/notifications/push/v3'
         let res = await post({ url: url, body: JSON.stringify({ messages: messages }), headers: { "content-type": "application/json" } })
@@ -445,7 +466,7 @@ async function push(thread) {
             console.log(`[Response] push body: ${res.data}`)
         }
         if (res.error || res.response.status >= 400) {
-            throw `push notifications error: ${res.data}`
+            throw `[Push] notifications error: ${res.data}`
         }
     }
 
@@ -459,46 +480,48 @@ async function push(thread) {
 }
 
 async function main() {
-    try {
-        let fidList = getScriptArgument("fidList") || []
-        let uid = getScriptArgument("uid") || ""
-        let cid = getScriptArgument("cid") || ""
-        let debug = getScriptArgument("debug") || false
-        let onceMax = getScriptArgument("onceMax")
+    let fidList = getScriptArgument("fidList") || []
+    let uid = getScriptArgument("uid") || ""
+    let cid = getScriptArgument("cid") || ""
+    let debug = getScriptArgument("debug") || false
+    let onceMax = getScriptArgument("onceMax")
 
 
-        let querystringArray = Array.from(fidList.map(fid => {
-            return `fid=${fid}`
-        }))
-        querystringArray.push(`order_by=lastpostdesc`)
-        let qs = querystringArray.join("&")
-        if (debug) {
-            console.log(`[Request] threads querystringArray: ${qs}`)
+    let querystringArray = Array.from(fidList.map(fid => {
+        return `fid=${fid}`
+    }))
+    querystringArray.push(`order_by=lastpostdesc`)
+    let qs = querystringArray.join("&")
+    if (debug) {
+        console.log(`[Request] threads querystringArray: ${qs}`)
+    }
+    let url = `https://p.19940731.xyz/api/nga/threads/v2?${qs}`
+    let res = await get({ url: url, headers: { "content-type": "application/json", "uid": uid, "cid": cid } })
+    if (res.error || res.response.status >= 400) {
+        throw `request nga threads error: ${res.data}`
+    }
+    let body = parseJsonBody(res.data)
+    if (debug) {
+        console.log(`[Response] threads response body: ${res.data}`)
+    }
+    for (const item of body.data) {
+        if (onceMax) {
+            item.threads = item.threads.slice(0, onceMax)
         }
-        let url = `https://p.19940731.xyz/api/nga/threads/v2?${qs}`
-        let res = await get({ url: url, headers: { "content-type": "application/json", "uid": uid, "cid": cid } })
-        if (res.error || res.response.status >= 400) {
-            throw `request nga threads error: ${res.data}`
+        for (const thread of item.threads) {
+            await push(thread)
         }
-        let body = parseJsonBody(res.data)
-        if (debug) {
-            console.log(`[Response] threads response body: ${res.data}`)
-        }
-        for (const item of body.data) {
-            if (onceMax) {
-                item.threads = item.threads.slice(0, onceMax)
-            }
-            for (const thread of item.threads) {
-                await push(thread)
-            }
-        }
-
-    } catch (error) {
-        console.log(`[Error]: ${error}`)
-
-    } finally {
-        $done({})
     }
 }
 
-main()
+
+(async () => {
+    try {
+        await main();
+    } catch (error) {
+        console.log(`[Error]: ${error?.message || error}`); // 打印异常信息
+    } finally {
+        // @ts-ignore
+        $done({})
+    }
+})();

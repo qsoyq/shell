@@ -404,6 +404,7 @@ async function main() {
     let cid = mustGetScriptArgument("cid")
     let force = getScriptArgument('force') || false
     let APNs = getScriptArgument("APNs")
+    let debug = getScriptArgument("debug")
 
 
     let url = `https://p.19940731.xyz/api/nga/threads?favor=${favor}&order_by=lastpostdesc`
@@ -418,7 +419,13 @@ async function main() {
         let keyname = `nga-favor-${thread.tid}`
         let cache = getPersistentArgument(keyname)
         let lastpost = thread.lastpost
-        if (!force && cache && lastpost < Number(cache)) {
+        if (debug) {
+            console.log(`[Cache] ${thread.subject}, ${cache}`)
+        }
+        if (!force && cache && lastpost <= Number(cache)) {
+            if (debug) {
+                console.log(`[Cache] skip ${thread.subject}`)
+            }
             continue
         }
         let messages = []
@@ -431,7 +438,8 @@ async function main() {
                     "alert": {
                         "title": "nga 收藏主题有新回复",
                         "body": `${thread.subject}\n\nurl:${thread["url"]}\n\n${thread["ios_app_scheme_url"]}`
-                    }
+                    },
+                    'thread-id': `nga-favor`
                 }
             }
             if (thread.icon.startsWith("http")) {
@@ -447,7 +455,7 @@ async function main() {
                 throw `push notification error: ${res.error}, data: ${res.data}, subject: ${thread.subject}`
             }
             console.log(`[Push] ${thread.subject} success`)
-            writePersistentArgument(keyname, lastpost.toString())
+            writePersistentArgument(keyname, `${parseInt(`${(new Date().getTime())}`)}`)
         }
     }
 }
