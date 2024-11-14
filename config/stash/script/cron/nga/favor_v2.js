@@ -1,14 +1,14 @@
 /** @namespace loglog */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} nga.post.favor.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} nga.post.favor.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, nga.post.favor.HTTPCallback): nga.post.favor.HTTPResponse} nga.post.favor.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} nga.post.favor.HttpClient
+ * @property {nga.post.favor.HTTPMethod} get - 发送 GET 请求
+ * @property {nga.post.favor.HTTPMethod} post - 发送 POST 请求
+ * @property {nga.post.favor.HTTPMethod} put - 发送 PUT 请求
+ * @property {nga.post.favor.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {nga.post.favor.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<nga.post.favor.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {nga.post.favor.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<nga.post.favor.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<nga.post.favor.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<nga.post.favor.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<nga.post.favor.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -399,15 +399,68 @@ function telegramEscapeMarkdownV2(text) {
 }
 
 async function main() {
-    throw "test"
+    let favor = mustGetScriptArgument("favor")
+    let uid = mustGetScriptArgument("uid")
+    let cid = mustGetScriptArgument("cid")
+    let force = getScriptArgument('force') || false
+    let APNs = getScriptArgument("APNs")
+
+
+    let url = `https://p.19940731.xyz/api/nga/threads?favor=${favor}&order_by=lastpostdesc`
+    // return
+    let res = await get({ url: url, headers: { "content-type": "application/json", "uid": uid.toString(), "cid": cid.toString() } })
+    if (res.error || res.response.status >= 400) {
+        throw `request favor threads error: ${res.error}, data: ${res.data}`
+    }
+
+    let body = parseJsonBody(res.data)
+    for (const thread of body.threads) {
+        let keyname = `nga-favor-${thread.tid}`
+        let cache = getPersistentArgument(keyname)
+        let lastpost = thread.lastpost
+        if (!force && cache && lastpost < Number(cache)) {
+            continue
+        }
+        let messages = []
+        if (APNs) {
+            let payload = {
+                "group": `nga-favor`,
+                "url": thread.ios_app_scheme_url,
+                "device_token": APNs.device_token,
+                "aps": {
+                    "alert": {
+                        "title": "nga 收藏主题有新回复",
+                        "body": `${thread.subject}\n\nurl:${thread["url"]}\n\n${thread["ios_app_scheme_url"]}`
+                    }
+                }
+            }
+            if (thread.icon.startsWith("http")) {
+                payload.icon = thread.icon
+            }
+            messages.push({ "apple": payload })
+        }
+
+        if (messages) {
+            let url = 'https://p.19940731.xyz/api/notifications/push/v3'
+            let res = await post({ url, body: JSON.stringify({ "messages": messages }), headers: { "content-type": "application/json" } })
+            if (res.error || res.response.status >= 400) {
+                throw `push notification error: ${res.error}, data: ${res.data}, subject: ${thread.subject}`
+            }
+            console.log(`[Push] ${thread.subject} success`)
+            writePersistentArgument(keyname, lastpost.toString())
+        }
+    }
 }
+
 
 (async () => {
     try {
         await main();
     } catch (error) {
-        console.log(`error: ${error?.message || error}`); // 打印异常信息
+        console.log(`[Error]: ${error?.message || error}`); // 打印异常信息
+    } finally {
+        // @ts-ignore
+        $done({})
     }
 })();
 
-$done({})
