@@ -1,3 +1,7 @@
+# CairoSVG
+# https://github.com/Kozea/CairoSVG/issues/392#issuecomment-1927435606
+export DYLD_LIBRARY_PATH="/opt/homebrew/opt/cairo/lib:$DYLD_LIBRARY_PATH"
+
 # pmset
 alias enablesleep="sudo pmset -b sleep 5; sudo pmset -b disablesleep 0"
 alias disablesleep="sudo pmset -b sleep 0; sudo pmset -b disablesleep 1"
