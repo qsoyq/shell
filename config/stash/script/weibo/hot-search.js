@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace HotSearch */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} HotSearch.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} HotSearch.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, HotSearch.HTTPCallback): HotSearch.HTTPResponse} HotSearch.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} HotSearch.HttpClient
+ * @property {HotSearch.HTTPMethod} get - 发送 GET 请求
+ * @property {HotSearch.HTTPMethod} post - 发送 POST 请求
+ * @property {HotSearch.HTTPMethod} put - 发送 PUT 请求
+ * @property {HotSearch.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {HotSearch.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<HotSearch.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {HotSearch.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<HotSearch.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<HotSearch.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<HotSearch.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<HotSearch.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -399,7 +399,56 @@ function telegramEscapeMarkdownV2(text) {
 }
 
 async function main() {
-    throw "test"
+    let APNs = getScriptArgument("APNs")
+    let debug = getScriptArgument("debug") || false
+    let force = getScriptArgument("force") || false
+    let url = 'https://weibo.com/ajax/side/hotSearch'
+    let resp = await get({ url, headers: { "content-type": "application/json" } })
+    if (resp.error || resp.response.status >= 400) {
+        throw `[Error] ${resp.error}, ${resp.response.status}, ${resp.data}`
+    }
+    let data = parseJsonBody(resp.data)
+    if (debug) {
+        console.log(`[Debug] realtime count: ${(data?.data?.realtime || []).length}`)
+    }
+    for (const item of data?.data?.realtime || []) {
+        let q = item?.word_scheme || item?.note || item?.word
+        let content = item?.note || item?.word
+        let keyname = `weibo-hotsearch-${content}`
+        if (!force && getPersistentArgument(keyname)) {
+            if (debug) {
+                console.log(`[Cache] ${content} skip`)
+            }
+            continue
+        }
+
+        let jumpUrl = `weibointernational://searchall?q=${q}`
+        if (APNs?.device_token) {
+            let message = {
+                group: APNs?.group || "微博热搜",
+                url: jumpUrl,
+                icon: APNs?.icon || "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Weibo.png",
+                device_token: APNs.device_token,
+                aps: {
+                    alert: {
+                        title: "微博热搜有新内容",
+                        body: content
+                    },
+                    "thread-id": APNs?.group || "微博热搜",
+                    "mutable-content": 1
+                }
+            }
+            let url = 'https://p.19940731.xyz/api/notifications/push/v3'
+            let res = await post({ url, body: JSON.stringify({ messages: [{ "apple": message }] }), headers: { "content-type": "application/json" } })
+            if (res.error || res.response.status >= 400) {
+                throw `[Error] ${resp.error}, ${resp.response.status}, ${resp.data}`
+            }
+            writePersistentArgument(keyname, keyname)
+            if (debug) {
+                console.log(`[Cache] ${content} write cache success.`)
+            }
+        }
+    }
 }
 
 (async () => {
@@ -407,8 +456,11 @@ async function main() {
         await main();
     } catch (error) {
         console.log(`error: ${error?.message || error}`); // 打印异常信息
+    } finally {
+        // @ts-ignore
+        $done({})
     }
+
 })();
 
-// @ts-ignore
-$done({})
+
