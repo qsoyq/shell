@@ -422,7 +422,7 @@ async function main() {
             continue
         }
 
-        let jumpUrl = `weibointernational://searchall?q=${q}`
+        let jumpUrl = `weibointernational://searchall?q=${encodeURIComponent(q)}`
         if (APNs?.device_token) {
             let message = {
                 group: APNs?.group || "微博热搜",
