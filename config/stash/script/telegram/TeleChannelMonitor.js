@@ -1,4 +1,5 @@
 // 2024.11.09 更新: 通过参数 `blockKeywords`, 忽略消息
+// 2024.11.19 更新: 通过参数 `icon`, 指定推送 icon
 
 /** @namespace TeleChannelMonitor */
 
@@ -411,6 +412,7 @@ function makePushMessages(groupMessages) {
     let barkToken = getScriptArgument("barkToken")
     let barkGroup = getScriptArgument("barkGroup") || "Telegram"
     let level = getScriptArgument("level") || "passive"
+    let icon = getScriptArgument("icon")
     /** @type {string[]} */
     let activeKeywords = getScriptArgument("activeKeywords") || []
     let messages = []
@@ -430,7 +432,7 @@ function makePushMessages(groupMessages) {
                 body: `${message.text}\n\n${url}`,
                 group: barkGroup,
                 level: level,
-                icon: message.head,
+                icon: icon || message.head,
                 url: url
             }
             messages.push({ bark: payload })
