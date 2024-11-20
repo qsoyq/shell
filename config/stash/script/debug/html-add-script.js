@@ -448,13 +448,9 @@ async function main() {
 }
 
 (async () => {
-    try {
-        await main();
-    } catch (error) {
-        console.log(`[Error]: ${error?.message || error}`); // 打印异常信息
-        // @ts-ignore
-        $done({})
-    } finally {
-
-    }
+    main().catch(error => {
+        console.log(`[Error]: ${error}`)
+    })
+    // @ts-ignore
+    $done({})
 })();

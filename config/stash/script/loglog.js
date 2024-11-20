@@ -247,7 +247,7 @@ function parseJsonBody(string) {
     try {
         return JSON.parse(string)
     } catch (e) {
-        console.log(`invalid json: ${e}`)
+        console.log(`[Warn] invalid json: ${e}, json: ${string}`)
         return null
     }
 }
@@ -262,12 +262,10 @@ function getScriptArgument(key) {
         return;
     }
 
-    let body;
-    try {
-        body = JSON.parse($argument);
-    } catch (error) {
-        console.log("Invalid JSON:", error);
-        return null; // JSON 解析失败返回 null
+    let body = parseJsonBody($argument)
+    if (!body) {
+        console.log(`[Warn] Invalid JSON: ${$argument}`);
+        return null; // JSON 解析失败返回 null        
     }
     return body[key]
 }
@@ -403,12 +401,9 @@ async function main() {
 }
 
 (async () => {
-    try {
-        await main();
-    } catch (error) {
-        console.log(`error: ${error?.message || error}`); // 打印异常信息
-    } finally {
-        // @ts-ignore
-        $done({})
-    }
+    main().catch(error => {
+        console.log(`[Error]: ${error}`)
+    })
+    // @ts-ignore
+    $done({})
 })();
