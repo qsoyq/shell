@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace smzdm.new */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} smzdm.new.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} smzdm.new.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, smzdm.new.HTTPCallback): smzdm.new.HTTPResponse} smzdm.new.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} smzdm.new.HttpClient
+ * @property {smzdm.new.HTTPMethod} get - 发送 GET 请求
+ * @property {smzdm.new.HTTPMethod} post - 发送 POST 请求
+ * @property {smzdm.new.HTTPMethod} put - 发送 PUT 请求
+ * @property {smzdm.new.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {smzdm.new.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<smzdm.new.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {smzdm.new.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<smzdm.new.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<smzdm.new.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<smzdm.new.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<smzdm.new.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -398,8 +398,88 @@ function telegramEscapeMarkdownV2(text) {
     return escapedText;
 }
 
+
+/**
+ * @param {string} data
+ */
+function parseDocument(data) {
+    let domParser = new DOMParser();
+    let document = domParser.parseFromString(data, 'text/html');
+    let item = document.querySelector("#commentTabBlockNew > ul.comment-main-list > li:nth-child(1) > div.comment-main-list-item-content > div.list-item-level1")
+    if (item) {
+        let span = item.querySelector("div.comment-main-list-item-content-comment.padding-right-10 > span")
+        if (span) {
+            let textContent = span.textContent
+            let href = span.querySelector("span > a")?.attributes["href"]?.textContent
+            if (href) {
+                return { href, textContent }
+            }
+
+        }
+
+    }
+
+}
+
 async function main() {
-    throw "test"
+    let pList = getScriptArgument("pList") || []
+    let force = getScriptArgument("force") || false
+    let APNs = getScriptArgument("APNs")
+    for (const p of pList) {
+        let url = `https://www.smzdm.com/p/${p}/p1/?sort_tab=new`
+        let res = await get(url)
+        if (res.error || res.response.status >= 400) {
+            throw `[Error]: ${res.error}, ${res.response.status}, ${res.data}`
+        }
+        if (!res.data) {
+            continue
+        }
+        let body = parseDocument(res.data)
+        if (!body) {
+            throw `[Error]: parse document failed. Data: ${res.data}`
+        }
+        const lastSlashIndex = body.href.lastIndexOf('/');
+        const uid = body.href.substring(lastSlashIndex + 1)
+        let keyname = `smzdm-new-${uid}`
+        console.log(`[Cache] ${keyname} ${getPersistentArgument(keyname)}`)
+        if (getPersistentArgument(keyname)) {
+            if (!force) {
+                console.log(`[Cache] ${body.textContent} skip `)
+                continue
+            }
+
+        }
+        if (APNs) {
+            let payload = {
+                messages: [
+                    {
+                        apple: {
+                            icon: APNs?.icon || "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/assets/icon/smzdm.jpeg",
+                            url: body.href,
+                            group: APNs?.group || "什么值得买评论区",
+                            device_token: APNs?.device_token,
+                            aps: {
+                                "thread-id": APNs?.group || "什么值得买评论区",
+                                "mutable-content": 1,
+                                "interruption-level": APNs?.level || "passive",
+                                alert: {
+                                    title: "什么值得买关注拼车有更新！",
+                                    body: `${body.textContent}\n\n${body.href}\n\nhttps://www.smzdm.com/p/${p}/p1/?sort_tab=new`
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+            let url = "https://p.19940731.xyz/api/notifications/push/v3"
+            let res = await post({ url, body: JSON.stringify(payload), headers: { "content-type": "application/json" } })
+            if (res.error || res.response.status >= 400) {
+                throw `[Error]: ${res.error}, ${res.response.status}, ${res.data}`
+            }
+
+            console.log(`[Cache] write ${keyname} ${writePersistentArgument(keyname, uid)}`)
+        }
+    }
 }
 
 (async () => {

@@ -1,1 +1,1 @@
-alias OpenWeChat="nohup /Applications/WeChat.app/Contents/MacOS/WeChat > /dev/null 2>&1 &"
+alias wechat="nohup /Applications/Weixin.app/Contents/MacOS/Weixin > /dev/null 2>&1 &"
