@@ -422,7 +422,7 @@ function makePushMessages(groupMessages) {
             if (activeKeywords) {
                 activeKeywords.forEach(element => {
                     if (typeof message.text === 'string' && message.text.includes(element)) {
-                        level = 'active'
+                        level = 'critical'
                     }
                 })
             }
