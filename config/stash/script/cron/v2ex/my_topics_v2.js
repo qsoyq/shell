@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace v2ex.my.topics */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} v2ex.my.topics.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} v2ex.my.topics.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, v2ex.my.topics.HTTPCallback): v2ex.my.topics.HTTPResponse} v2ex.my.topics.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} v2ex.my.topics.HttpClient
+ * @property {v2ex.my.topics.HTTPMethod} get - 发送 GET 请求
+ * @property {v2ex.my.topics.HTTPMethod} post - 发送 POST 请求
+ * @property {v2ex.my.topics.HTTPMethod} put - 发送 PUT 请求
+ * @property {v2ex.my.topics.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {v2ex.my.topics.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<v2ex.my.topics.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {v2ex.my.topics.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<v2ex.my.topics.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<v2ex.my.topics.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<v2ex.my.topics.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<v2ex.my.topics.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -406,7 +406,91 @@ function getUrlArgument(key) {
 }
 
 async function main() {
-    console.log("test")
+    let APNs = getScriptArgument("APNs")
+    let force = getScriptArgument("force")
+    let sessionKey = mustGetScriptArgument("sessionKey")
+    let debug = getScriptArgument("debug")
+
+    for (let p = 1; p < 20; p++) {
+        if (debug) {
+            console.log(`[Debug] current page: ${p}`)
+        }
+        let url = `https://p.19940731.xyz/api/v2ex/my/topics?p=${p}`
+        let res = await get({ url: url, headers: { "content-type": "application/json", "A2": sessionKey } })
+
+        if (res.error || res.response.status >= 400) {
+            throw `[Error] fetch topics error: ${res.error}, ${res.response.status}, ${res.data}`
+        }
+        let data = parseJsonBody(res.data)
+        if (debug) {
+            console.log(`[Debug] fetch topics data: ${res.data}`)
+        }
+        /** @type {any[]} */
+        let topics = data.topics
+        if (debug) {
+            console.log(`[Debug] origin topics: ${topics}`)
+        }
+        topics = topics.filter(topic => {
+            if (force) {
+                return true
+            }
+            let keyname = `v2ex-mytopics-${topic.id}`
+            let lastPushTime = getPersistentArgument(keyname)
+            if (!lastPushTime) {
+                return true
+            }
+            if ((Number(lastPushTime)) < (topic.last_touched * 1000)) {
+                return true
+            }
+            return false
+        })
+        if (debug) {
+            console.log(`[Debug] filtered topics: ${topics}`)
+        }
+        for (const topic of topics) {
+            if (APNs?.device_token) {
+                let group = APNs?.group || "V2ex-收藏"
+                let v2fun_href = `v2fun://topic/${topic["id"]}`
+                let payload = {
+                    messages: [
+                        {
+                            apple: {
+                                group: group,
+                                url: v2fun_href,
+                                icon: APNs?.icon || "https://v2ex.com/favicon.ico",
+                                device_token: APNs.device_token,
+                                aps: {
+                                    "thread-id": group,
+                                    alert: {
+                                        title: `V2ex 收藏的帖子有新的回复`,
+                                        body: `${topic["title"]}\n\nhttps://v2ex.com/t/${topic.id}\n\n${v2fun_href}`
+                                    }
+                                }
+
+                            }
+                        }
+                    ]
+                }
+
+                let url = "https://p.19940731.xyz/api/notifications/push/v3"
+                if (debug) {
+                    console.log(`[Debug] push ${topic.title}: ${JSON.stringify(payload)}`)
+                }
+                let res = await post({ url, body: JSON.stringify(payload), headers: { "content-type": "application/json" } })
+                if (res.error || res.response.status >= 400) {
+                    throw `[Error] push topic error: ${res.error}, ${res.response.status}, ${res.data}`
+                }
+
+                let keyname = `v2ex-mytopics-${topic.id}`
+                writePersistentArgument(keyname, new Date().getTime().toString())
+            }
+        }
+
+        if (!data.has_next_page) {
+            break
+        }
+
+    }
 }
 
 (async () => {

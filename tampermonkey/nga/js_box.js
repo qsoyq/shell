@@ -1,4 +1,4 @@
-
+// qsoyq
 ; (function () {
 
     var $ = _$, HTTP = new XMLHttpRequest()
@@ -682,7 +682,9 @@
         HTTP.onreadystatechange = function () {
             if (HTTP.readyState !== HTTP.DONE)
                 return;
+
             var all = HTTP.responseText
+
             if (HTTP.status != 200 || HTTP.getResponseHeader("X-NGA-CONTENT-TYPE") == 'short-message') {
                 var c = all.match(/<!--msgcodestart-->(\d+)<!--msgcodeend-->/)
                 if (c && c[1] == 15 && HTTP.__rep < 1) {
@@ -777,12 +779,24 @@
     }//
 
     P.htmlProc = function (all, go) {
-        var s = all.indexOf("<div id='mainmenu'>"), e = all.lastIndexOf("<div id='footer'"), b = all.indexOf("</head>"),
+        // var s = all.indexOf("<div id='mainmenu'>"), e = all.lastIndexOf("<div id='footer'"), b = all.indexOf("</head>"),
+        // 	head = all.substr(0, b),
+        // 	body = all.substr(s, e - s),
+        // 	til = head.match(/<title>(.+?)<\/title>/),
+        // 	scp = head.match(/\/\/loadscriptstart([\x00-\xff\u0000-\uffff]+?)\/\/loadscriptend/g)        
+        var s = all.search(/<div id=["']mainmenu["']>/);
+        var e = -1
+        var matches = all.match(/<div id=["']footer["']/g);
+        if (matches) {
+            // 找到最后一个匹配项
+            var lastMatch = matches[matches.length - 1];
+            e = all.lastIndexOf(lastMatch);
+        }
+        var b = all.indexOf("</head>"),
             head = all.substr(0, b),
             body = all.substr(s, e - s),
             til = head.match(/<title>(.+?)<\/title>/),
             scp = head.match(/\/\/loadscriptstart([\x00-\xff\u0000-\uffff]+?)\/\/loadscriptend/g)
-
         body = body.split(/<\/?script[^>]*>/)
         body.shift(); body.shift()//remove mainmenu and mainmenu init
         data = {}
