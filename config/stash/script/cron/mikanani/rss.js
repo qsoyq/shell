@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace mikanani.rss */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} mikanani.rss.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} mikanani.rss.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, mikanani.rss.HTTPCallback): mikanani.rss.HTTPResponse} mikanani.rss.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} mikanani.rss.HttpClient
+ * @property {mikanani.rss.HTTPMethod} get - 发送 GET 请求
+ * @property {mikanani.rss.HTTPMethod} post - 发送 POST 请求
+ * @property {mikanani.rss.HTTPMethod} put - 发送 PUT 请求
+ * @property {mikanani.rss.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {mikanani.rss.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<mikanani.rss.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {mikanani.rss.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<mikanani.rss.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<mikanani.rss.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<mikanani.rss.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<mikanani.rss.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -201,18 +201,6 @@ function randomChar(num) {
  */
 function getLocalDateString(date = null) {
     if (!date) {
-        date = new Date()
-    }
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds()
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-}
-function getLocalDateString(date) {
-    if (typeof date === 'undefined') {
         date = new Date()
     }
     const year = date.getFullYear();
@@ -417,8 +405,79 @@ function getUrlArgument(key) {
     return params.get(key) || null
 }
 
+
+
 async function main() {
     console.log("test")
+    let now = getLocalDateString()
+    let APNs = getScriptArgument("APNs")
+    let force = getScriptArgument("")
+    let debug = getScriptArgument("debug")
+    let mikananiToken = mustGetScriptArgument('mikananiToken')
+
+    let url = `https://p.19940731.xyz/api/mikanani/rss/?token=${mikananiToken}`
+    let res = await get({ url })
+    if (res.error || res.response.status >= 400) {
+        throw `${now} [Error]  fetch mikanni rss error: ${res.error} ${res.response.status} ${res.data}`
+    }
+    if (debug) {
+        console.log(`${now} [Debug] rss data: ${res.data}`)
+    }
+    let data = parseJsonBody(res.data)
+    let keyname = `mikanani-rss`
+    let cache = getPersistentArgument(keyname)
+    let lastPushTime = cache ? Number(cache) : null
+    data.rss.channel.item = data.rss.channel.item.filter(element => {
+        if (!lastPushTime) {
+            return true
+        }
+        if (!force) {
+            return true
+        }
+
+        if ((new Date(element['torrent']['pubDate']).getTime()) > lastPushTime) {
+            return true
+        }
+        return false
+    })
+    if (data.rss.channel.item.length === 0 && debug) {
+        console.log(`${now} [Debug] no bangumi update.`)
+    }
+    if (!APNs) {
+        return
+    }
+    let messages = []
+    for (const item of data.rss.channel.item) {
+        let group = APNs?.group || "蜜柑计划"
+        let payload = {
+            apple: {
+                group: group,
+                url: `https://mikanani.me/`,
+                icon: item?.image ? item.image : "https://mikanani.me/favicon.ico",
+                device_token: APNs.device_token,
+                aps: {
+                    "thread-id": group,
+                    alert: {
+                        title: `蜜柑计划有新番剧更新了！`,
+                        body: item.title
+                    }
+                }
+
+            }
+        }
+        messages.push(payload)
+    }
+    if (messages) {
+        let url = "https://p.19940731.xyz/api/notifications/push/v3"
+        if (debug) {
+            console.log(`${now}[Debug] push mikanni payload: ${JSON.stringify(messages)}`)
+        }
+        let res = await post({ url, body: JSON.stringify({ messages: messages }), headers: { "content-type": "application/json" } })
+        if (res.error || res.response.status >= 400) {
+            throw `${now} [Error] push mikanani error: ${res.error}, ${res.response.status}, ${res.data}`
+        }
+        writePersistentArgument(keyname, new Date().getTime().toString())
+    }
 }
 
 (async () => {
