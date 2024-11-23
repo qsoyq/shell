@@ -427,11 +427,11 @@ async function main() {
     let keyname = `mikanani-rss`
     let cache = getPersistentArgument(keyname)
     let lastPushTime = cache ? Number(cache) : null
-    data.rss.channel.item = data.rss.channel.item.filter(element => {
+    data.rss.channel.item = data.rss.channel.item.filter((/** @type {{ [x: string]: { [x: string]: string | number | Date; }; }} */ element) => {
         if (!lastPushTime) {
             return true
         }
-        if (!force) {
+        if (force) {
             return true
         }
 
