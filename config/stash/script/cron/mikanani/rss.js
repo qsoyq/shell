@@ -408,7 +408,6 @@ function getUrlArgument(key) {
 
 
 async function main() {
-    console.log("test")
     let now = getLocalDateString()
     let APNs = getScriptArgument("APNs")
     let force = getScriptArgument("")
