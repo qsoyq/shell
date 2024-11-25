@@ -485,43 +485,45 @@ async function main() {
     let cid = getScriptArgument("cid") || ""
     let debug = getScriptArgument("debug") || false
     let onceMax = getScriptArgument("onceMax")
-
-
-    let querystringArray = Array.from(fidList.map(fid => {
-        return `fid=${fid}`
-    }))
-    querystringArray.push(`order_by=lastpostdesc`)
-    let qs = querystringArray.join("&")
-    if (debug) {
-        console.log(`[Request] threads querystringArray: ${qs}`)
-    }
-    let url = `https://p.19940731.xyz/api/nga/threads/v2?${qs}`
-    let res = await get({ url: url, headers: { "content-type": "application/json", "uid": uid, "cid": cid } })
-    if (res.error || res.response.status >= 400) {
-        throw `request nga threads error: ${res.data}`
-    }
-    let body = parseJsonBody(res.data)
-    if (debug) {
-        console.log(`[Response] threads response body: ${res.data}`)
-    }
-    for (const item of body.data) {
-        if (onceMax) {
-            item.threads = item.threads.slice(0, onceMax)
+    let from = getScriptArgument("from") || 1
+    let to = getScriptArgument("to") || 1
+    for (const page of generateArray(from, to)) {
+        let querystringArray = Array.from(fidList.map((/** @type {any} */ fid) => {
+            return `fid=${fid}`
+        }))
+        querystringArray.push(`order_by=lastpostdesc`)
+        querystringArray.push(`page=${page}`)
+        let qs = querystringArray.join("&")
+        if (debug) {
+            console.log(`[Request] threads querystringArray: ${qs}`)
         }
-        for (const thread of item.threads) {
-            await push(thread)
+        let url = `https://p.19940731.xyz/api/nga/threads/v2?${qs}`
+        let res = await get({ url: url, headers: { "content-type": "application/json", "uid": uid, "cid": cid } })
+        if (res.error || res.response.status >= 400) {
+            throw `request nga threads error: ${res.data}`
+        }
+        let body = parseJsonBody(res.data)
+        if (debug) {
+            console.log(`[Response] threads response body: ${res.data}`)
+        }
+        for (const item of body.data) {
+            if (onceMax) {
+                item.threads = item.threads.slice(0, onceMax)
+            }
+            for (const thread of item.threads) {
+                await push(thread)
+            }
         }
     }
 }
 
 
+
 (async () => {
-    try {
-        await main();
-    } catch (error) {
-        console.log(`[Error]: ${error?.message || error}`); // 打印异常信息
-    } finally {
-        // @ts-ignore
+    main().then(_ => {
         $done({})
-    }
+    }).catch(error => {
+        console.log(`[Error]: ${error?.message || error}`)
+        $done({})
+    })
 })();
