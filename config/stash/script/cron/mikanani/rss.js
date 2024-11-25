@@ -410,9 +410,10 @@ function getUrlArgument(key) {
 async function main() {
     let now = getLocalDateString()
     let APNs = getScriptArgument("APNs")
-    let force = getScriptArgument("")
+    let force = getScriptArgument("force")
     let debug = getScriptArgument("debug")
     let mikananiToken = mustGetScriptArgument('mikananiToken')
+    let aria2 = getScriptArgument("aria2")
 
     let url = `https://p.19940731.xyz/api/mikanani/rss/?token=${mikananiToken}`
     let res = await get({ url })
@@ -448,6 +449,7 @@ async function main() {
     let messages = []
     for (const item of data.rss.channel.item) {
         let group = APNs?.group || "蜜柑计划"
+        let realTitle = item?.real_title
         let payload = {
             apple: {
                 group: group,
@@ -458,13 +460,45 @@ async function main() {
                     "thread-id": group,
                     alert: {
                         title: `蜜柑计划有新番剧更新了！`,
-                        body: item.title
+                        body: realTitle || item.title
                     }
                 }
 
             }
         }
         messages.push(payload)
+    }
+    if (aria2) {
+        for (const item of data.rss.channel.item) {
+            let realTitle = item?.real_title
+            if (!realTitle) {
+                continue
+            }
+
+            let [title, number] = realTitle.split('-').map((/** @type {string} */ ele) => { return ele.trim() })
+            let torrentUrl = item?.enclosure?.["@url"]
+            let url = aria2.url
+            let dirPrefix = aria2?.dirPrefix || "/Anime"
+            let dir = `${dirPrefix}/${title}/`
+            let payload = {
+                jsonrpc: "2.0",
+                method: "aria2.addUri",
+                id: randomChar(32).toLowerCase(),
+                params: [
+                    `token:${aria2.token}`,
+                    [torrentUrl],
+                    { "dir": dir }
+                ]
+            }
+            let body = JSON.stringify(payload)
+            let res = await post({ url, body: body, headers: { "Content-Type": "application/json" } })
+            if (res.error || res.response.status >= 400) {
+                throw `${now} [Error] create aria2 download task error.\nUrl: ${url}\nPayload:\n${body} \n${res.error}, ${res.response.status}, ${res.data}`
+            }
+            if (debug) {
+                console.log(`${now} [Debug] create downlonad task for ${title} - ${number}, save to ${dir}`)
+            }
+        }
     }
     if (messages) {
         let url = "https://p.19940731.xyz/api/notifications/push/v3"
@@ -477,13 +511,15 @@ async function main() {
         }
         writePersistentArgument(keyname, new Date().getTime().toString())
     }
+
+
 }
 
 (async () => {
     main().then(_ => {
         $done({})
     }).catch(error => {
-        console.log(`[Error]: ${error}`)
+        console.log(`[Error]: ${error?.message || error}`)
         $done({})
     })
 })();
