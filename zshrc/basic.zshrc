@@ -18,6 +18,7 @@ alias today="date \"+%Y-%m-%d\""
 alias history="history 1000"
 alias tarfix="gtar --mtime='2024-01-01' --sort=name --numeric-owner -czf"
 alias uuid="python -c 'import uuid;print(uuid.uuid4().hex)'"
+alias dstorrent="find ~/Movies/Anime -name '*.torrent' -type f -ls -delete "
 
 urlsafe_base64() {
     python3 -c "import base64; print(base64.urlsafe_b64encode('$1'.encode()).decode())"
