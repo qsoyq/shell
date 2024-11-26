@@ -507,10 +507,16 @@ async function main() {
             console.log(`[Response] threads response body: ${res.data}`)
         }
         for (const item of body.data) {
+            /** @type {any[]} */
+            let threads = item?.threads || []
             if (onceMax) {
-                item.threads = item.threads.slice(0, onceMax)
+                threads = threads.slice(0, onceMax)
             }
-            for (const thread of item.threads) {
+            threads = threads.filter((ele) => {
+                // 帖子发布或回复时间超过限制
+                return ele.postdate
+            })
+            for (const thread of threads) {
                 await push(thread)
             }
         }

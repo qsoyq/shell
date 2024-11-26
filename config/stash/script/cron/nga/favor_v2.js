@@ -415,6 +415,10 @@ async function main() {
     }
 
     let body = parseJsonBody(res.data)
+    body.threads = (body?.threads || []).filter((/** @type {{ postdate: any; }} */ ele) => {
+        // 帖子发布或回复时间超过限制
+        return ele.postdate
+    })
     for (const thread of body.threads) {
         let keyname = `nga-favor-${thread.tid}`
         let cache = getPersistentArgument(keyname)
@@ -460,15 +464,11 @@ async function main() {
     }
 }
 
-
 (async () => {
-    try {
-        await main();
-    } catch (error) {
-        console.log(`[Error]: ${error?.message || error}`); // 打印异常信息
-    } finally {
-        // @ts-ignore
+    main().then(_ => {
         $done({})
-    }
+    }).catch(error => {
+        console.log(`[Error]: ${error?.message || error}`)
+        $done({})
+    })
 })();
-
