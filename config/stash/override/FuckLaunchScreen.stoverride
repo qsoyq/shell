@@ -1,3 +1,4 @@
+#SUBSCRIBED https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/override/FuckLaunchScreen.stoverride
 # 肯德基失效
 # 麦当劳待测试
 
@@ -94,23 +95,6 @@ http:
 
     # 移除微博国际版首页和帖子内广告
     - ^https://api.weibo.cn/2/ad/weibointl - reject
-    # - "*.sinaimg.cn"
-    # - "*.weibo.cn"
-    # - "*.weibo.com"
-    # - a1.alibabausercontent.com
-    # - "*.adbkwai.com"
-    # - "msg.umengcloud.com"
-    # - "cnlogs.umeng.com"
-    # - adukwai.com
-    # - https?://msg.umengcloud.com - reject
-    # - https?://cnlogs.umeng.com - reject
-    # - https?://bootrealtime.uve.weibo.com - reject
-    # - https?://.*.?adbkwai.com - reject
-    # - https://bootpreload.uve.weibo.com/v1/ad/preload - reject
-    # - https://api.weibo.cn/2/ad/weibointl - reject
-    # - https://adstrategy.biz.weibo.com/v3/strategy/ad - reject
-    # - https://a1.alibabausercontent.com/prod/feupload/user/5mcuu - reject
-    # - https://weibointl.api.weibo.cn/portal.php - reject
 
   body-rewrite:
     # 便利蜂
@@ -134,10 +118,18 @@ rule-providers:
   anti-AD:
     behavior: domain
     format: yaml
-    interval: 86400
+    interval: 7200
     type: http
     url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-clash.yaml
 
+  秋风广告规则:
+    behavior: domain
+    format: yaml
+    interval: 7200
+    type: http
+    url: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml
+
 rules:
   # 可跳过番茄小说广告
-  - RULE-SET,anti-AD,REJECT
+  - RULE-SET,anti-AD,REJECT-DROP,no-resolve,no-track
+  - RULE-SET,秋风广告规则,REJECT-DROP,no-resolve,no-track

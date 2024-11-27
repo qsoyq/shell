@@ -417,6 +417,74 @@ function getUrlArgument(key) {
     return params.get(key) || null
 }
 
+/**
+ * 生成推送消息格式
+ * https://p.19940731.xyz/redoc#tag/notifications.push/operation/push_v3_api_notifications_push_v3_post
+ * @param {*} title 
+ * @param {*} body 
+ * @param {*} url 
+ * @param {*} group 
+ * @param {*} icon 
+ * @param {*} level 
+ * @returns 
+ */
+function makePushMessage(title, body, url = null, group = null, icon = null, level = null) {
+    let payload = {}
+
+    let APNs = getScriptArgument("APNs")
+    let bark = getScriptArgument("bark")
+    if (APNs) {
+        group = APNs?.group || group || "Default"
+        level = APNs?.level || level || "passive"
+        payload.apple = {
+            group: group,
+            url: url,
+            icon: icon || APNs?.icon,
+            device_token: APNs.device_token,
+            aps: {
+                "thread-id": group,
+                "interruption-level": level,
+                alert: {
+                    title: title,
+                    body: body
+                }
+            }
+        }
+    }
+    if (bark) {
+        group = bark?.group || group || "Default"
+        level = bark?.level || level || "passive"
+        payload.bark = {
+            device_key: bark.device_key,
+            title: title,
+            body: body,
+            level: level,
+            icon: icon || bark?.icon,
+            group: group,
+            url: url,
+            endpoint: bark?.endpoint || "https://api.day.app/push"
+
+        }
+    }
+    return payload
+}
+
+/**
+ * 推送消息
+ * https://p.19940731.xyz/redoc#tag/notifications.push/operation/push_v3_api_notifications_push_v3_post
+ * @param {*} message 
+ * @returns 
+ */
+async function pushMessage(message) {
+    let url = 'https://p.19940731.xyz/api/notifications/push/v3'
+    let res = await post({ url, body: JSON.stringify({ messages: [message] }), headers: { "content-type": "application/json" } })
+    let now = getLocalDateString()
+    if (res.error || res.response.status >= 400) {
+        throw `${now} [Error] push messages error: ${res.error}, ${res.response.status}, ${res.data}`
+    }
+    return res
+}
+
 async function main() {
     console.log("test")
 }
