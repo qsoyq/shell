@@ -433,13 +433,14 @@ function makePushMessage(title, body, url = null, group = null, icon = null, lev
 
     let APNs = getScriptArgument("APNs")
     let bark = getScriptArgument("bark")
+    group = getScriptArgument("group") || group || "Default"
+    level = getScriptArgument("level") || level || "passive"
+    icon = icon || getScriptArgument("icon")
     if (APNs) {
-        group = APNs?.group || group || "Default"
-        level = APNs?.level || level || "passive"
         payload.apple = {
             group: group,
             url: url,
-            icon: icon || APNs?.icon,
+            icon: icon,
             device_token: APNs.device_token,
             aps: {
                 "thread-id": group,
@@ -452,14 +453,12 @@ function makePushMessage(title, body, url = null, group = null, icon = null, lev
         }
     }
     if (bark) {
-        group = bark?.group || group || "Default"
-        level = bark?.level || level || "passive"
         payload.bark = {
             device_key: bark.device_key,
             title: title,
             body: body,
             level: level,
-            icon: icon || bark?.icon,
+            icon: icon,
             group: group,
             url: url,
             endpoint: bark?.endpoint || "https://api.day.app/push"

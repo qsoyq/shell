@@ -529,13 +529,14 @@ async function main() {
         })
     });
 
-    for (const group of body.data) {
-        for (const topic of group.topics) {
+    for (const item of body.data) {
+        for (const topic of item.topics) {
             let openUrl = typeof topic["v2fun_urlscheme"] !== 'undefined' ? topic["v2fun_urlscheme"] : topic["url"]
             let title = `V2ex ${topic["node"]["title"]}`
             let group = `V2ex-Node-${topic["node"]["title"]}`
             let body = `${topic["title"]}\n\nurl:${topic["url"]}\n\nv2fun:${openUrl}`
-            let payload = makePushMessage(title, body, openUrl, group)
+            let icon = item.node.avatar
+            let payload = makePushMessage(title, body, openUrl, group, icon)
             if (debug) {
                 console.log(`${now}[Debug] push notification: ${JSON.stringify(payload)}`)
             }
