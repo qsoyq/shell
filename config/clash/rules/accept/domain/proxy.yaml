@@ -56,6 +56,13 @@ payload:
   - "+.ip-api.com"
   - "+.fly.io"
   - "+.dlercloud.com"
+  - "+.gravatar.com"
+  - "+.bgp.he.net"
+  - "+.wikimedia.org"
+  - "+.wikipedia.org"
+  - "+.gstatic.com"
+  - ""
+  - ""
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
