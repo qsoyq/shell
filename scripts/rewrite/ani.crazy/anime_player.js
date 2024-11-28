@@ -35572,9 +35572,9 @@ Current map: `, r),
                         playingVideo: !1
                     })
                     this.trigger("playingAd")
-                    this.player.adHandler().play(this.state.videoSn, h(this, ms), () => {
-                        e()
-                    })
+                    // this.player.adHandler().play(this.state.videoSn, h(this, ms), () => {
+                    //     e()
+                    // })
                     debugger
                 }
                 ).catch(e => {
