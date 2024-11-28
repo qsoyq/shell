@@ -1,4 +1,4 @@
-// 2024-11-29 03:24:41
+// 2024-11-29 03:30:43
 var cC = Object.defineProperty;
 var fC = (Ve, Ue, et) => Ue in Ve ? cC(Ve, Ue, {
     enumerable: !0,
@@ -35567,14 +35567,14 @@ Current map: `, r),
             Su = new WeakSet,
             fy = function () {
                 return new Promise((e, s) => {
-                    this.setState({
-                        playingAd: !0,
-                        playingVideo: !1
-                    }),
-                        this.trigger("playingAd"),
-                        this.player.adHandler().play(this.state.videoSn, h(this, ms), () => {
-                            e()
-                        })
+                    // this.setState({
+                    //     playingAd: !0,
+                    //     playingVideo: !1
+                    // }),
+                    // this.trigger("playingAd"),
+                    // this.player.adHandler().play(this.state.videoSn, h(this, ms), () => {
+                    //     e()
+                    // })
                 }
                 ).catch(e => {
                     debugger
