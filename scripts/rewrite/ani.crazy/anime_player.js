@@ -35567,14 +35567,15 @@ Current map: `, r),
             Su = new WeakSet,
             fy = function () {
                 return new Promise((e, s) => {
-                    // this.setState({
-                    //     playingAd: !0,
-                    //     playingVideo: !1
-                    // }),
-                    // this.trigger("playingAd"),
-                    // this.player.adHandler().play(this.state.videoSn, h(this, ms), () => {
-                    //     e()
-                    // })
+                    this.setState({
+                        playingAd: !0,
+                        playingVideo: !1
+                    })
+                    this.trigger("playingAd")
+                    this.player.adHandler().play(this.state.videoSn, h(this, ms), () => {
+                        e()
+                    })
+                    debugger
                 }
                 ).catch(e => {
                     debugger
