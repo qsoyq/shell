@@ -419,19 +419,22 @@ async function main() {
         // 帖子发布或回复时间超过限制
         return ele.postdate
     })
-    for (const thread of body.threads) {
+    body.threads = body.threads.filter((thread) => {
         let keyname = `nga-favor-${thread.tid}`
         let cache = getPersistentArgument(keyname)
         let lastpost = thread.lastpost
         if (debug) {
-            console.log(`[Cache] ${thread.subject}, ${cache}`)
+            console.log(`[Cache] ${thread.subject}, cache lastpost: ${cache}, current lastpost: ${thread?.lastpostStr}`)
         }
         if (!force && cache && lastpost <= Number(cache)) {
             if (debug) {
                 console.log(`[Cache] skip ${thread.subject}`)
             }
-            continue
+            return false
         }
+        return true
+    })
+    for (const thread of body.threads) {
         let messages = []
         if (APNs) {
             let payload = {
@@ -459,7 +462,8 @@ async function main() {
                 throw `push notification error: ${res.error}, data: ${res.data}, subject: ${thread.subject}`
             }
             console.log(`[Push] ${thread.subject} success`)
-            writePersistentArgument(keyname, `${parseInt(`${(new Date().getTime())}`)}`)
+            let keyname = `nga-favor-${thread.tid}`
+            writePersistentArgument(keyname, `${thread.lastpost}`)
         }
     }
 }
