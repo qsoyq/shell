@@ -61,8 +61,7 @@ payload:
   - "+.wikimedia.org"
   - "+.wikipedia.org"
   - "+.gstatic.com"
-  - ""
-  - ""
+  - "+.javdb.com"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
