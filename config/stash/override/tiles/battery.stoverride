@@ -14,5 +14,5 @@ tiles:
 
 script-providers:
   MacbookPro电量:
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/tiles/battery.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/tiles/battery.js
     interval: 86400

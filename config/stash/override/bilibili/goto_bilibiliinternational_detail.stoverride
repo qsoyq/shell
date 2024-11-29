@@ -16,5 +16,5 @@ http:
 
 script-providers:
   "哔哩哔哩国际版-微信修改":
-    url: "https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/bilibili/goto_bilibiliinternational_detail.js"
+    url: "https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/bilibili/goto_bilibiliinternational_detail.js"
     interval: 86400

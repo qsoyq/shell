@@ -20,5 +20,5 @@ http:
 
 script-providers:
   "NGA-微信内通知提醒插件":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/nga/auto_open_nga_in_wechat.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/nga/auto_open_nga_in_wechat.js
     interval: 86400

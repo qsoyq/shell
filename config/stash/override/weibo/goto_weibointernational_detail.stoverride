@@ -18,5 +18,5 @@ http:
 
 script-providers:
   "微博国际版URLScheme":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/weibo/goto_weibointernational_detail.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/weibo/goto_weibointernational_detail.js
     interval: 86400

@@ -10,18 +10,17 @@ http:
     - "*.bq16.cc"
   url-rewrite:
     # - ^https?:\/\/(\w+).bi25.cc/js/read.js - reject
-    # - ^https?:\/\/(\w+).bq16.cc/js/read.js - reject    
-    - ^https?:\/\/(\w+).bi25.cc/js/comibm.js - reject
-    - ^https?:\/\/(\w+).bq16.cc/js/comibm.js - reject
+    # - ^https?:\/\/(\w+).bq16.cc/js/read.js - reject
+    - ^https?:\/\/(\w+).bi\d+.cc/js/comibm.js - reject
   script:
     - match: ^https?://(\w+).(bq16|bi25).cc/(book|index)/\d+/.+
       name: "笔趣阁小说净化"
       type: response
       require-body: true
       timeout: 5
-      argument: ''
+      argument: ""
 
 script-providers:
   "笔趣阁小说净化":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/bq/NovelTextCleaner.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/bq/NovelTextCleaner.js
     interval: 86400

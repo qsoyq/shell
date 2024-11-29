@@ -25,8 +25,8 @@ cron:
 
 script-providers:
   "梦璃签到":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/checkin/moeli-desu.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/cron/checkin/moeli-desu.js
     interval: 86400
   "梦璃获取Cookie":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/checkin/moeli-desu.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/cron/checkin/moeli-desu.js
     interval: 86400    

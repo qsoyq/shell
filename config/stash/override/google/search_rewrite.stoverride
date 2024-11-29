@@ -30,5 +30,5 @@ http:
  
 script-providers:
   google-search-rewrite:
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/google/search_rewrite.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/google/search_rewrite.js
     interval: 86400

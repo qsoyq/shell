@@ -12,5 +12,5 @@ cron:
 
 script-providers:
   "网页运行监控":
-    url: https://qsoyq-public.oss-cn-shanghai.aliyuncs.com/github/shell/config/stash/script/cron/watcher.js
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/cron/watcher.js
     interval: 86400
