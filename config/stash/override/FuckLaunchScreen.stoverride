@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  2024年11月30日 星期六 20时56分04秒 CST
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
@@ -54,6 +55,13 @@ http:
     # 微博国际版
     - api.weibo.cn
 
+    # 笔趣阁
+    - "*.bi25.cc"
+    - "*.bq16.cc"
+
+    # 小黑盒
+    - api.xiaoheihe.cn
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -89,6 +97,9 @@ http:
     # 淘宝
     - ^https?://(gw|heic).alicdn.com/imgextra/i\d/\d*/?[\w!]+-\d-(octopus|tps-1125-1602).(jp|pn)g_(1\d{3}|9\d{2})x(1\d{3}|9\d{2})q[59]0 - reject # 开屏广告
 
+    # 笔趣阁去广告
+    - ^https?:\/\/(\w+).bi\d+.cc/js/comibm.js - reject
+
     # 移除微博国际版首页和帖子内广告
     - ^https://api.weibo.cn/2/ad/weibointl - reject
 
@@ -96,6 +107,10 @@ http:
     # 便利蜂
     # - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 - reject
     - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 response-jq .data.HomeLoadNew.adItems=[]
+
+    # 小黑盒去开瓶广告
+    - ^https?://api.xiaoheihe.cn/account/get_ads_info_v2.* response-jq .result.open_screen=[]
+    - ^https?://api.xiaoheihe.cn/account/get_ads_info_v2.* response-jq .result.inner_ads=[]
 
   script:
     - match: https?://amdc.m.taobao.com
