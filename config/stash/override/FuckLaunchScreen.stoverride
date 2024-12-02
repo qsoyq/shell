@@ -1,6 +1,6 @@
 name: 去他妈的广告
 desc: |-
-  更新时间: 2024-11-30 20:59:24
+  2024年12月 2日 星期一 20时11分39秒 CST: 去除 reddit 列表和详情页的广告
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
@@ -111,6 +111,7 @@ http:
     # 小黑盒去开屏广告
     - ^https?://api.xiaoheihe.cn/account/get_ads_info_v2.* response-jq .result.open_screen=[]
     - ^https?://api.xiaoheihe.cn/account/get_ads_info_v2.* response-jq .result.inner_ads=[]
+    - ^https://gql-fed.reddit.com/ response-jq .data.postInfoById.commentsPageAds=[]
 
   script:
     - match: https?://amdc.m.taobao.com
