@@ -1,6 +1,6 @@
 name: 去他妈的广告
 desc: |-
-  2024年12月 2日 星期一 20时11分39秒 CST: 去除 reddit 列表和详情页的广告
+  2024-12-02 20:16:07: 去除 reddit 列表和详情页的广告
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
@@ -61,6 +61,9 @@ http:
 
     # 小黑盒
     - api.xiaoheihe.cn
+
+    # reddit
+    - gql-fed.reddit.com
 
   url-rewrite:
     # 叮咚买菜
