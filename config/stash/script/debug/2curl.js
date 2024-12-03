@@ -231,6 +231,9 @@ function visitAll(body, prefix = "", visited = new WeakSet()) {
         if (typeof value === 'object' && value !== null) {
             visitAll(value, currentPrefix, visited);
         } else {
+            if (prefix === 'body' && typeof value === 'number') {
+                continue
+            }
             console.log(`Key: ${currentPrefix}, Value: ${value}, Type: ${typeof value}`);
         }
     }
