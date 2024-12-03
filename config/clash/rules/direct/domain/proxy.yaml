@@ -1,21 +1,18 @@
 payload:
-  - "+.localhost"
   - "+.wushuangai.com"
   - "+.lcdn-locator.apple.com"
   - "+.lcdn-registration.apple.com"
   - "+.argotunnel.com"
-  - "mbp.19940731.xyz"
-  - "iphone.19940731.xyz"
-  - "windows.19940731.xyz"
   - "+.tastientech.com"
   - "+.aihubmix.com"
   - "+.claw.buzz"
   - "+.clawcloudsingaporeprivatelimited.sjv.io"
   - "+.www.ojrq.net"
 
-  # OrbStack
-  - "+.orb.local"
-
   # QQ网页端快捷登陆
   - "localhost.ptlogin2.qq.com"
   - "localhost.sec.qq.com"
+
+  - "mbp.19940731.xyz"
+  - "iphone.19940731.xyz"
+  - "windows.19940731.xyz"
