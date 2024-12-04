@@ -1,8 +1,8 @@
-#SUBSCRIBED https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/config/stash/override/FuckLaunchScreen.stoverride
 name: 去他妈的广告
 desc: |-
+  - 2024-12-05 01:13:45: 取出 美团外卖 开屏广告(视频)
   - 2024-12-04 19:15:02: 下载狗屏蔽 iOS、微信 弹窗提示
-  - 2024-12-04 07:10:18: 去除 美团外卖 开屏广告
+  - 2024-12-04 07:10:18: 去除 美团外卖 开屏广告(图片)
   - 2024-12-02 20:16:07: 去除 reddit 列表和详情页的广告
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
@@ -118,6 +118,7 @@ http:
 
     # 美团外卖开屏广告
     - ^https?://img.meituan.net/bizad/bizad_brandCpt_\d+\.jpg\.webp - reject
+    - ^https?://s3plus.meituan.net/v1/\w+/brandcpt-vedio/.*$ - reject
 
     # 下载狗
     - ^https://www.xiazaitool.com/parseVideo/js/master.js.*$ https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/xiazaitool/parseVideo/js/master.js 307
