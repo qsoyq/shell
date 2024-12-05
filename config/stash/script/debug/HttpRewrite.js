@@ -353,11 +353,14 @@ async function main() {
                 for (const regexp of regexps) {
                     let search = regexp?.search
                     let replace = regexp?.replace
-                    console.log(`search: ${search}, replace: ${replace}`)
                     if (search && replace) {
                         origin = modified
                         modified = body.replace(new RegExp(search, 'g'), replace);
-                        console.log(`${origin}=>${modified}`)
+                        if (origin !== modified) {
+                            console.log(`search: ${search}, replace: ${replace}, replacement successful. `)
+                        } else {
+                            console.log(`search: ${search}, replace: ${replace}, replacement skip. `)
+                        }
                     }
                 }
                 return $done({ body: modified })
