@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-06 05:01:05: 更新 下载狗 iOS、微信 下载受限的弹窗提示 使用脚本替换url重定向
   - 2024-12-05 01:13:45: 去除 美团外卖 开屏广告(视频)
   - 2024-12-04 19:15:02: 去除 下载狗 iOS、微信 下载受限的弹窗提示
   - 2024-12-04 07:10:18: 去除 美团外卖 开屏广告(图片)
@@ -120,13 +121,9 @@ http:
     - ^https?://img.meituan.net/bizad/bizad_brandCpt_\d+\.jpg\.webp - reject
     - ^https?://s3plus.meituan.net/v1/\w+/brandcpt-vedio/.*$ - reject
 
-    # 下载狗
-    - ^https://www.xiazaitool.com/parseVideo/js/master.js.*$ https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/xiazaitool/parseVideo/js/master.js 307
-
   header-rewrite:
     # 下载狗
-    - ^https?://www.xiazaitool.com/parseVideo/js/master.js.*$ response-replace Content-Type application/javascript;charset=utf-8
-    - ^https?://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/xiazaitool/parseVideo/js/master.js.*$ response-replace Content-Type application/javascript;charset=utf-8
+    - ^https?://www.xiazaitool.com/parseVideo/js/master.js.*$ response-replace Cache-Control no-store
 
   body-rewrite:
     # 便利蜂
@@ -139,16 +136,30 @@ http:
     - ^https://gql-fed.reddit.com/ response-jq .data.postInfoById.commentsPageAds=[]
 
   script:
-    - match: https?://amdc.m.taobao.com
+    - match: ^https?://amdc.m.taobao.com
       name: amdc
       type: response
       require-body: true
       max-size: -1
       timeout: 60
 
+    - match: ^https?://www.xiazaitool.com/parseVideo/js/master.js.*$
+      name: 下载狗
+      type: response
+      require-body: true
+      max-size: -1
+      timeout: 60
+      debug: false
+      argument: >-
+        {"rewriteHttpResponseBodyRegexps":[{"search":"alert","replace":"console.log"}]}
+
 script-providers:
   amdc:
     url: https://github.com/ddgksf2013/Scripts/raw/master/amdc.js
+    interval: 86400
+
+  下载狗:
+    url: https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/config/stash/script/debug/HttpRewrite.js
     interval: 86400
 
 rule-providers:
