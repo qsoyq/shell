@@ -342,31 +342,39 @@ function getScriptResponseBody() {
 }
 
 async function main() {
-    try {
-        let type = getScriptType()
-        if (type === 'request') {
-
-        }
-        if (type === 'response') {
-            let regexps = getScriptArgument("rewriteHttpResponseBodyRegexps") || []
+    let type = getScriptType()
+    let regexps = getScriptArgument("rewriteHttpResponseBodyRegexps") || []
+    switch (type) {
+        case 'request':
+        case 'response':
             let body = getScriptResponseBody()
             if (body) {
+                let modified = body
                 for (const regexp of regexps) {
                     let search = regexp?.search
                     let replace = regexp?.replace
                     console.log(`search: ${search}, replace: ${replace}`)
                     if (search && replace) {
-                        body = body.replace(new RegExp(search, 'g'), replace);
+                        origin = modified
+                        modified = body.replace(new RegExp(search, 'g'), replace);
+                        console.log(`${origin}=>${modified}`)
                     }
                 }
-                return $done({ body: body })
+                return $done({ body: modified })
             }
-        }
-    } catch (error) {
-        console.log(`error: ${error}`)
-        $done({})
+            break
+        default:
+            break;
     }
-    return $done({})
+    $done({})
 }
 
-main()
+
+(async () => {
+    main().then(_ => {
+
+    }).catch(error => {
+        console.log(`[Error]: ${error?.message || error}`)
+        $done({})
+    })
+})();
