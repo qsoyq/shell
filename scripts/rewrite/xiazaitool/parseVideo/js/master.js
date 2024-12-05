@@ -1,3 +1,4 @@
+// 2024-12-06 04:29:44
 $(document).ready(function () {
     //复选框操作
     var allChecked = true; // 初始状态为不权限状态
@@ -73,7 +74,6 @@ $(document).ready(function () {
         // 更新按钮文本
         $("#toggleButton").text(allChecked ? "取消全选" : "全选");
     });
-
 
 
     //判断用户有没有登录，选择展示的内容
@@ -174,17 +174,57 @@ $(document).ready(function () {
         //判断是否是微信浏览器
         if (userAgent.indexOf("weixin") !== -1) {
             setTimeout(function () {
-                console.log("由于微信浏览器限制下载，推荐使用其他浏览器打开网站");
+                alert("由于微信浏览器限制下载，推荐使用其他浏览器打开网站");
             }, 2000);
         }
 
         //判断是否是苹果手机浏览器浏览器
         if (userAgent.indexOf("iphone") !== -1 && userAgent.indexOf("safari") !== -1 && userAgent.indexOf("version") !== -1) {
             setTimeout(function () {
-                console.log("由于苹果浏览器限制下载，推荐使用其他浏览器打开网站");
+                alert("由于苹果浏览器限制下载，推荐使用其他浏览器打开网站");
             }, 2000);
         }
     };
+
+
+    //禁用右键菜单
+    // document.addEventListener('contextmenu', function (e) {
+    //     e.preventDefault();
+    // });
+
+    // 拦截 F12 和开发者工具快捷键
+    // document.addEventListener('keydown', function (e) {
+    //     // F12 或 Ctrl+Shift+I
+    //     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+    //         e.preventDefault();
+    //     }
+    //     // Ctrl+Shift+J 或 Ctrl+U
+    //     if ((e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
+    //         e.preventDefault();
+    //     }
+    //
+    //     // 禁用 Ctrl+U (查看源代码)
+    //     if (e.ctrlKey && e.key === 'u') {
+    //         e.preventDefault();
+    //     }
+    // });
+    //
+    // var firstTime
+    // var lastTime
+    // let intervalId = setInterval(() => {
+    //     firstTime = Date.now()
+    //     debugger
+    //     lastTime = Date.now()
+    //     if (lastTime - firstTime > 100) {
+    //         console.log('这里可以屏蔽当前dom或者启动无限数据循环')
+    //         clearInterval(intervalId);
+    //         // 清空页面内容并刷新
+    //         document.body.innerHTML = ""; // 清空页面
+    //         document.body.style.backgroundColor = "#ffffff"; // 设置背景为白色
+    //         // location.reload(); // 刷新页面
+    //     }
+    // }, 300);
+
 
 });
 
@@ -319,8 +359,20 @@ function copyToClipboard(text) {
     document.body.removeChild(input);
 }
 
+async function confidential(params) {
+    const salt = "1b23a4426e30435fa6b132dd0c56c835";
+
+    console.log(salt + params.url + params.platform);
+    const encoder = new TextEncoder();
+    const data = encoder.encode(salt + params.url + params.platform);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
 $('#shareLink').click(function () {
-    var urlToCopy = "https://www.xiazaitool.com/ 抖音、快手、皮皮虾、小红书去水印，推荐使用浏览器打开";
+    let urlToCopy = "https://www.xiazaitool.com/ 抖音、快手、皮皮虾、小红书去水印，推荐使用浏览器打开";
 
     try {
         copyToClipboard(urlToCopy);
