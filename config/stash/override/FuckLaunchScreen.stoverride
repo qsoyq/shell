@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-09 00:59:14: 去除 大众点评 开屏广告
   - 2024-12-08 06:18:59: 去除 reddit 社区页列表的广告
   - 2024-12-06 05:01:05: 更新 下载狗 iOS、微信 下载受限的弹窗提示 使用脚本替换url重定向
   - 2024-12-05 01:13:45: 去除 美团外卖 开屏广告(视频)
@@ -71,6 +72,7 @@ http:
     - gql-fed.reddit.com
 
     # 美团外卖
+    # 大众点评
     - img.meituan.net
 
     # 下载狗
@@ -121,6 +123,9 @@ http:
     # 美团外卖开屏广告
     - ^https?://img.meituan.net/bizad/bizad_brandCpt_\d+\.jpg\.webp - reject
     - ^https?://s3plus.meituan.net/v1/\w+/brandcpt-vedio/.*$ - reject
+
+    # 大众点评开屏广告
+    - ^https://img.meituan.net/goodsawardpic/.* - reject
 
   header-rewrite:
     # 下载狗
