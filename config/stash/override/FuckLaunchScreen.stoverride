@@ -1,5 +1,7 @@
+#SUBSCRIBED https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/config/stash/override/FuckLaunchScreen.stoverride
 name: 去他妈的广告
 desc: |-
+  - 2024-12-10 00:15:02: 去除 起点读书 开屏广告
   - 2024-12-09 00:59:14: 去除 大众点评 开屏广告
   - 2024-12-08 06:18:59: 去除 reddit 社区页列表的广告
   - 2024-12-06 05:01:05: 更新 下载狗 iOS、微信 下载受限的弹窗提示 使用脚本替换url重定向
@@ -79,6 +81,9 @@ http:
     - www.xiazaitool.com
     - raw.githubusercontent.com
 
+    # 起点
+    - ataru.qidian.com
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -126,6 +131,9 @@ http:
 
     # 大众点评开屏广告
     - ^https://img.meituan.net/goodsawardpic/.* - reject
+
+    # 起点
+    - ^https?://ataru.qidian.com/noah/\d+ - reject
 
   header-rewrite:
     # 下载狗
