@@ -383,7 +383,8 @@ function telegramEscapeMarkdownV2(text) {
         { char: '{', replacement: '\\{' },
         { char: '}', replacement: '\\}' },
         { char: '.', replacement: '\\.' },
-        { char: '!', replacement: '\\!' }
+        { char: '!', replacement: '\\!' },
+        { char: '`', replacement: '\\`' }
     ];
 
     let escapedText = text;
