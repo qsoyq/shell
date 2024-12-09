@@ -495,7 +495,7 @@ async function main() {
     }
 
     let data = parseJsonBody(body)
-    for (const item of data.items) {
+    for (const item of data.data.items) {
         console.log(`${item?.card_type}, ${item?.goto}, ${item?.args?.up_name},${item?.args?.rname},${item?.args?.tname},${item?.title}`)
     }
 }
