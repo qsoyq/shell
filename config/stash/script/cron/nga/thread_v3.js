@@ -385,7 +385,8 @@ function telegramEscapeMarkdownV2(text) {
         { char: '{', replacement: '\\{' },
         { char: '}', replacement: '\\}' },
         { char: '.', replacement: '\\.' },
-        { char: '!', replacement: '\\!' }
+        { char: '!', replacement: '\\!' },
+        { char: '`', replacement: '\\`' }
     ];
 
     let escapedText = text;
@@ -421,7 +422,7 @@ async function push(thread) {
 
     let messages = []
 
-    if (telegram.bot_id && telegram.chat_id) {
+    if (telegram) {
         let redirectUrl = `https://p.19940731.xyz/api/network/url/redirect?url=${encodeURIComponent(thread.ios_app_scheme_url)}`
         let title = telegramEscapeMarkdownV2(`NGA ${thread["fname"]} 有新帖子`)
         let subject = telegramEscapeMarkdownV2(thread.subject)
