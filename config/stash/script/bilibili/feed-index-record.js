@@ -498,6 +498,11 @@ async function main() {
     for (const item of data.data.items) {
         console.log(`${item?.card_type}, ${item?.goto}, ${item?.args?.up_name},${item?.args?.rname},${item?.args?.tname},${item?.title}`)
         if (!item?.card_type || !item?.args?.rname) {
+            if (item?.goto && item?.season) {
+                // 合集类视频， 没有分类相关的参数
+                continue
+            }
+            // debug 日志
             visitAll(item)
         }
     }
