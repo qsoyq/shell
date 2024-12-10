@@ -497,8 +497,9 @@ async function main() {
     let data = parseJsonBody(body)
     for (const item of data.data.items) {
         console.log(`${item?.card_type}, ${item?.goto}, ${item?.args?.up_name},${item?.args?.rname},${item?.args?.tname},${item?.title}`)
-        // b 站 feature? 偶尔部分字段会为 undefined
-        // if (!item?.card_type || !item?.args?.rname) {}
+        if (!item?.card_type || !item?.args?.rname) {
+            visitAll(item)
+        }
     }
 }
 
