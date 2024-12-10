@@ -497,14 +497,8 @@ async function main() {
     let data = parseJsonBody(body)
     for (const item of data.data.items) {
         console.log(`${item?.card_type}, ${item?.goto}, ${item?.args?.up_name},${item?.args?.rname},${item?.args?.tname},${item?.title}`)
-        if (!item?.card_type || !item?.args?.rname) {
-            if (item?.goto && item?.season) {
-                // 合集类视频， 没有分类相关的参数
-                continue
-            }
-            // debug 日志
-            visitAll(item)
-        }
+        // b 站 feature? 偶尔部分字段会为 undefined
+        // if (!item?.card_type || !item?.args?.rname) {}
     }
 }
 
