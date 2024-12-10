@@ -139,10 +139,6 @@ http:
     # 起点
     - ^https?://ataru.qidian.com/noah/\d+ - reject
 
-    # 推特
-    # 首页时间线去广告
-    - ^https?://x.com/i/api/graphql/\w+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
-
   header-rewrite:
     # 下载狗
     - ^https?://www.xiazaitool.com/parseVideo/js/master.js.*$ response-replace Cache-Control no-store
@@ -166,6 +162,11 @@ http:
 
     # 首页列表广告
     - ^https://gql-fed.reddit.com/ response-jq .data.homeV3.elements.edges |= map(select(.node.cells[0].__typename!="AdMetadataCell"))
+
+    # 推特
+    # 首页时间线去广告
+    # - ^https?://x.com/i/api/graphql/\w+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
+    - ^https?://x.com/i/api/graphql/\w+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
 
   script:
     - match: ^https?://amdc.m.taobao.com
