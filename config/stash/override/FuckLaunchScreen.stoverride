@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-10 10:07:43: 去除 reddit 首页列表的广告
   - 2024-12-10 00:15:02: 去除 起点读书 开屏广告
   - 2024-12-09 00:59:14: 去除 大众点评 开屏广告
   - 2024-12-08 06:18:59: 去除 reddit 社区页列表的广告
@@ -152,8 +153,11 @@ http:
     # 首页列表和详情页评论广告
     - ^https://gql-fed.reddit.com/ response-jq .data.postInfoById.commentsPageAds=[]
 
-    # 社区主页下列表广告
+    # 社区主页列表广告
     - ^https://gql-fed.reddit.com/ response-jq .data.subredditV3.elements.edges |= map(select(.node.cells[0].__typename!="AdMetadataCell"))
+
+    # 首页列表广告
+    - ^https://gql-fed.reddit.com/ response-jq .data.homeV3.elements.edges |= map(select(.node.cells[0].__typename!="AdMetadataCell"))
 
   script:
     - match: ^https?://amdc.m.taobao.com
