@@ -165,7 +165,6 @@ http:
 
     # 推特
     # 首页时间线去广告
-    # - ^https?://x.com/i/api/graphql/\w+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
     - ^https?://x.com/i/api/graphql/\w+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
 
   script:
