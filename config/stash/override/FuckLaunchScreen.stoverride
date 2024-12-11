@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-11 23:22:51: 去除 特推网页版 详情页评论广告
   - 2024-12-11 00:03:51: 去除 特推网页版 首页时间线广告
   - 2024-12-10 10:07:43: 去除 reddit 首页列表的广告
   - 2024-12-10 00:15:02: 去除 起点读书 开屏广告
@@ -166,6 +167,8 @@ http:
     # 推特
     # 首页时间线去广告
     - ^https?://x.com/i/api/graphql/\w+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
+    # 详情页评论广告
+    - ^https?://x.com/i/api/graphql/\w+/TweetDetail.*$ response-jq .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null))
 
   script:
     - match: ^https?://amdc.m.taobao.com
