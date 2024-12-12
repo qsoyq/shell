@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-13 00:53:57: 去除 google 搜索页面赞助商广告
   - 2024-12-12 07:58:59: 修复 推特网页版 去广告时 URL 匹配可能遗漏
   - 2024-12-11 23:22:51: 去除 特推网页版 详情页评论广告
   - 2024-12-11 00:03:51: 去除 特推网页版 首页时间线广告
@@ -89,6 +90,9 @@ http:
 
     # 推特
     - x.com
+
+    # google
+    - www.google.com
 
   url-rewrite:
     # 叮咚买菜
@@ -189,6 +193,14 @@ http:
       argument: >-
         {"rewriteHttpResponseBodyRegexps":[{"search":"alert","replace":"console.log"}]}
 
+    - match: ^https?://www.google.com/search\?.*$
+      name: google-search-rewrite
+      type: response
+      require-body: true
+      max-size: -1
+      timeout: 5
+      debug: false
+
 script-providers:
   amdc:
     url: https://github.com/ddgksf2013/Scripts/raw/master/amdc.js
@@ -196,6 +208,10 @@ script-providers:
 
   下载狗:
     url: https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/config/stash/script/debug/HttpRewrite.js
+    interval: 86400
+
+  google-search-rewrite:
+    url: https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/config/stash/script/google/search-rewrite.js
     interval: 86400
 
 rule-providers:
