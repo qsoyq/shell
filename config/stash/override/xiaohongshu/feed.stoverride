@@ -2,6 +2,7 @@ name: 小红书首页推荐定制
 desc: |-
   首页发现内容根据标签过滤
 icon: https://www.xiaohongshu.com/favicon.ico
+category: Network
 http:
   mitm:
     - edith.xiaohongshu.com
