@@ -1,0 +1,9 @@
+name: 小红书首页推荐定制-美食
+desc: |-
+  首页发现内容过滤， 仅保留美食相关
+icon: https://www.xiaohongshu.com/favicon.ico
+http:
+  mitm:
+    - edith.xiaohongshu.com
+  body-rewrite:
+    - ^https?://edith.xiaohongshu.com/api/sns/v6/homefeed[^/]*$ response-jq .data |= map(select(.recommend.category_name|tostring == "美食"))
