@@ -1,5 +1,7 @@
+#SUBSCRIBED https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/config/stash/override/FuckLaunchScreen.stoverride
 name: 去他妈的广告
 desc: |-
+  - 2024-12-13 16:34:55: 取出 小红书首页推荐 广告
   - 2024-12-13 00:53:57: 去除 google 搜索页面赞助商广告
   - 2024-12-12 07:58:59: 修复 推特网页版 去广告时 URL 匹配可能遗漏
   - 2024-12-11 23:22:51: 去除 特推网页版 详情页评论广告
@@ -94,6 +96,9 @@ http:
     # google
     - www.google.com
 
+    # 小红书
+    - edith.xiaohongshu.com
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -174,6 +179,9 @@ http:
     - ^https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
     # 详情页评论广告
     - ^https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null))
+
+    # 小红书
+    - ^https?://edith.xiaohongshu.com/api/sns/v6/homefeed[^/]*$ response-jq .data |= map(select(.is_ads!=true))
 
   script:
     - match: ^https?://amdc.m.taobao.com
