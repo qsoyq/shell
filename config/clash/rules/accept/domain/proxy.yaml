@@ -50,6 +50,7 @@ payload:
   - "+.jav.app"
   - "+.pythonhosted.org"
   - "+.fbcdn.net"
+  - "+.linktr.ee"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
