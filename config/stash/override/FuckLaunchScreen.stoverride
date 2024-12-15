@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-15 11:28:48: 去除 哔哩哔哩HD 首页推荐广告
   - 2024-12-15 11:07:49: 去除 哔哩哔哩HD 首页 banner
   - 2024-12-13 16:34:55: 去除 小红书首页推荐 广告
   - 2024-12-13 00:53:57: 去除 google 搜索页面赞助商广告
@@ -189,6 +190,9 @@ http:
     # 哔哩哔哩
     # Bilibili HD 首页 banner 轮播
     - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq .data.items |= map(select(.card_type!="banner_ipad_v8"))
+
+    # Bilibili HD 首页推荐广告
+    - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq .data.items |= map(select(.card_goto!="ad_web_s"))
 
   script:
     - match: ^https?://amdc.m.taobao.com
