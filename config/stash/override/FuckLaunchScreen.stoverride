@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-15 11:07:49: 去除 哔哩哔哩HD 首页 banner
   - 2024-12-13 16:34:55: 去除 小红书首页推荐 广告
   - 2024-12-13 00:53:57: 去除 google 搜索页面赞助商广告
   - 2024-12-12 07:58:59: 修复 推特网页版 去广告时 URL 匹配可能遗漏
@@ -98,6 +99,9 @@ http:
     # 小红书
     - edith.xiaohongshu.com
 
+    # 哔哩哔哩
+    - app.bilibili.com
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -181,6 +185,10 @@ http:
 
     # 小红书
     - ^https?://edith.xiaohongshu.com/api/sns/v6/homefeed[^/]*$ response-jq .data |= map(select(.is_ads!=true))
+
+    # 哔哩哔哩
+    # Bilibili HD 首页 banner 轮播
+    - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq .data.items |= map(select(.card_type!="banner_ipad_v8"))
 
   script:
     - match: ^https?://amdc.m.taobao.com
