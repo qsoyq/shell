@@ -1,4 +1,4 @@
-name: " iRingo: 📍 Location UK"
+name: " iRingo: 📍 Location EE"
 desc: |-
   全面自定义「定位服务」的功能。
   注：该覆写包含代理规则。
@@ -23,8 +23,7 @@ http:
       name: GeoServices.response
       type: response
       require-body: true
-      # argument: "Switch=true&PEP.GCC=US"
-      argument: "Switch=true&PEP.GCC=GB"
+      argument: "Switch=true&PEP.GCC=EE"
       # https://www.geonames.org/countries/
       # https://gspe1-ssl.ls.apple.com/pep/gcc
 
