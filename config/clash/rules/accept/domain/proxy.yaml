@@ -51,6 +51,9 @@ payload:
   - "+.pythonhosted.org"
   - "+.fbcdn.net"
   - "+.linktr.ee"
+  - "+.imgur.com"
+  - "+.gitbook.io"
+  - "+.e-hentai.org"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
