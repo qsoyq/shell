@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-17 13:44:59: 更新 塔斯汀 Banner 移除
   - 2024-12-16 20:17:52: 去除 塔斯汀部分 Banner
   - 2024-12-15 12:17:37: 去除 小黑盒首页推荐 推广
   - 2024-12-15 11:28:48: 去除 哔哩哔哩HD 首页推荐广告
@@ -203,15 +204,17 @@ http:
     - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq .data.items |= map(select(.card_goto!="ad_web_s"))
 
     # 塔斯汀 Banner
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="INDEX_TOP_BANNER")) # 首页顶部Banner
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="INDEX_HOT_AREA")) # 首页塔塔热推
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="PRODUCT_LIST_LEFTMENU_BANNER")) # 点单页商品列表横幅 banner
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="ORDER_DETAIL_BANNER"))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="J_TSDD")) # 订单页弹窗
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="GROUP_COUPON_BANNER"))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="HOME_BOTTOM_ENTRY"))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="INDEX_WAIST_AREA"))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode[0]!="HOME_PAGE_BOTTOM_FLOATING_ICON"))
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("INDEX_TOP_BANNER")|not)) # 首页顶部Banner
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("INDEX_HOT_AREA")|not)) # 首页塔塔热推
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("PRODUCT_LIST_LEFTMENU_BANNER")|not)) # 点单页商品列表横幅 banner
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("ORDER_DETAIL_BANNER")|not))
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("J_TSDD")|not)) # 订单页弹窗
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("J_INDEX")|not)) # 首页弹窗
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("GROUP_COUPON_BANNER")|not))
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("HOME_BOTTOM_ENTRY")|not))
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("INDEX_WAIST_AREA")|not))
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("HOME_PAGE_BOTTOM_FLOATING_ICON")|not))
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/firstBanner response-jq .result={} # 小程序启动页弹窗
 
   script:
     - match: ^https?://amdc.m.taobao.com
