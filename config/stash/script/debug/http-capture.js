@@ -1,14 +1,14 @@
-/** @namespace loglog */
+/** @namespace debug.http.catprure */
 
 /**
- * @typedef {Object} loglog.HTTPResponse
+ * @typedef {Object} debug.http.catprure.HTTPResponse
  * @property {string|null} error - 错误信息，如果没有错误则为 null
  * @property {object} response - HTTP 响应对象
  * @property {string|null} data - 返回的数据，如果没有数据则为 null
  */
 
 /**
- * @typedef {function(Error|string|null, Object, string|null): void} loglog.HTTPCallback
+ * @typedef {function(Error|string|null, Object, string|null): void} debug.http.catprure.HTTPCallback
  * 回调函数类型，接受错误、响应和数据作为参数。
  * @param {Error|string|null} error - 错误信息，可以是 Error 对象、字符串或者 null
  * @param {Object} response - HTTP 响应对象
@@ -16,18 +16,18 @@
  */
 
 /**
- * @typedef {function(Object, loglog.HTTPCallback): loglog.HTTPResponse} loglog.HTTPMethod
+ * @typedef {function(Object, debug.http.catprure.HTTPCallback): debug.http.catprure.HTTPResponse} debug.http.catprure.HTTPMethod
  */
 
 /**
- * @typedef {Object} loglog.HttpClient
- * @property {loglog.HTTPMethod} get - 发送 GET 请求
- * @property {loglog.HTTPMethod} post - 发送 POST 请求
- * @property {loglog.HTTPMethod} put - 发送 PUT 请求
- * @property {loglog.HTTPMethod} delete - 发送 DELETE 请求
+ * @typedef {Object} debug.http.catprure.HttpClient
+ * @property {debug.http.catprure.HTTPMethod} get - 发送 GET 请求
+ * @property {debug.http.catprure.HTTPMethod} post - 发送 POST 请求
+ * @property {debug.http.catprure.HTTPMethod} put - 发送 PUT 请求
+ * @property {debug.http.catprure.HTTPMethod} delete - 发送 DELETE 请求
  */
 
-/** @type {loglog.HttpClient} */
+/** @type {debug.http.catprure.HttpClient} */
 var $httpClient;
 
 var $request, $response, $notification, $argument, $persistentStore, $script
@@ -39,12 +39,12 @@ var $done
  * 对异步回调的 HTTP 调用包装成 async 函数
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method - HTTP 方法类型，支持 GET、POST、PUT 和 DELETE
  * @param {Object} params - 请求参数对象，包含请求所需的各类信息
- * @returns {Promise<loglog.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
+ * @returns {Promise<debug.http.catprure.HTTPResponse>} 返回一个 Promise，解析为包含 error、response 和 data 的对象
  * @throws {Error} 如果请求失败，Promise 会被拒绝并返回错误信息
  */
 async function request(method, params) {
     return new Promise((resolve, reject) => {
-        /** @type {loglog.HTTPMethod} */
+        /** @type {debug.http.catprure.HTTPMethod} */
         const httpMethod = $httpClient[method.toLowerCase()]; // 通过 HTTP 方法选择对应的请求函数
         httpMethod(params, (error, response, data) => {
             if (error) {
@@ -60,7 +60,7 @@ async function request(method, params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<debug.http.catprure.HTTPResponse>}
  */
 async function get(params) {
     return request('GET', params);
@@ -69,7 +69,7 @@ async function get(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<debug.http.catprure.HTTPResponse>}
  */
 async function post(params) {
     return request('POST', params);
@@ -78,7 +78,7 @@ async function post(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<debug.http.catprure.HTTPResponse>}
  */
 async function put(params) {
     return request('PUT', params);
@@ -87,7 +87,7 @@ async function put(params) {
 /**
  * 请求封装
  * @param {object} params
- * @returns {Promise<loglog.HTTPResponse>}
+ * @returns {Promise<debug.http.catprure.HTTPResponse>}
  */
 async function delete_(params) {
     return request('DELETE', params);
@@ -196,13 +196,10 @@ function randomChar(num) {
 
 /**
  * 将指定日期对象转为相应的日期时间字符串
- * @param {Date|null} [date=null] 
+ * @param {Date} date 
  * @returns {string} 表示当前时间的字符串
  */
-function getLocalDateString(date = null) {
-    if (!date) {
-        date = new Date()
-    }
+function getLocalDateString(date) {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -211,22 +208,6 @@ function getLocalDateString(date = null) {
     const seconds = date.getSeconds()
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
-
-/**
- * 将指定日期对象转为相应的日期字符串
- * @param {Date|null} [date=null] 
- * @returns {string} 表示当前时间的字符串
- */
-function getLocalTodayString(date = null) {
-    if (!date) {
-        date = new Date()
-    }
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}-${month}-${day}`
-}
-
 /**
  * 遍历并输出对象字面值
  * @param {object} body 
@@ -250,6 +231,9 @@ function visitAll(body, prefix = "", visited = new WeakSet()) {
         if (typeof value === 'object' && value !== null) {
             visitAll(value, currentPrefix, visited);
         } else {
+            if (prefix === 'body' && typeof value === 'number') {
+                continue
+            }
             console.log(`Key: ${currentPrefix}, Value: ${value}, Type: ${typeof value}`);
         }
     }
@@ -263,7 +247,6 @@ function parseJsonBody(string) {
     try {
         return JSON.parse(string)
     } catch (e) {
-        console.log(`[Warn] invalid json: ${e}, json: ${string}`)
         return null
     }
 }
@@ -278,10 +261,12 @@ function getScriptArgument(key) {
         return;
     }
 
-    let body = parseJsonBody($argument)
-    if (!body) {
-        console.log(`[Warn] Invalid JSON: ${$argument}`);
-        return null; // JSON 解析失败返回 null        
+    let body;
+    try {
+        body = JSON.parse($argument);
+    } catch (error) {
+        console.log("Invalid JSON:", error);
+        return null; // JSON 解析失败返回 null
     }
     return body[key]
 }
@@ -312,7 +297,7 @@ function getPersistentArgument(key) {
 
 /**
  * 返回当前的脚本类型
-* @returns {'request' | 'response' | 'tile' | 'cron'}
+* @returns {'request' | 'response' | 'tile'}
  */
 function getScriptType() {
     return typeof $script !== 'undefined' ? $script.type : 'undefined'
@@ -348,150 +333,35 @@ function countryCodeToEmoji(countryCode) {
     // 将Unicode字符转换为emoji
     return String.fromCodePoint(...codePoints);
 }
-/**
- * 返回从 from 到 to 递增或递减的数组，步长为 1
- * @param {number} from 
- * @param {number} to 
- * @returns 
- */
-function generateArray(from, to) {
-    const start = Math.min(from, to);
-    const end = Math.max(from, to);
 
-    // 如果 from 大于 to，生成逆序数组
-    if (from > to) {
-        return Array.from({ length: end - start + 1 }, (_, i) => end - i);
-    } else {
-        // 否则生成顺序数组
-        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-    }
-}
-
-/**
- * 解析响应脚本参数
- * @returns {string | undefined}
- */
-function getScriptResponseBody() {
-    let body = (typeof $response.body === 'object') ? (new TextDecoder('utf-8')).decode(new Uint8Array($response.body)) : $response.body;
-    return body
-}
-
-/**
- *  处理 telegram.sendMessage MarkdownV2 格式消息体转义
- * @param {string} text 
- * @returns 
- */
-function telegramEscapeMarkdownV2(text) {
-    const escapeChars = [
-        { char: '_', replacement: '\\_' },
-        { char: '*', replacement: '\\*' },
-        { char: '[', replacement: '\\[' },
-        { char: ']', replacement: '\\]' },
-        { char: '(', replacement: '\\(' },
-        { char: ')', replacement: '\\)' },
-        { char: '~', replacement: '\\~' },
-        { char: '>', replacement: '\\>' },
-        { char: '#', replacement: '\\#' },
-        { char: '+', replacement: '\\+' },
-        { char: '-', replacement: '\\-' },
-        { char: '=', replacement: '\\=' },
-        { char: '|', replacement: '\\|' },
-        { char: '{', replacement: '\\{' },
-        { char: '}', replacement: '\\}' },
-        { char: '.', replacement: '\\.' },
-        { char: '!', replacement: '\\!' },
-        { char: '`', replacement: '\\`' }
-    ];
-
-    let escapedText = text;
-
-    escapeChars.forEach(({ char, replacement }) => {
-        const regex = new RegExp(`\\${char}`, 'g');
-        escapedText = escapedText.replace(regex, replacement);
-    });
-
-    return escapedText;
-}
-
-/** 获取当前 URL 中的参数
- * @param {any} key
- */
-function getUrlArgument(key) {
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    return params.get(key) || null
-}
-
-/**
- * 生成推送消息格式
- * https://p.19940731.xyz/redoc#tag/notifications.push/operation/push_v3_api_notifications_push_v3_post
- * @param {*} title 
- * @param {*} body 
- * @param {*} url 
- * @param {*} group 
- * @param {*} icon 
- * @param {*} level 
- * @returns 
- */
-function makePushMessage(title, body, url = null, group = null, icon = null, level = null) {
-    let payload = {}
-
-    let APNs = getScriptArgument("APNs")
-    let bark = getScriptArgument("bark")
-    group = getScriptArgument("group") || group || "Default"
-    level = getScriptArgument("level") || level || "passive"
-    icon = icon || getScriptArgument("icon")
-    if (APNs) {
-        payload.apple = {
-            group: group,
-            url: url,
-            icon: icon,
-            device_token: APNs.device_token,
-            aps: {
-                "thread-id": group,
-                "interruption-level": level,
-                alert: {
-                    title: title,
-                    body: body
-                }
-            }
-        }
-    }
-    if (bark) {
-        payload.bark = {
-            device_key: bark.device_key,
-            title: title,
-            body: body,
-            level: level,
-            icon: icon,
-            group: group,
-            url: url,
-            endpoint: bark?.endpoint || "https://api.day.app/push"
-
-        }
-    }
-    return payload
-}
-
-/**
- * 推送消息
- * https://p.19940731.xyz/redoc#tag/notifications.push/operation/push_v3_api_notifications_push_v3_post
- * @param {*} message 
- * @returns 
- */
-async function pushMessage(message) {
-    let url = 'https://p.19940731.xyz/api/notifications/push/v3'
-    let res = await post({ url, body: JSON.stringify({ messages: [message] }), headers: { "content-type": "application/json" } })
-    let now = getLocalDateString()
-    if (res.error || res.response.status >= 400) {
-        throw `${now} [Error] push messages error: ${res.error}, ${res.response.status}, ${res.data}`
-    }
-    return res
-}
 
 async function main() {
-    console.log("test")
+    let type = getScriptType()
+    if (["request", 'response'].includes(type)) {
+        let command = `curl -X ${$request.method} "${$request.url}"`
+        for (const [key, value] of Object.entries($request.headers)) {
+            command = `${command} \\\n  -H"${key}: ${value.replace(/"/g, '\\"')}"`
+        }
+        if ($request.body) {
+            let body = (typeof $request.body === 'object') ? (new TextDecoder('utf-8')).decode(new Uint8Array($request.body)) : $request.body;
+            command = `${command} \\\n  -d'${body}'`
+        }
+        console.log(`[Curl]:${command}`)
+        let data = {
+            request: {
+                url: $request.url, method: $request.method, body: $request.body
+            },
+            response: {
+                status: $response.status,
+                headers: $response.headers,
+                body: $response.body
+            }
+        }
+        let json = JSON.stringify(data)
+        console.log(`[JSON]:${json}`)
+    }
 }
+
 
 (async () => {
     main().then(_ => {
