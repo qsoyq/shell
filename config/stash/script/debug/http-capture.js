@@ -337,6 +337,7 @@ function countryCodeToEmoji(countryCode) {
 
 async function main() {
     let type = getScriptType()
+    let ts = Math.floor(Date.now() / 1000)
     if (["request", 'response'].includes(type)) {
         let command = `curl -X ${$request.method} "${$request.url}"`
         for (const [key, value] of Object.entries($request.headers)) {
@@ -355,7 +356,8 @@ async function main() {
                 status: $response.status,
                 headers: $response.headers,
                 body: $response.body
-            }
+            },
+            timestamp: ts
         }
         let json = JSON.stringify(data)
         console.log(`[JSON]:${json}`)
