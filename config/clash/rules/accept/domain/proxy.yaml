@@ -57,6 +57,7 @@ payload:
   - "+.gamme.com.tw"
   - "+.python-httpx.org"
   - "+.discord.gg"
+  - "+.discord.com"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
