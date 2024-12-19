@@ -360,7 +360,10 @@ async function main() {
                 headers: $response.headers,
                 body: $response.body
             },
-            timestamp: ts
+            dev: {
+                timestamp: ts,
+                curl: command
+            }
         }
         let json = JSON.stringify(data)
         console.log(`[JSON]:${json}`)
