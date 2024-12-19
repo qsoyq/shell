@@ -1,0 +1,17 @@
+name: HTTP 抓包
+category: Network
+icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/debug.png
+
+script-providers:
+  http-catpure:
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+    interval: 86400
+http:
+  mitm:
+    - "*"
+
+  script:
+    - match: ^https?://.*
+      name: http-catpure
+      type: response
+      require-body: true
