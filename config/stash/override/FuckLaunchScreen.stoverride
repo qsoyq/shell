@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-20 05:02:39: 去除 禁漫 详情页顶部广告
   - 2024-12-17 13:44:59: 更新 塔斯汀 Banner 移除
   - 2024-12-16 20:17:52: 去除 塔斯汀部分 Banner
   - 2024-12-15 12:17:37: 去除 小黑盒首页推荐 推广
@@ -109,6 +110,9 @@ http:
     # 塔斯汀
     - sss-web.tastientech.com
 
+    # 禁漫
+    - cuwocqnt.com
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -159,6 +163,9 @@ http:
 
     # 起点
     - ^https?://ataru.qidian.com/noah/\d+ - reject
+
+    # 禁漫
+    - ^https://cuwocqnt.com/en/ghym - reject
 
   header-rewrite:
     # 下载狗
