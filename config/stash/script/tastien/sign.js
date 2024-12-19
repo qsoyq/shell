@@ -509,19 +509,27 @@ async function main() {
         console.log(`${now} [Error] request error: ${res.error}, ${res.response.status}, ${res.data}`)
     }
 
-    console.log(`[DEBUG] ${res.data}`)
+    console.log(`${now} [DEBUG] [Response] [Body]:${res.data}`)
     let respData = parseJsonBody(res.data)
 
     let msg = respData.msg
-    if (msg.includes("您今天已经签过到了哦")) {
+    if (msg && msg.includes("您今天已经签过到了哦")) {
         console.log(`${now} [DEBUG] ${today} 重复签到`)
         writePersistentArgument(cacheKey, cacheKey)
+        notificationPost("塔斯汀签到", "签到成功", `今日重复签到`)
     }
 
     if (respData?.result?.rewardInfoList) {
         console.log(`${now} [DEBUG] ${today} 签到成功`)
+        let rewardName = respData?.result?.rewardInfoList[0]?.rewardName
+        if (rewardName) {
+            notificationPost("塔斯汀签到", "签到成功", `签到奖励积分: ${rewardName}`)
+        } else {
+            notificationPost("塔斯汀签到", "签到异常", `签到成功，但未能获取奖励积分`)
+        }
         writePersistentArgument(cacheKey, cacheKey)
     }
+
 
 }
 
