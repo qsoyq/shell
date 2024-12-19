@@ -350,7 +350,10 @@ async function main() {
         console.log(`[Curl]:${command}`)
         let data = {
             request: {
-                url: $request.url, method: $request.method, body: $request.body
+                url: $request.url,
+                method: $request.method,
+                headers: $request.headers,
+                body: $request.body
             },
             response: {
                 status: $response.status,
