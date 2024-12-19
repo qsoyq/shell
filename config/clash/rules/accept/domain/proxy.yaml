@@ -58,6 +58,9 @@ payload:
   - "+.python-httpx.org"
   - "+.discord.gg"
   - "+.discord.com"
+  - "+.fc2.com"
+  - "+.sotwe.com"
+  - "+.spankbang.com"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
