@@ -112,6 +112,7 @@ http:
 
     # 禁漫
     - cuwocqnt.com
+    - ojkaqzrcy.com
 
   url-rewrite:
     # 叮咚买菜
@@ -166,6 +167,7 @@ http:
 
     # 禁漫
     - ^https://cuwocqnt.com/en/ghym - reject
+    - ^https://ojkaqzrcy.com/en/ogd/aqd - reject
 
   header-rewrite:
     # 下载狗
