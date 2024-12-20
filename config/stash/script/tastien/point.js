@@ -495,7 +495,7 @@ async function main() {
     let userToken = mustGetScriptArgument('userToken')
     let activityId = mustGetScriptArgument('activityId')
     let count = 0
-    while (count <= 30) {
+    while (count <= 15) {
         count += 1
         let data = `{"requestId":"1af524af544","activityId":${activityId}}`
         let url = 'https://sss-web.tastientech.com/api/c/pointOrder/create'
