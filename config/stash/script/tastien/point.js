@@ -511,6 +511,12 @@ async function main() {
 
         let msg = respData?.msg
         let code = respData?.code
+        if (msg && msg.includes("活动太火爆了")) {
+            console.log(`${now} [DEBUG] [Continue] ${today} 活动太火爆了`)
+            notificationPost("塔斯汀积分兑换", "兑换失败", `活动太火爆了`)
+            continue
+        }
+
         if (msg && msg.includes("当前活动还未到开放时段")) {
             console.log(`${now} [DEBUG] [Exit] ${today} 当前活动还未到开放时段`)
             notificationPost("塔斯汀积分兑换", "兑换失败", `当前活动还未到开放时段`)
@@ -529,17 +535,14 @@ async function main() {
             return
         }
 
-        if (msg && msg.includes("活动太火爆了")) {
-            console.log(`${now} [DEBUG] [Continue] ${today} 活动太火爆了`)
-            notificationPost("塔斯汀积分兑换", "兑换失败", `活动太火爆了`)
-            continue
-        }
-
         if (code && code == 200) {
             console.log(`${now} [DEBUG] [Success] ${today} 积分兑换成功, 活动ID: ${activityId}`)
             notificationPost("塔斯汀积分兑换", "兑换成功", `活动ID: ${activityId}`)
             return
         }
+
+        console.log(`${now} [DEBUG] [Bug] ${today} 未知错误, [Data]:${res.data}`)
+        notificationPost("塔斯汀积分兑换", "兑换失败", `未知错误`)
     }
 }
 
