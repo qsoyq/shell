@@ -433,6 +433,12 @@ async function handler(page) {
                     console.log(`${article.title} skip`)
                     continue
                 }
+
+                if (force !== true && getPersistentArgument(`xx.knit.bid-${article.category}-${article.href}-${article.time}`)) {
+                    console.log(`${article.title} skip`)
+                    continue
+                }
+
                 let page = 1
                 let imgList = []
                 while (true) {
@@ -497,6 +503,10 @@ async function handler(page) {
                     }
 
                     console.log(`[push] success.`)
+                    writePersistentArgument(keyname, keyname)
+
+                    // 兼容部分标题导致的缓存异常，不优雅，但是应该有用
+                    keyname = `xx.knit.bid-${article.category}-${article.href}-${article.time}`
                     writePersistentArgument(keyname, keyname)
                 }
             }
