@@ -196,10 +196,13 @@ function randomChar(num) {
 
 /**
  * 将指定日期对象转为相应的日期时间字符串
- * @param {Date} date 
+ * @param {Date|null} [date=null] 
  * @returns {string} 表示当前时间的字符串
  */
-function getLocalDateString(date) {
+function getLocalDateString(date = null) {
+    if (!date) {
+        date = new Date()
+    }
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -208,6 +211,8 @@ function getLocalDateString(date) {
     const seconds = date.getSeconds()
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
+
+
 /**
  * 遍历并输出对象字面值
  * @param {object} body 
@@ -344,10 +349,15 @@ function getScriptResponseBody() {
 async function main() {
     let type = getScriptType()
     let regexps = getScriptArgument("rewriteHttpResponseBodyRegexps") || []
+    let debug = getScriptArgument("debug")
+    let now = getLocalDateString()
     switch (type) {
         case 'request':
         case 'response':
             let body = getScriptResponseBody()
+            if (debug) {
+                console.log(`${now} [Debug] [Request] [Body]: ${body}`)
+            }
             if (body) {
                 let modified = body
                 for (const regexp of regexps) {
