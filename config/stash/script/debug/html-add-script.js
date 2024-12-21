@@ -527,8 +527,9 @@ async function main() {
                 let outerHTML = encoding.toLowerCase() == 'gbk' ? str2gbk(document.documentElement.outerHTML) : document.documentElement.outerHTML
                 $done({ body: outerHTML })
             } else {
+                console.log(`[Response] [Headers]: ${JSON.stringify($response.headers)}`)
                 visitAll($response.headers)
-                console.log(`[Warn] invalid response body, content-type: ${$response.headers["Content-Type"]}, body: ${body}`)
+                console.log(`[Warn] invalid response body, content-type: ${$response.headers["Content-Type"]}`)
                 $done({})
             }
             break
@@ -540,10 +541,12 @@ async function main() {
 
 }
 
+
 (async () => {
-    main().catch(error => {
-        console.log(`[Error]: ${error}`)
-        // @ts-ignore
-        $done()
+    main().then(_ => {
+
+    }).catch(error => {
+        console.log(`[Error]: ${error?.message || error}`)
+        $done({})
     })
 })();
