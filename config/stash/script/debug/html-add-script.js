@@ -503,7 +503,8 @@ async function main() {
     switch (type) {
         case "response":
             let contentType = $response.headers["Content-Type"]
-            let body = contentType.toLowerCase().includes("gbk") ? getScriptResponseBody('gbk') : getScriptResponseBody()
+            let isGbk = (contentType || "").toLowerCase().includes("gbk") ? true : false
+            let body = isGbk ? getScriptResponseBody('gbk') : getScriptResponseBody()
             if (body && typeof contentType === 'string' && contentType.includes("text/html")) {
                 let domParser = new DOMParser();
                 let document = domParser.parseFromString(body, 'text/html');
