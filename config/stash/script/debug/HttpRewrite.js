@@ -363,7 +363,7 @@ async function main() {
                 for (const regexp of regexps) {
                     let search = regexp?.search
                     let replace = regexp?.replace
-                    if (search && replace) {
+                    if (search && typeof replace === 'string') {
                         origin = modified
                         modified = body.replace(new RegExp(search, 'g'), replace);
                         if (origin !== modified) {
