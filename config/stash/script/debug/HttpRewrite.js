@@ -365,7 +365,7 @@ async function main() {
                     let replace = regexp?.replace
                     if (search && typeof replace === 'string') {
                         origin = modified
-                        modified = body.replace(new RegExp(search, 'g'), replace);
+                        modified = origin.replace(new RegExp(search, 'g'), replace);
                         if (origin !== modified) {
                             console.log(`search: ${search}, replace: ${replace}, replacement successful. `)
                         } else {
