@@ -1,6 +1,6 @@
 name: 去他妈的广告
 desc: |-
-  - 2024-12-22 10:39:37: 替换 笔趣阁 内容无关文字
+  - 2024-12-22 21:12:30: 替换 笔趣阁 内容无关文字
   - 2024-12-22 10:19:07: 更新 笔趣阁 域名
   - 2024-12-20 05:02:39: 去除 禁漫 详情页顶部广告
   - 2024-12-17 13:44:59: 更新 塔斯汀 Banner 移除
@@ -153,7 +153,7 @@ http:
     - ^https?://(gw|heic).alicdn.com/imgextra/i\d/\d*/?[\w!]+-\d-(octopus|tps-1125-1602).(jp|pn)g_(1\d{3}|9\d{2})x(1\d{3}|9\d{2})q[59]0 - reject # 开屏广告
 
     # 笔趣阁去广告
-    - ^https?:\/\/(\w+).bi\d+.cc/js/comibm.js - reject
+    - ^https?:\/\/(\w+).bq\d+.cc/js/comibm.js - reject
 
     # 移除微博国际版首页和帖子内广告
     - ^https://api.weibo.cn/2/ad/weibointl - reject
