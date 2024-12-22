@@ -256,7 +256,7 @@ http:
 
     # 笔趣阁错别字替换
     - name: httpResponseRewrite
-      match: https://.*.bq.*.cc/kan/\d+/\d+\.html
+      match: https://.*.bq.*.cc/(kan|book)/\d+/\d+\.html
       type: response
       require-body: true
       timeout: 10
