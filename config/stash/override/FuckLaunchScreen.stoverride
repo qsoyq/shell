@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2024-12-22 10:39:37: 替换 笔趣阁 内容无关文字
   - 2024-12-22 10:19:07: 更新 笔趣阁 域名
   - 2024-12-20 05:02:39: 去除 禁漫 详情页顶部广告
   - 2024-12-17 13:44:59: 更新 塔斯汀 Banner 移除
@@ -253,6 +254,15 @@ http:
       timeout: 5
       debug: false
 
+    # 笔趣阁错别字替换
+    - name: httpResponseRewrite
+      match: https://.*.bq.*.cc/kan/\d+/\d+\.html
+      type: response
+      require-body: true
+      timeout: 10
+      argument: |-
+        {"rewriteHttpResponseBodyRegexps":[{"search": "龗", "replace": ""}, {"search":"请收藏：https://m.bq02.cc", "replace": ""}]}
+
 script-providers:
   amdc:
     url: https://github.com/ddgksf2013/Scripts/raw/master/amdc.js
@@ -264,6 +274,10 @@ script-providers:
 
   google-search-rewrite:
     url: https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/config/stash/script/google/search-rewrite.js
+    interval: 86400
+
+  httpResponseRewrite:
+    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
     interval: 86400
 
 rule-providers:
