@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 path = Path("~/Downloads/http-catpure.log").expanduser()
-failed = successed = 0
 with path.open("r") as f:
     lines = filter(lambda x: x and "JSON" in x, f.readlines())
 
