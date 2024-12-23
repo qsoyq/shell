@@ -59,6 +59,10 @@ payload:
   - "+.fc2.com"
   - "+.sotwe.com"
   - "+.spankbang.com"
+  - "+.mastodon.online,Select"
+  - "+.go-esim.com,Select"
+  - "+.v2ray.com,Select"
+  - "+.v2fly.org,Select"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
