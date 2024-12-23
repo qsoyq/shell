@@ -1,8 +1,6 @@
 name: "📍 Location US"
 category: "Location"
 icon: https://images.macrumors.com/article-new/2019/07/ios_location_services-250x250.jpg
-desc: |-
-  https://gspe1-ssl.ls.apple.com/pep/gcc -> https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/rewrite/location/uk
 
 http:
   mitm:
