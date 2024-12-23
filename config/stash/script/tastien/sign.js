@@ -522,8 +522,11 @@ async function main() {
     if (respData?.result?.rewardInfoList) {
         console.log(`${now} [DEBUG] ${today} 签到成功`)
         let rewardName = respData?.result?.rewardInfoList[0]?.rewardName
+        let point = respData?.result?.rewardInfoList[0]?.point
         if (rewardName) {
             notificationPost("塔斯汀签到", "签到成功", `签到奖励积分: ${rewardName}`)
+        } else if (point) {
+            notificationPost("塔斯汀签到", "签到成功", `签到奖励积分: ${point}`)
         } else {
             notificationPost("塔斯汀签到", "签到异常", `签到成功，但未能获取奖励积分`)
         }
