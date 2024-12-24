@@ -10,8 +10,6 @@ alias PIP_INSTALL_EXTRA="pip install --upgrade pysocks ipython httpx pyvim ruff 
 alias python_format="yapf -r -i . && isort . && pycln -a ."
 
 alias pi="poetry install"
-alias pip="pip3"
-alias python="python3"
 
 alias ruff_run="ruff check . --fix && ruff format ."
 
