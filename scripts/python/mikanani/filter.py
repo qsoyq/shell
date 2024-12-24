@@ -15,8 +15,9 @@ def main(
     filter_words: str = typer.Argument(..., help="过滤字符串"),
 ):
     """
-    从标准输入读取字符串替换后输出
+    解析 mikanni 磁链
     """
+
     url = f"https://mikanani.me/Home/Bangumi/{bangumi_id}"
     resp = httpx.get(url)
     resp.raise_for_status()
