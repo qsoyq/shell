@@ -3,9 +3,5 @@ alias dump-http-capture="curl -s https://raw.githubusercontent.com/qsoyq/shell/m
 alias markdown-image-move="markdown_inline_image_link_oss_export && curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/markdown/MarkdownInlineImageLinkMigrator.py | python -c \"import sys;exec(sys.stdin.read())\" -d ~/Documents/obsidian/Obsidian"
 alias json-to-yaml="python -c \"import sys,json,yaml;data=sys.stdin.read();print(yaml.safe_dump(json.loads(data)))\""
 alias yaml-to-json="python -c \"import sys,json,yaml;data=sys.stdin.read();print(json.dumps(yaml.safe_load(data), ensure_ascii=False, indent=4))\""
-mikanani-magnet(){
-    curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/mikanani/filter.py | python3 - "$@"
-}
-replace-all(){
-    curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/terminal/replace-all.py | python3 - "$@"
-}
+alias mikanani-magnet="python3 <(curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/mikanani/filter.py)"
+alias replace-all="python3 <(curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/terminal/replace-all.py)"
