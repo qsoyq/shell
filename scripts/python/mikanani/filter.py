@@ -5,7 +5,6 @@ https://mikanani.me/Home/Bangumi
 import httpx
 from rich import print
 import typer
-from pathlib import Path
 from bs4 import BeautifulSoup
 
 
