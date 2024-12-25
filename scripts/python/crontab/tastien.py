@@ -28,6 +28,8 @@ def point_create(
     """
     塔斯汀积分兑换
     """
+    now = datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
+    print(f"[{now}] Start")
     url = "https://sss-web.tastientech.com/api/c/pointOrder/create"
     headers = {
         "User-Token": userToken,
