@@ -63,6 +63,7 @@ payload:
   - "+.go-esim.com,Select"
   - "+.v2ray.com,Select"
   - "+.v2fly.org,Select"
+  - "+.missav.com"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
