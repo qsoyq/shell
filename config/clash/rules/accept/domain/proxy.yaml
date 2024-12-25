@@ -64,6 +64,7 @@ payload:
   - "+.v2ray.com,Select"
   - "+.v2fly.org,Select"
   - "+.missav.com"
+  - "+.nyaa.si"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
