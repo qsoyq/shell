@@ -54,9 +54,11 @@ def gmail(
         # 发送邮件
         server.sendmail(GMAIL_USER, recipient_email, message.as_string())
         print(f"[{now}] 邮件发送成功！")
+        typer.Exit(0)
 
     except Exception as e:
         print(f"[{now}] 邮件发送失败: {e}")
+        typer.Exit(-1)
 
     finally:
         server.quit()
