@@ -3,6 +3,7 @@
 from rich import print
 import typer
 import smtplib
+from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -20,6 +21,7 @@ def gmail(
     """使用 Gmail 发送邮件
     应用专用密码设置: https://myaccount.google.com/apppasswords
     """
+    now = datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
     # Gmail SMTP 服务器配置
     SMTP_SERVER = "smtp.gmail.com"
     SMTP_PORT = 587
@@ -51,10 +53,10 @@ def gmail(
 
         # 发送邮件
         server.sendmail(GMAIL_USER, recipient_email, message.as_string())
-        print("邮件发送成功！")
+        print(f"[{now}] 邮件发送成功！")
 
     except Exception as e:
-        print(f"邮件发送失败: {e}")
+        print(f"[{now}] 邮件发送失败: {e}")
 
     finally:
         server.quit()
