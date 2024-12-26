@@ -497,7 +497,8 @@ async function main() {
     let count = 0
     while (count <= 15) {
         count += 1
-        let data = `{"requestId":"1af524af544","activityId":${activityId}}`
+        let requestId = randomChar(11)
+        let data = `{"requestId":"${requestId}","activityId":${activityId}}`
         let url = 'https://sss-web.tastientech.com/api/c/pointOrder/create'
         let headers = { "User-Token": userToken, "Referer": "https://servicewechat.com/wx557473f23153a429/379/page-frame.html", "Accept-Encoding": "gzip,compress,br,deflate", "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.54(0x18003622) NetType/WIFI Language/zh_CN", "Content-Length": "44", "Content-Type": "application/json", "Version": "3.3.0", "Host": "sss-web.tastientech.com", "Channel": "1", "Connection": "keep-alive" }
         let res = await post({ url, body: data, headers: headers })

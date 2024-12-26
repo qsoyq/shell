@@ -1,9 +1,9 @@
 alias dump_clash_connections="curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/clash/dump_connections.py | python"
 alias dump-http-capture="curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/stash/dump-http-capture.py | python" 
-alias markdown-image-move="markdown_inline_image_link_oss_export && curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/markdown/MarkdownInlineImageLinkMigrator.py | python -c \"import sys;exec(sys.stdin.read())\" -d ~/Documents/obsidian/Obsidian"
+alias markdown-image-move="markdown_inline_image_link_oss_export && MarkdownInlineImageLinkMigrator -d ~/Documents/obsidian/Obsidian"
 alias json-to-yaml="python -c \"import sys,json,yaml;data=sys.stdin.read();print(yaml.safe_dump(json.loads(data)))\""
 alias yaml-to-json="python -c \"import sys,json,yaml;data=sys.stdin.read();print(json.dumps(yaml.safe_load(data), ensure_ascii=False, indent=4))\""
-function update-scripts(){
+function uc(){
     ts=$(date +%s)
     curl -s -o /usr/local/bin/mikanani-magnet "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/mikanani/filter.py?v=$ts"
     chmod +x /usr/local/bin/mikanani-magnet
@@ -13,4 +13,10 @@ function update-scripts(){
 
     curl -s -o /usr/local/bin/MarkdownInlineImageLinkMigrator "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/markdown/MarkdownInlineImageLinkMigrator.py?v=$ts"
     chmod +x /usr/local/bin/MarkdownInlineImageLinkMigrator
+
+    curl -s -o /usr/local/bin/gmail "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/tool/gmail.py?v=$ts"
+    chmod +x /usr/local/bin/gmail
+
+    curl -s -o /usr/local/bin/tastien "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/crontab/tastien.py?v=$ts"
+    chmod +x /usr/local/bin/tastien
 }
