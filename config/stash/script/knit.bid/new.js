@@ -377,21 +377,11 @@ function generateArray(from, to) {
 }
 
 async function main() {
-    try {
-        let page = getScriptArgument("page") || { "from": 1, "to": 1 }
-        let pages = generateArray(page.from, page.to)
-        for (const _page of pages) {
-            await handler(_page)
-        }
-    } catch (error) {
-        if (typeof error === 'object') {
-            visitAll(error, 'error')
-        } else {
-            console.log(`error: ${error}`)
-        }
-        $done({})
+    let page = getScriptArgument("page") || { "from": 1, "to": 1 }
+    let pages = generateArray(page.from, page.to)
+    for (const _page of pages) {
+        await handler(_page)
     }
-    $done({})
 }
 
 
@@ -515,4 +505,12 @@ async function handler(page) {
         throw error
     }
 }
-main()
+
+(async () => {
+    main().then(_ => {
+        $done({})
+    }).catch(error => {
+        console.log(`[Error]: ${error?.message || error}`)
+        $done({})
+    })
+})();
