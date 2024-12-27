@@ -443,7 +443,7 @@ async function push(thread) {
         let group = APNs?.group || "nga-threads"
         let payload = {
             "group": group,
-            "url": thread.ios_app_scheme_url,
+            "url": thread.url,
             "device_token": APNs.device_token,
             "aps": {
                 "alert": {
