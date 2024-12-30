@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import hashlib
+from typing import List, Dict
 from pathlib import Path
 from rich import print
 from datetime import datetime
@@ -32,24 +33,52 @@ def compute_file_hash(file_path: Path) -> str:
 
 @app.command()
 def show(
-    dest: Path = typer.Option(..., "-d", "--dir", help="目录"),
+    paths: list[Path] = typer.Argument(..., help="待遍历目录"),
 ):
     """
     遍历目录，根据文件 hash 值记录重复项
     """
-    # echo("hello, world")
-    if not dest.is_dir():
-        echo("dir must be folder")
-        raise typer.Exit(1)
-    memo = defaultdict(list)
+    memo: Dict[str, List[Path]] = defaultdict(list)
+    for p in paths:
+        if not p.exists():
+            echo("path must be exists")
+            raise typer.Exit(2)
+        if not p.is_dir():
+            echo(p)
+            echo("path must be directory")
+            raise typer.Exit(1)
+        for file in p.rglob("*"):
+            if file.is_file():
+                hashv = compute_file_hash(file)
+                memo[hashv].append(file)
+        for hashv, li in memo.items():
+            for x in li[1:]:
+                echo(f"{hashv} {x.name} {x.absolute()} is duplicate")
 
-    for p in dest.rglob("*.gz"):
-        if p.is_file():
-            # echo(p.absolute(), p.stat())
-            memo[p.name].append(p.absolute())
-            echo(f"hash: {compute_file_hash(p)}")
-    for k, li in memo.items():
-        echo(f"{k}, count: {len(li)}")
+
+@app.command()
+def delete(
+    paths: list[Path] = typer.Argument(..., help="待遍历目录"),
+):
+    """
+    遍历目录，根据文件 hash 值记录重复项
+    """
+    memo: Dict[str, List[Path]] = defaultdict(list)
+    for p in paths:
+        if not p.exists():
+            echo("path must be exists")
+            raise typer.Exit(2)
+        if not p.is_dir():
+            echo(p)
+            echo("path must be directory")
+            raise typer.Exit(1)
+        for file in p.rglob("*"):
+            if file.is_file():
+                hashv = compute_file_hash(file)
+                memo[hashv].append(file)
+        for hashv, li in memo.items():
+            for x in li[1:]:
+                x.unlink()
 
 
 if __name__ == "__main__":

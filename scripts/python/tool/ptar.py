@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import tarfile
-import hashlib
 from pathlib import Path
 from rich import print
 from datetime import datetime
