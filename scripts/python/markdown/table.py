@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+import sys
 import rich
 from datetime import datetime
 import typer
 import textwrap
 from tabulate import tabulate
+from typing import List, Any, Dict
+
+import pyperclip
 
 app = typer.Typer()
 
@@ -19,28 +23,33 @@ def get_current_datetime_str() -> str:
     return datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
 
 
+def is_number(val: str) -> bool:
+    try:
+        float(val)
+        return True
+    except ValueError:
+        pass
+    return False
+
+
 @app.command()
-def sort():
-    # data = sys.stdin.read()
-    data = textwrap.dedent(
-        """
-    | 机场  | 费用(元) | 总量(G) | 单价(G/每元)  |
-    | ----- | -------- | ------- | ----- |
-    | mojie | 14.9     | 130     | 8.72  |
-    | mojie | 42       | 420     | 10    |
-    | mojie | 1        | 2       | 2     |
-    | mojie | 69       | 750     | 10.86 |
-    | mojie | 138      | 1660   | 12.02 |
-    | mojie | 279      | 3600   | 12.9  |
-    | mojie | 688      | 10000  | 14.53 |
-    | xfltd | 10       | 120     | 12    |
-    | xfltd | 20       | 250     | 12.5  |
-    | xfltd | 30       | 390     | 13      |
+def sort(
+    sort_keys: List[str] = typer.Argument(..., help="基于指定字段排序"),
+    reverse: bool = typer.Option(False, help="是否倒序"),
+    clipboard: bool = typer.Option(False, help="是否从剪切板中读取输入"),
+):
+    """默认从标准输入中读取
+    可设置 clipboard 改为从剪切板中读取
     """
-    )
+    if clipboard:
+        data = pyperclip.paste()
+    else:
+        data = sys.stdin.read()
+
     content = [x for x in data.split("\n") if x]
     if not content:
-        return
+        echo("markdown table text not found")
+        raise typer.Exit(1)
     cnt = content[0].count("|")
     for line in content:
         assert line.count("|") == cnt, line
@@ -48,31 +57,23 @@ def sort():
     headers = [x.strip() for x in headers if x.strip()]
     body = content[2:]
     body = [[y.strip() for y in x.split("|") if y.strip()] for x in body]
-    # body = [[float(y) if y.isdigit() else y for y in x] for x in body]
+    body = [[float(y) if is_number(y) else y for y in x] for x in body]
 
     tables = []
     for line in body:
         row = {k: v for k, v in zip(headers, line)}
         tables.append(row)
 
-    # sort
-    tables = sorted(tables, key=lambda x: (x["机场"], x["费用(元)"]))
+    tables = sorted(
+        tables, key=lambda x: tuple(x.get(k, None) for k in sort_keys), reverse=reverse
+    )
 
-    # pprint(tables)
-    sorted_table = []
+    sorted_table: List[List] = []
     for row in tables:
         line = [row[k] for k in headers]
         sorted_table.append(line)
 
-    # for k, v in zip(headers, line):
-    #     mapping[k].append(v)
-    # pprint(mapping)
-    # pprint(headers)
-    # pprint(body)
-    # print(tabulate(body, headers, tablefmt="github"))
-    # print(tabulate(mapping, headers, tablefmt="github"))
-    print(tabulate(sorted_table, headers, tablefmt="github"))
-
+    rich.print(tabulate(sorted_table, headers, tablefmt="github"))
     pass
 
 
