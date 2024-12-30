@@ -3,9 +3,8 @@ import sys
 import rich
 from datetime import datetime
 import typer
-import textwrap
 from tabulate import tabulate
-from typing import List, Any, Dict
+from typing import List
 
 import pyperclip
 
@@ -74,7 +73,6 @@ def sort(
         sorted_table.append(line)
 
     rich.print(tabulate(sorted_table, headers, tablefmt="github"))
-    pass
 
 
 if __name__ == "__main__":
