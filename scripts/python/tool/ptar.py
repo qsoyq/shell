@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
+import tarfile
 import hashlib
 from pathlib import Path
 from rich import print
 from datetime import datetime
 import typer
-from collections import defaultdict
 
 
 app = typer.Typer()
@@ -31,25 +31,31 @@ def compute_file_hash(file_path: Path) -> str:
 
 
 @app.command()
-def show(
-    dest: Path = typer.Option(..., "-d", "--dir", help="目录"),
+def create(
+    output: Path = typer.Argument(..., help="输出文件"),
+    paths: list[Path] = typer.Argument(..., help="待压缩文件或目录"),
 ):
     """
-    遍历目录，根据文件 hash 值记录重复项
+    使用 tar 压缩文件
     """
-    # echo("hello, world")
-    if not dest.is_dir():
-        echo("dir must be folder")
+    if output.is_dir():
+        echo("[Error] 输出路径已存在文件")
         raise typer.Exit(1)
-    memo = defaultdict(list)
 
-    for p in dest.rglob("*.gz"):
-        if p.is_file():
-            # echo(p.absolute(), p.stat())
-            memo[p.name].append(p.absolute())
-            echo(f"hash: {compute_file_hash(p)}")
-    for k, li in memo.items():
-        echo(f"{k}, count: {len(li)}")
+    files: list[Path] = []
+    for path in paths:
+        if not path.exists():
+            echo(f"[Error] path {path} not exists")
+            raise typer.Exit(2)
+        files.append(path)
+    files = sorted(set(files))
+    for path in files:
+        echo(f"[File] {path.name}\t{path} ")
+
+    with tarfile.open(output, "w") as tar:
+        for file in files:
+            tar.add(file, recursive=True, arcname=file.name)
+    echo(f"[Res] Tar file {output} created successfully.")
 
 
 if __name__ == "__main__":
