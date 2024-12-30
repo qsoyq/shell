@@ -36,7 +36,7 @@ def show(
     paths: list[Path] = typer.Argument(..., help="待遍历目录"),
 ):
     """
-    遍历目录，根据文件 hash 值记录重复项
+    遍历目录，根据文件 hash 值, 显示重复项
     """
     memo: Dict[str, List[Path]] = defaultdict(list)
     for p in paths:
@@ -61,7 +61,7 @@ def delete(
     paths: list[Path] = typer.Argument(..., help="待遍历目录"),
 ):
     """
-    遍历目录，根据文件 hash 值记录重复项
+    遍历目录，根据文件 hash 值, 删除重复项
     """
     memo: Dict[str, List[Path]] = defaultdict(list)
     for p in paths:
