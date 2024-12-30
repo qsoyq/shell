@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 import time
-from rich import print
+import rich
+
 from datetime import datetime
 import typer
 import httpx
 import uuid
 
 app = typer.Typer()
+
+
+def echo(*args, **kwargs):
+    if args:
+        arg = f"[{get_current_datetime_str()}] {args[0]}"
+        args = [arg, *args[1:]]
+    rich.print(*args, **kwargs)
 
 
 def get_current_datetime_str():
@@ -39,15 +47,15 @@ def point_create(
     current = datetime.now()
     if until is not None:
         if current > until:
-            print(f"[{get_current_datetime_str()}] [Datetime] 日期已过期, 退出")
+            echo("[Datetime] 日期已过期, 退出")
             raise typer.Exit(-1)
 
         delta = until - current
         wait = delta.seconds + delta.microseconds / 1_000_000
-        print(f"[{get_current_datetime_str()}] [Datetime] 等待 {wait} s后执行")
+        echo(f"[Datetime] 等待 {wait} s后执行")
         time.sleep(wait)
 
-    print(f"[{get_current_datetime_str()}] Start")
+    echo(" Start")
     url = "https://sss-web.tastientech.com/api/c/pointOrder/create"
     headers = {
         "User-Token": userToken,
@@ -74,7 +82,7 @@ def point_create(
             "当前时段可领取数量已经达到上限",
         ]:
             if content in text:
-                print(f"[{get_current_datetime_str()}] [Break] {content}")
+                echo(f"[Break] {content}")
                 flag = True
                 break
         if flag:
@@ -82,21 +90,18 @@ def point_create(
 
         for content in ["活动太火爆了"]:
             if content in text:
-                print(f"[{get_current_datetime_str()}] [Continue] {content}")
+                echo(f"[Continue] {content}")
                 continue
 
         data = resp.json()
         code = data.get("code")
         if code == 200:
-            print(
-                f"{get_current_datetime_str()} [Point] 积分兑换成功, 当前活动 ID: {activityId}"
-            )
+            echo(f"[Point] 积分兑换成功, 当前活动 ID: {activityId}")
         else:
-            print(f"[{get_current_datetime_str()}] [Error] 未知错误:\n{data}")
+            echo(f"[Error] 未知错误:\n{data}")
             raise typer.Exit(-2)
-
     else:
-        print(f"[{get_current_datetime_str()}] [Max] 尝试次数超过上线 ")
+        echo("[Max] 尝试次数超过上线 ")
 
 
 if __name__ == "__main__":
