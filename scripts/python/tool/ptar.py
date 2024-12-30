@@ -38,6 +38,8 @@ def create(
         if not path.exists():
             echo(f"[Error] path {path} not exists")
             raise typer.Exit(2)
+        if path.is_symlink():
+            echo(f"[Warn] file {path} if symlink")
         files.append(path)
     files = sorted(set(files))
     for path in files:
