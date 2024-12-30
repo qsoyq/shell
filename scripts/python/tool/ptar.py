@@ -21,15 +21,6 @@ def get_current_datetime_str() -> str:
     return datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
 
 
-def compute_file_hash(file_path: Path) -> str:
-    """Compute the hash of a file."""
-    hash_md5 = hashlib.md5()  # You can choose other hashing algorithms like sha256
-    with file_path.open("rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
-
-
 @app.command()
 def create(
     output: Path = typer.Argument(..., help="输出文件"),
