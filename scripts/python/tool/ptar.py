@@ -30,7 +30,7 @@ def create(
     使用 tar 压缩文件
     """
     if output.is_dir():
-        echo("[Error] 输出路径已存在文件")
+        echo("[Error] Output path is a directory. Please specify a file path.")
         raise typer.Exit(1)
 
     files: list[Path] = []
@@ -43,10 +43,14 @@ def create(
     for path in files:
         echo(f"[File] {path.name}\t{path} ")
 
-    with tarfile.open(output, "w") as tar:
-        for file in files:
-            tar.add(file, recursive=True, arcname=file.name)
-    echo(f"[Res] Tar file {output} created successfully.")
+    try:
+        with tarfile.open(output, "w") as tar:
+            for file in files:
+                tar.add(file, arcname=file.relative_to(file.parent))
+        echo(f"[Res] Tar file {output} created successfully.")
+    except Exception as e:
+        echo(f"[Error] Failed to create tar file: {e}")
+        raise typer.Exit(3)
 
 
 if __name__ == "__main__":
