@@ -267,7 +267,7 @@ http:
       require-body: true
       timeout: 10
       argument: |-
-        {"rewriteHttpResponseBodyRegexps":[{"search": "zhì", "replace":"治"},{"search": "fù", "replace":"复"},{"search": "qiē", "replace": "切"},{"search": "dà", "replace": "大"},{"search": "sù", "replace": "诉"},{"search": "龗", "replace": ""}, {"search":"请收藏：https://m.bq02.cc", "replace": ""}, {"search":"\\\\?\\\\?", "replace": ""}, {"search":"67", "replace": ""}]}
+        {"rewriteHttpResponseBodyRegexpsArray":[["zhì","治"],["fù","复"],["qiē","切"],["dà","大"],["sù","诉"],["龗",""],["请收藏：https://m.bq02.cc",""],["\\?\\?",""],["67",""]]}
 
 script-providers:
   amdc:
