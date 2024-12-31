@@ -349,6 +349,7 @@ function getScriptResponseBody() {
 async function main() {
     let type = getScriptType()
     let regexps = getScriptArgument("rewriteHttpResponseBodyRegexps") || []
+    let regexpsArray = getScriptArgument("rewriteHttpResponseBodyRegexpsArray") || []
     let debug = getScriptArgument("debug")
     let now = getLocalDateString()
     switch (type) {
@@ -360,9 +361,25 @@ async function main() {
             }
             if (body) {
                 let modified = body
+                // {"rewriteHttpResponseBodyRegexps": [{"search": "a", "replace":"b"}]}
                 for (const regexp of regexps) {
                     let search = regexp?.search
                     let replace = regexp?.replace
+                    if (search && typeof replace === 'string') {
+                        origin = modified
+                        modified = origin.replace(new RegExp(search, 'g'), replace);
+                        if (origin !== modified) {
+                            console.log(`${search} -> ${replace} ✅`)
+                        } else {
+                            console.log(`${search} -> ${replace} ❌ `)
+                        }
+                    }
+                }
+
+                // {"rewriteHttpResponseBodyRegexps": [["a", "b"]]}                    
+                for (const regexp of regexpsArray) {
+                    let search = regexp[0]
+                    let replace = regexp[1]
                     if (search && typeof replace === 'string') {
                         origin = modified
                         modified = origin.replace(new RegExp(search, 'g'), replace);
