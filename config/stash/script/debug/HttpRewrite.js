@@ -367,9 +367,9 @@ async function main() {
                         origin = modified
                         modified = origin.replace(new RegExp(search, 'g'), replace);
                         if (origin !== modified) {
-                            console.log(`search: ${search}, replace: ${replace}, replacement successful. `)
+                            console.log(`${search} -> ${replace} ✅`)
                         } else {
-                            console.log(`search: ${search}, replace: ${replace}, replacement skip. `)
+                            console.log(`${search} -> ${replace} ❌ `)
                         }
                     }
                 }
