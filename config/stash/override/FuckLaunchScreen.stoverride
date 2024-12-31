@@ -267,7 +267,7 @@ http:
       require-body: true
       timeout: 10
       argument: |-
-        {"rewriteHttpResponseBodyRegexps":[{"search": "龗", "replace": ""}, {"search":"请收藏：https://m.bq02.cc", "replace": ""}, {"search":"\\?\\?", "replace": "?"}]}
+        {"rewriteHttpResponseBodyRegexps":[{"search": "龗", "replace": ""}, {"search":"请收藏：https://m.bq02.cc", "replace": ""}, {"search":"\\?\\?", "replace": ""}]}
 
 script-providers:
   amdc:
