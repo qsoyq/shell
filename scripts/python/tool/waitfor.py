@@ -28,7 +28,9 @@ def main(
 
         delta = until - current
         wait = delta.seconds + delta.microseconds / 1_000_000
-        print(f"[{get_current_datetime_str()}] [Datetime] 等待 {wait} s后执行")
+        print(
+            f"[{get_current_datetime_str()}] [Datetime] next run at {until},  execute after {wait} s"
+        )
         time.sleep(wait)
         raise typer.Exit(0)
     raise typer.Exit(0)
