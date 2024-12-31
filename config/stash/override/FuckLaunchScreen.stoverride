@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2025-01-01 02:10:30: 移除 笔趣阁内容 替换
   - 2024-12-22 21:12:30: 替换 笔趣阁 内容无关文字
   - 2024-12-22 10:19:07: 更新 笔趣阁 域名
   - 2024-12-20 05:02:39: 去除 禁漫 详情页顶部广告
@@ -261,13 +262,13 @@ http:
       debug: false
 
     # 笔趣阁错别字替换
-    - name: httpResponseRewrite
-      match: https://.*.bq.*.cc/(kan|book)/\d+/.*\.html
-      type: response
-      require-body: true
-      timeout: 10
-      argument: |-
-        {"rewriteHttpResponseBodyRegexpsArray":[["dù", "度"],["guò","过"],["zhì","治"],["fù","复"],["qiē","切"],["dà","大"],["sù","诉"],["龗",""],["请收藏：https://m.bq02.cc",""],["\\\\?\\\\?",""]]}
+    # - name: httpResponseRewrite
+    #   match: https://.*.bq.*.cc/(kan|book)/\d+/.*\.html
+    #   type: response
+    #   require-body: true
+    #   timeout: 10
+    #   argument: |-
+    #     {"rewriteHttpResponseBodyRegexpsArray":[["dù", "度"],["guò","过"],["zhì","治"],["fù","复"],["qiē","切"],["dà","大"],["sù","诉"],["龗",""],["请收藏：https://m.bq02.cc",""],["\\\\?\\\\?",""]]}
 
 script-providers:
   amdc:
