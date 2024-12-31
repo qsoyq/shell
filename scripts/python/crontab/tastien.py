@@ -98,6 +98,7 @@ def point_create(
         code = data.get("code")
         if code == 200:
             echo(f"[Point] 积分兑换成功, 当前活动 ID: {activityId}")
+            raise typer.Exit(0)
         else:
             echo(f"[Error] 未知错误:\n{data}")
             raise typer.Exit(-2)
