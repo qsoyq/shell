@@ -80,6 +80,7 @@ def point_create(
             "当前活动还未到开放时段",
             "请勿重复提交",
             "当前时段可领取数量已经达到上限",
+            "用户限领已达上限",
         ]:
             if content in text:
                 echo(f"[Break] {content}")
