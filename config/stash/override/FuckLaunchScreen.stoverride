@@ -117,6 +117,9 @@ http:
     - cuwocqnt.com
     - ojkaqzrcy.com
 
+    # 什么值得买
+    - homepage-api.smzdm.com
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -228,6 +231,9 @@ http:
     - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("HOME_PAGE_BOTTOM_FLOATING_ICON")|not))
     - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/firstBanner response-jq .result={} # 小程序启动页弹窗
 
+    # 什么值得买首页 广告
+    - https://homepage-api.smzdm.com/v3/home response-jq .data.component[4].zz_content|=map(select(.tag!="广告"))
+
   script:
     - match: ^https?://amdc.m.taobao.com
       name: amdc
@@ -261,7 +267,7 @@ http:
       require-body: true
       timeout: 10
       argument: |-
-        {"rewriteHttpResponseBodyRegexps":[{"search": "龗", "replace": ""}, {"search":"请收藏：https://m.bq02.cc", "replace": ""}]}
+        {"rewriteHttpResponseBodyRegexps":[{"search": "龗", "replace": ""}, {"search":"请收藏：https://m.bq02.cc", "replace": ""}, {"search":"\\?\\?", "replace": "?"}]}
 
 script-providers:
   amdc:
