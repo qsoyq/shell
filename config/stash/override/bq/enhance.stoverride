@@ -10,11 +10,6 @@ http:
     - "*.bi25.cc"
     - "*.bq16.cc"
     - "*.bq02.cc"
-    - raw.githubusercontent.com
-  header-rewrite:
-    - https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/replace.js response-replace content-type application/javascript;charset=utf-8
-    - https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/bg.js response-replace content-type application/javascript;charset=utf-8
-    - https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/remove.js response-replace content-type application/javascript;charset=utf-8
   script:
     - name: 笔趣阁增强
       match: https://.*.bq.*.cc/(kan|book)/\d+/.*\.html
