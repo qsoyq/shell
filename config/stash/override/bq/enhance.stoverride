@@ -1,5 +1,6 @@
-name: 笔趣阁黑暗模式
+name: 笔趣阁增强
 desc: |-
+  - 替换污染词汇
 category: qsoyq
 icon: https://www.bq16.cc/favicon.ico
 http:
@@ -8,16 +9,15 @@ http:
     - "*.bq16.cc"
     - "*.bq02.cc"
   script:
-    # 笔趣阁黑暗模式
-    - name: html-add-script
+    - name: 笔趣阁增强
       match: https://.*.bq.*.cc/(kan|book)/\d+/.*\.html
       type: response
       require-body: true
       timeout: 1
       argument: >-
-        {"scripts": [{"textContent": "document.getElementById(\\"lightdiv\\").click()"}]}
+        {"scripts": [{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/replace.js"}]}
 
 script-providers:
-  html-add-script:
+  笔趣阁增强:
     url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/html-add-script.js
     interval: 86400
