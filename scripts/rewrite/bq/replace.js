@@ -2,6 +2,7 @@
 let ele = document.getElementById("chaptercontent")
 if (ele) {
     let words = [
+        ["尽kuài", "尽快"],
         ["毁miè", "毁灭"],
         ["存zài", "存在"],
         ["表xiàn", "表现"],
@@ -10,7 +11,6 @@ if (ele) {
         ["狼bèi", "狼狈"],
         ["轻yì", "轻易"],
         ["形shì", "形势"],
-        ["表xiàn", "表现"],
         ["表xiàn", "表现"],
         ["导zhì", "导致"],
         ["情yì", "情谊"],
