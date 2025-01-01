@@ -1,4 +1,4 @@
-
+// 使用手势跳转章节
 (function () {
     console.log('swipe')
     let chaptercontent = document.getElementById('chaptercontent')
@@ -20,10 +20,14 @@
 
         if (distance > 50) {
             // 向右滑动
-            alert('Swiped Right!');
+            console.log('Swiped Right!');
         } else if (distance < -50) {
             // 向左滑动
-            alert('Swiped Left!');
+            const pb_next = document.getElementById('pb_next')
+            if (pb_next) {
+                pb_next.click()
+            }
+            console.log('Swiped Left!');
         }
     });
 })();
