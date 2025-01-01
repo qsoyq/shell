@@ -2,6 +2,10 @@
 let ele = document.getElementById("chaptercontent")
 if (ele) {
     let words = [
+        ["严sù", "严肃"],
+        ["创zào", "创造"],
+        ["忘jì", "忘记"],
+        ["I1292", ""],
         ["提yì", "提议"],
         ["尽kuài", "尽快"],
         ["毁miè", "毁灭"],
