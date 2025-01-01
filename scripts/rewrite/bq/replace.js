@@ -1,7 +1,21 @@
 // 替换正文污染词汇
 let ele = document.getElementById("chaptercontent")
 if (ele) {
-    let words = [["情yì", "情谊"], ["严zhòng", "严重"], ["dù", "度"], ["guò", "过"], ["zhì", "治"], ["fù", "复"], ["qiē", "切"], ["dà", "大"], ["sù", "诉"], ["龗", ""], ["请收藏：https://m.bq02.cc", ""], ["\\?\\?", ""]]
+    let words = [
+        ["导zhì", "导致"],
+        ["情yì", "情谊"],
+        ["严zhòng", "严重"],
+        ["医zhì", "医治"],
+        ["dù", "度"],
+        ["guò", "过"],
+        ["恢fù", "恢复"],
+        ["一qiē", "一切"],
+        ["dà", "大"],
+        ["告sù", "告诉"],
+        ["龗", ""],
+        ["请收藏：https://m.bq02.cc", ""],
+        ["\\?\\?", ""]
+    ]
     let origin = ele.innerHTML
     words.forEach(items => {
         let search = items[0]
