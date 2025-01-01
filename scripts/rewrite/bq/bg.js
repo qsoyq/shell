@@ -30,7 +30,7 @@ if (lastBg) {
             } else {
                 localStorage.setItem('.bq.lastBg', "light")
             }
-            console.log('huyandiv was clicked!');
+            console.log('lightdiv was clicked!');
         });
     }
 })();
