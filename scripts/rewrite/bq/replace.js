@@ -2,6 +2,7 @@
 let ele = document.getElementById("chaptercontent")
 if (ele) {
     let words = [
+        ["狼bèi", "狼狈"],
         ["轻yì", "轻易"],
         ["形shì", "形势"],
         ["表xiàn", "表现"],
