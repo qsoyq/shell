@@ -2,6 +2,7 @@
 let ele = document.getElementById("chaptercontent")
 if (ele) {
     let words = [
+        ["提yì", "提议"],
         ["尽kuài", "尽快"],
         ["毁miè", "毁灭"],
         ["存zài", "存在"],
