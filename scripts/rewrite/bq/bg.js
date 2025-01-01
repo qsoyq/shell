@@ -1,9 +1,12 @@
 // 记忆网页护眼、关灯行为
-let lastBg = localStorage.getItem('.bq.lastBg')
-if (lastBg) {
-    // @ts-ignore
-    nr_setbg(lastBg)
-}
+(function () {
+    let lastBg = localStorage.getItem('.bq.lastBg')
+    if (lastBg) {
+        // @ts-ignore
+        nr_setbg(lastBg)
+    }
+})();
+
 
 (function () {
     const element = document.getElementById('huyandiv');
