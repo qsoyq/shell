@@ -74,7 +74,6 @@ def point_create(
         resp = httpx.post(url, json=body, headers=headers, verify=False)
         resp.raise_for_status()
         text = resp.text
-        flag = False
         for content in [
             "当前活动领取数量已达上限",
             "当前活动还未到开放时段",
@@ -85,10 +84,7 @@ def point_create(
         ]:
             if content in text:
                 echo(f"[Break] {content}")
-                flag = True
-                break
-        if flag:
-            break
+                raise typer.Exit(1)
 
         for content in ["活动太火爆了"]:
             if content in text:
@@ -102,7 +98,7 @@ def point_create(
             raise typer.Exit(0)
         else:
             echo(f"[Error] 未知错误:\n{data}")
-            raise typer.Exit(-2)
+            raise typer.Exit(2)
     else:
         echo("[Max] 尝试次数超过上线 ")
 
