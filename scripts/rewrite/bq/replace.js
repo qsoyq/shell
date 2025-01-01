@@ -2,6 +2,7 @@
 let ele = document.getElementById("chaptercontent")
 if (ele) {
     let words = [
+        ["存zài", "存在"],
         ["表xiàn", "表现"],
         ["程dù", "程度"],
         ["控zhì", "控制"],
