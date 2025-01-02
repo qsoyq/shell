@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from rich import print
 import typer
 import sys
 
