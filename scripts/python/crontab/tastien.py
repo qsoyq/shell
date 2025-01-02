@@ -81,6 +81,7 @@ def point_create(
             "当前时段可领取数量已经达到上限",
             "用户限领已达上限",
             "该用户已经有锁定的记录",
+            "当前活动领取数量达到总限",
         ]:
             if content in text:
                 echo(f"[Break] {content}")
