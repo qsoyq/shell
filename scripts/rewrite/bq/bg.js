@@ -13,10 +13,10 @@
     if (element) {
         element.addEventListener('click', function () {
             let lastBg = localStorage.getItem('.bq.lastBg')
-            if (lastBg) {
-                localStorage.setItem('.bq.lastBg', "")
-            } else {
+            if (lastBg !== 'huyan') {
                 localStorage.setItem('.bq.lastBg', "huyan")
+            } else {
+                localStorage.setItem('.bq.lastBg', "")
             }
             console.log('huyandiv was clicked!');
         });
@@ -28,10 +28,10 @@
     if (element) {
         element.addEventListener('click', function () {
             let lastBg = localStorage.getItem('.bq.lastBg')
-            if (lastBg) {
-                localStorage.setItem('.bq.lastBg', "")
-            } else {
+            if (lastBg !== 'light') {
                 localStorage.setItem('.bq.lastBg', "light")
+            } else {
+                localStorage.setItem('.bq.lastBg', "")
             }
             console.log('lightdiv was clicked!');
         });
