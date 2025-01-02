@@ -18,10 +18,10 @@
         const endX = event.changedTouches[0].clientX; // 记录结束触摸点的 X 坐标
         const distance = endX - startX; // 计算滑动距离
 
-        if (distance > 50) {
+        if (distance > 100) {
             // 向右滑动
             console.log('Swiped Right!');
-        } else if (distance < -50) {
+        } else if (distance < -100) {
             // 向左滑动
             const pb_next = document.getElementById('pb_next')
             if (pb_next) {
