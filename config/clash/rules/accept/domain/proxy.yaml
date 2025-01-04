@@ -66,6 +66,15 @@ payload:
   - "+.missav.com"
   - "+.nyaa.si"
   - "+.getchu.com"
+  - "+.bq02.cc"
+  - "+.certbot.eff.org"
+  - "+.nyaa.land"
+  - "+.mojie.me"
+  - "+.mojie.app"
+  - "+.mojie.net"
+  - "+.knit.bid"
+  - "+.hostloc.com"
+  - "+.debian.org"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
