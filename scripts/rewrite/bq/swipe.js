@@ -1,4 +1,22 @@
 // 使用手势跳转章节
+function gotoNext() {
+    const pb_next = document.getElementById('pb_next')
+    if (pb_next) {
+        pb_next.click()
+        console.log("goto next page")
+    }
+
+}
+(function () {
+    let chaptercontent = document.getElementById("chaptercontent")
+    if (chaptercontent) {
+        chaptercontent.addEventListener("dblclick", () => {
+            console.log('dbclick: goto next page')
+            gotoNext()
+        })
+    }
+})();
+
 (function () {
     console.log('swipe')
     let chaptercontent = document.getElementById('chaptercontent')
@@ -23,11 +41,9 @@
             console.log('Swiped Right!');
         } else if (distance < -200) {
             // 向左滑动
-            const pb_next = document.getElementById('pb_next')
-            if (pb_next) {
-                pb_next.click()
-            }
+            gotoNext()
             console.log('Swiped Left!');
         }
     });
 })();
+
