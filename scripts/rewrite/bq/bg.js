@@ -25,7 +25,7 @@ const lighton_style = `
     }                            
 
     #chaptercontent {
-        color: rgb(153, 153, 153);
+        color: rgb(153, 153, 153) !important;
     }
 `;
 
