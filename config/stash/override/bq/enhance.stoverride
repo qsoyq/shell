@@ -3,7 +3,7 @@ desc: |-
   - 替换污染词汇
   - 记忆护眼/关灯
   - 移除推荐链接/页脚
-  - 使用手势左滑跳转到下一章
+  - 使用手势左滑/双击跳转到下一章
   - 适配加载后的关灯模式
 category: Network
 icon: https://www.bq16.cc/favicon.ico
