@@ -8,15 +8,6 @@ const huyan_style = `
     #chaptercontent {
         color: #000000 !important;
     }        
-
-    .Readpage .Readpage_up {
-        color: #000000 !important;
-    }
-    .Readpage .Readpage_down {
-        color: #000000 !important;
-    }
-
-    
 `;
 
 const lighton_style = `
