@@ -15,6 +15,10 @@ const lighton_style = `
         background: rgb(3, 3, 3) !important;
     }
 
+    #huyandiv {
+        background: #656565 !important;
+    }
+
     .Readpage {
         background: rgb(3, 3, 3) !important;
         color: rgb(3, 3, 3) !important;
