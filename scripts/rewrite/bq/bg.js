@@ -17,6 +17,7 @@ const lighton_style = `
 
     #huyandiv {
         background: #656565 !important;
+        border: 1px solid #656565 !important;
     }
 
     .Readpage {
