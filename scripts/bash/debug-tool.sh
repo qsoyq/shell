@@ -10,5 +10,6 @@ curl -s -o /usr/local/bin/pytar "https://raw.githubusercontent.com/qsoyq/shell/r
 curl -s -o /usr/local/bin/duplicate "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/python/tool/duplicate.py?v=$(date +%s)"
 curl -s -o /usr/local/bin/markdown-table "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/python/markdown/table.py?v=$(date +%s)"
 curl -s -o /usr/local/bin/clear-docker-log "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/python/tool/clear-docker-log.py?v=$(date +%s)"
+curl -s -o /usr/local/bin/url-watcher "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/python/tool/url-watcher.py?v=$(date +%s)"
 
 chmod +x /usr/local/bin/*
