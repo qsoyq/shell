@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from rich import print
+import rich
 import typer
 import smtplib
 from datetime import datetime
@@ -8,6 +8,17 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 app = typer.Typer()
+
+
+def echo(*args, **kwargs):
+    if args:
+        arg = f"[{get_current_datetime_str()}] {args[0]}"
+        args = [arg, *args[1:]]
+    rich.print(*args, **kwargs)
+
+
+def get_current_datetime_str() -> str:
+    return datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
 
 
 @app.command()
@@ -47,13 +58,10 @@ def gmail(
 
         # 发送邮件
         server.sendmail(GMAIL_USER, recipient_email, message.as_string())
-        print(f"[{now}] 邮件发送成功！")
-        raise typer.Exit(0)
-
+        echo("邮件发送成功！")
     except Exception as e:
-        print(f"[{now}] 邮件发送失败: {e}")
-        raise typer.Exit(-1)
-
+        echo(f"[{now}] 邮件发送失败: {e}")
+        raise typer.Exit(1)
     finally:
         server.quit()
 
