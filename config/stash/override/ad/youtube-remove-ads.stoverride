@@ -1,0 +1,36 @@
+name: 油管去广告
+desc: |-
+  去他妈的广告
+  https://kelee.one/Tool/Loon/Plugin/YouTube_remove_ads.plugin
+icon: https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png
+category: YouTube
+http:
+  mitm:
+    - "*.googlevideo.com"
+    - youtubei.googleapis.com
+
+  url-rewrite:
+    - ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad - reject
+
+  script:
+    - name: 油管去广告
+      match: ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 10
+      argument: >-
+
+script-providers:
+  "油管去广告":
+    url: https://kelee.one/Resource/Script/YouTube/YouTube_remove_ads/YouTube_remove_ads_response.js
+    interval: 86400
+
+rules:
+  - SCRIPT,googlevideo-quic,REJECT
+  - SCRIPT,youtubei-quic,REJECT
+
+script:
+  shortcuts: # 可以在 rule 中引用
+    googlevideo-quic: 'network == ''udp'' and dst_port == 443 and host.endswith("googlevideo.com")'
+    youtubei-quic: 'network == ''udp'' and dst_port == 443 and host.endswith("youtubei.googleapis.com")'
