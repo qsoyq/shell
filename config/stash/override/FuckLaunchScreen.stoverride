@@ -1,5 +1,6 @@
 name: 去他妈的广告
 desc: |-
+  - 2025-01-09 21:36:24: 引入 可莉油管去广告 插件
   - 2025-01-01 02:10:30: 移除 笔趣阁内容 替换
   - 2024-12-22 21:12:30: 替换 笔趣阁 内容无关文字
   - 2024-12-22 10:19:07: 更新 笔趣阁 域名
@@ -121,6 +122,10 @@ http:
     # 什么值得买
     - homepage-api.smzdm.com
 
+    # 油管去广告
+    - "*.googlevideo.com"
+    - youtubei.googleapis.com
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -175,6 +180,9 @@ http:
     # 禁漫
     - ^https://cuwocqnt.com/en/ghym - reject
     - ^https://ojkaqzrcy.com/en/ogd/aqd - reject
+
+    # 油管去广告
+    - ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad - reject
 
   header-rewrite:
     # 下载狗
@@ -261,14 +269,13 @@ http:
       timeout: 5
       debug: false
 
-    # 笔趣阁错别字替换
-    # - name: httpResponseRewrite
-    #   match: https://.*.bq.*.cc/(kan|book)/\d+/.*\.html
-    #   type: response
-    #   require-body: true
-    #   timeout: 10
-    #   argument: |-
-    #     {"rewriteHttpResponseBodyRegexpsArray":[["dù", "度"],["guò","过"],["zhì","治"],["fù","复"],["qiē","切"],["dà","大"],["sù","诉"],["龗",""],["请收藏：https://m.bq02.cc",""],["\\\\?\\\\?",""]]}
+    - name: 油管去广告
+      match: ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 10
+      argument: >-
 
 script-providers:
   amdc:
@@ -287,6 +294,11 @@ script-providers:
     url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
     interval: 86400
 
+  # https://kelee.one/Tool/Loon/Plugin/YouTube_remove_ads.plugin
+  油管去广告:
+    url: https://kelee.one/Resource/Script/YouTube/YouTube_remove_ads/YouTube_remove_ads_response.js
+    interval: 86400
+
 rule-providers:
   anti-AD:
     behavior: domain
@@ -303,6 +315,14 @@ rule-providers:
     url: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml
 
 rules:
+  # 油管去广告
+  - SCRIPT,googlevideo-quic,REJECT
+  - SCRIPT,youtubei-quic,REJECT
   # 可跳过番茄小说广告
   - RULE-SET,anti-AD,REJECT,no-resolve,no-track
   - RULE-SET,秋风广告规则,REJECT,no-resolve,no-track
+
+script:
+  shortcuts:
+    googlevideo-quic: 'network == ''udp'' and dst_port == 443 and host.endswith("googlevideo.com")'
+    youtubei-quic: 'network == ''udp'' and dst_port == 443 and host.endswith("youtubei.googleapis.com")'
