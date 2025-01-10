@@ -59,7 +59,7 @@ payload:
   - "+.fc2.com"
   - "+.sotwe.com"
   - "+.spankbang.com"
-  - "+.mastodon.online,Select"
+  - "+.mastodon.online"
   - "+.go-esim.com,Select"
   - "+.v2ray.com,Select"
   - "+.v2fly.org,Select"
@@ -74,6 +74,10 @@ payload:
   - "+.mojie.net"
   - "+.hostloc.com"
   - "+.debian.org"
+  - "+.tktube.com"
+  - "+.sjv.io"
+  - "+.nsloon.app"
+  - "+.twilio.com"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
