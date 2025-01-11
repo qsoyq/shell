@@ -1,3 +1,4 @@
+# - 2025-01-11 09:40:48: 优化 response-jq 表达式
 # - 2025-01-11 09:30:57: 修复 推特网页版 点击显示评论无效的问题
 # - 2025-01-09 21:36:24: 引入 可莉油管去广告 插件
 # - 2025-01-01 02:10:30: 移除 笔趣阁内容 替换
@@ -25,7 +26,7 @@
 # - 2024-12-02 20:16:07: 去除 reddit 首页列表和详情页的广告
 name: 去他妈的广告
 desc: |-
-  - 2025-01-11 09:30:57: 修复 推特网页版 点击显示评论无效的问题
+  - 2025-01-11 09:40:48: 优化 response-jq 表达式
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
@@ -200,7 +201,7 @@ http:
     - ^https?://api.xiaoheihe.cn/account/get_ads_info_v2.* response-jq .result.inner_ads=[]
 
     # 小黑盒去首页推荐推广
-    - ^https?://api.xiaoheihe.cn/bbs/app/feeds[^/]*$ response-jq .result.links|=map(select(.ad_report==null))
+    - ^https?://api.xiaoheihe.cn/bbs/app/feeds[^/]*$ response-jq if .result.links != null then .result.links|=map(select(.ad_report==null)) end
 
     # Reddit
 
@@ -208,10 +209,10 @@ http:
     - ^https://gql-fed.reddit.com/ response-jq .data.postInfoById.commentsPageAds=[]
 
     # 社区主页列表广告
-    - ^https://gql-fed.reddit.com/ response-jq .data.subredditV3.elements.edges |= map(select(.node.cells[0].__typename!="AdMetadataCell"))
+    - ^https://gql-fed.reddit.com/ response-jq if .data.subredditV3.elements.edges != null then .data.subredditV3.elements.edges |= map(select(.node.cells[0].__typename!="AdMetadataCell")) end
 
     # 首页列表广告
-    - ^https://gql-fed.reddit.com/ response-jq .data.homeV3.elements.edges |= map(select(.node.cells[0].__typename!="AdMetadataCell"))
+    - ^https://gql-fed.reddit.com/ response-jq if .data.homeV3.elements.edges != null then .data.homeV3.elements.edges |= map(select(.node.cells[0].__typename!="AdMetadataCell")) end
 
     # 推特
     # 首页时间线去广告
@@ -220,30 +221,30 @@ http:
     - ^https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
 
     # 小红书
-    - ^https?://edith.xiaohongshu.com/api/sns/v6/homefeed[^/]*$ response-jq .data |= map(select(.is_ads!=true))
+    - ^https?://edith.xiaohongshu.com/api/sns/v6/homefeed[^/]*$ response-jq if .data != null then .data |= map(select(.is_ads!=true)) end
 
     # 哔哩哔哩
     # Bilibili HD 首页 banner 轮播
-    - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq .data.items |= map(select(.card_type!="banner_ipad_v8"))
+    - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq if .data.items!=null then .data.items |= map(select(.card_type!="banner_ipad_v8")) end
 
     # Bilibili HD 首页推荐广告
-    - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq .data.items |= map(select(.card_goto!="ad_web_s"))
+    - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq if .data.items!=null then .data.items |= map(select(.card_goto!="ad_web_s")) end
 
     # 塔斯汀 Banner
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("INDEX_TOP_BANNER")|not)) # 首页顶部Banner
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("INDEX_HOT_AREA")|not)) # 首页塔塔热推
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("PRODUCT_LIST_LEFTMENU_BANNER")|not)) # 点单页商品列表横幅 banner
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("ORDER_DETAIL_BANNER")|not))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("J_TSDD")|not)) # 订单页弹窗
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("J_INDEX")|not)) # 首页弹窗
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("GROUP_COUPON_BANNER")|not))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("HOME_BOTTOM_ENTRY")|not))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("INDEX_WAIST_AREA")|not))
-    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq .result|=map(select(.locationCode|index("HOME_PAGE_BOTTOM_FLOATING_ICON")|not))
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("INDEX_TOP_BANNER")|not)) end # 首页顶部Banner
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("INDEX_HOT_AREA")|not)) end # 首页塔塔热推
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("PRODUCT_LIST_LEFTMENU_BANNER")|not)) end # 点单页商品列表横幅 banner
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("ORDER_DETAIL_BANNER")|not)) end
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("J_TSDD")|not)) end # 订单页弹窗
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("J_INDEX")|not)) end # 首页弹窗
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("GROUP_COUPON_BANNER")|not)) end
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("HOME_BOTTOM_ENTRY")|not)) end
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("INDEX_WAIST_AREA")|not)) end
+    - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("HOME_PAGE_BOTTOM_FLOATING_ICON")|not)) end
     - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/firstBanner response-jq .result={} # 小程序启动页弹窗
 
     # 什么值得买首页 广告
-    - https://homepage-api.smzdm.com/v3/home response-jq .data.component[4].zz_content|=map(select(.tag!="广告"))
+    - https://homepage-api.smzdm.com/v3/home response-jq if .data.component[4].zz_content != null then .data.component[4].zz_content|=map(select(.tag!="广告")) end
 
   script:
     - match: ^https?://amdc.m.taobao.com
