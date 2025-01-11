@@ -1,29 +1,31 @@
+# - 2025-01-11 09:30:57: 修复 推特网页版 点击显示评论无效的问题
+# - 2025-01-09 21:36:24: 引入 可莉油管去广告 插件
+# - 2025-01-01 02:10:30: 移除 笔趣阁内容 替换
+# - 2024-12-22 21:12:30: 替换 笔趣阁 内容无关文字
+# - 2024-12-22 10:19:07: 更新 笔趣阁 域名
+# - 2024-12-20 05:02:39: 去除 禁漫 详情页顶部广告
+# - 2024-12-17 13:44:59: 更新 塔斯汀 Banner 移除
+# - 2024-12-16 20:17:52: 去除 塔斯汀部分 Banner
+# - 2024-12-15 12:17:37: 去除 小黑盒首页推荐 推广
+# - 2024-12-15 11:28:48: 去除 哔哩哔哩HD 首页推荐广告
+# - 2024-12-15 11:07:49: 去除 哔哩哔哩HD 首页 banner
+# - 2024-12-13 16:34:55: 去除 小红书首页推荐 广告
+# - 2024-12-13 00:53:57: 去除 google 搜索页面赞助商广告
+# - 2024-12-12 07:58:59: 修复 推特网页版 去广告时 URL 匹配可能遗漏
+# - 2024-12-11 23:22:51: 去除 特推网页版 详情页评论广告
+# - 2024-12-11 00:03:51: 去除 特推网页版 首页时间线广告
+# - 2024-12-10 10:07:43: 去除 reddit 首页列表的广告
+# - 2024-12-10 00:15:02: 去除 起点读书 开屏广告(无效)
+# - 2024-12-09 00:59:14: 去除 大众点评 开屏广告
+# - 2024-12-08 06:18:59: 去除 reddit 社区页列表的广告
+# - 2024-12-06 05:01:05: 更新 下载狗 iOS、微信 下载受限的弹窗提示 使用脚本替换url重定向
+# - 2024-12-05 01:13:45: 去除 美团外卖 开屏广告(视频)
+# - 2024-12-04 19:15:02: 去除 下载狗 iOS、微信 下载受限的弹窗提示
+# - 2024-12-04 07:10:18: 去除 美团外卖 开屏广告(图片)
+# - 2024-12-02 20:16:07: 去除 reddit 首页列表和详情页的广告
 name: 去他妈的广告
 desc: |-
-  - 2025-01-09 21:36:24: 引入 可莉油管去广告 插件
-  - 2025-01-01 02:10:30: 移除 笔趣阁内容 替换
-  - 2024-12-22 21:12:30: 替换 笔趣阁 内容无关文字
-  - 2024-12-22 10:19:07: 更新 笔趣阁 域名
-  - 2024-12-20 05:02:39: 去除 禁漫 详情页顶部广告
-  - 2024-12-17 13:44:59: 更新 塔斯汀 Banner 移除
-  - 2024-12-16 20:17:52: 去除 塔斯汀部分 Banner
-  - 2024-12-15 12:17:37: 去除 小黑盒首页推荐 推广
-  - 2024-12-15 11:28:48: 去除 哔哩哔哩HD 首页推荐广告
-  - 2024-12-15 11:07:49: 去除 哔哩哔哩HD 首页 banner
-  - 2024-12-13 16:34:55: 去除 小红书首页推荐 广告
-  - 2024-12-13 00:53:57: 去除 google 搜索页面赞助商广告
-  - 2024-12-12 07:58:59: 修复 推特网页版 去广告时 URL 匹配可能遗漏
-  - 2024-12-11 23:22:51: 去除 特推网页版 详情页评论广告
-  - 2024-12-11 00:03:51: 去除 特推网页版 首页时间线广告
-  - 2024-12-10 10:07:43: 去除 reddit 首页列表的广告
-  - 2024-12-10 00:15:02: 去除 起点读书 开屏广告(无效)
-  - 2024-12-09 00:59:14: 去除 大众点评 开屏广告
-  - 2024-12-08 06:18:59: 去除 reddit 社区页列表的广告
-  - 2024-12-06 05:01:05: 更新 下载狗 iOS、微信 下载受限的弹窗提示 使用脚本替换url重定向
-  - 2024-12-05 01:13:45: 去除 美团外卖 开屏广告(视频)
-  - 2024-12-04 19:15:02: 去除 下载狗 iOS、微信 下载受限的弹窗提示
-  - 2024-12-04 07:10:18: 去除 美团外卖 开屏广告(图片)
-  - 2024-12-02 20:16:07: 去除 reddit 首页列表和详情页的广告
+  - 2025-01-11 09:30:57: 修复 推特网页版 点击显示评论无效的问题
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
@@ -213,9 +215,9 @@ http:
 
     # 推特
     # 首页时间线去广告
-    - ^https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null))
+    - ^https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null)) end
     # 详情页评论广告
-    - ^https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null))
+    - ^https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
 
     # 小红书
     - ^https?://edith.xiaohongshu.com/api/sns/v6/homefeed[^/]*$ response-jq .data |= map(select(.is_ads!=true))
