@@ -1,5 +1,6 @@
 #!/bin/bash
-pip --quiet install httpx bs4 typer rich tabulate socksio ipython
+pip install --upgrade certifi   --trusted-host pypi.org --trusted-host files.pythonhosted.org
+pip install httpx bs4 typer rich tabulate socksio ipython pysocks ipython pyvim ruff you-get vcron mac-cleanup  --trusted-host pypi.org --trusted-host files.pythonhosted.org
 
 curl -sL -o /usr/local/bin/mikanani-magnet "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/python/mikanani/filter.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/replace-all "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/python/terminal/replace-all.py?v=$(date +%s)"
