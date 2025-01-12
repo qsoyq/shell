@@ -42,6 +42,7 @@ alias airport="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/C
 
 # Battery Percentage
 alias battpct="pmset -g batt | grep -o '[0-9]*%' | tr -d '%'"
+alias displaysleepnow="pmset displaysleepnow"
 
 
 # WiFI
