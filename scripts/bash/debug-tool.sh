@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 pip install --upgrade certifi   --trusted-host pypi.org --trusted-host files.pythonhosted.org
 pip install httpx bs4 typer rich tabulate socksio ipython pysocks ipython pyvim ruff you-get vcron mac-cleanup  --trusted-host pypi.org --trusted-host files.pythonhosted.org
 
