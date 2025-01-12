@@ -7,7 +7,9 @@ const huyan_style = `
     }
     #chaptercontent {
         color: #000000 !important;
+
     }        
+        
 `;
 
 const lighton_style = `
@@ -30,7 +32,9 @@ const lighton_style = `
     }                            
 
     #chaptercontent {
-        color: rgb(153, 153, 153) !important;
+        // color: rgb(153, 153, 153) !important;
+        color: #4e5d6f !important;
+        background: #17191f !important;                
     }
 `;
 
