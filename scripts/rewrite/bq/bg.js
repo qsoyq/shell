@@ -14,7 +14,8 @@ const huyan_style = `
 
 const lighton_style = `
     body {
-        background: rgb(3, 3, 3) !important;
+        // background: rgb(3, 3, 3) !important;
+        background: #17191f !important;         
     }
 
     #huyandiv {
@@ -23,12 +24,15 @@ const lighton_style = `
     }
 
     .Readpage {
-        background: rgb(3, 3, 3) !important;
-        color: rgb(3, 3, 3) !important;
+        // background: rgb(3, 3, 3) !important;
+        // color: rgb(3, 3, 3) !important;
+        color: #17191f !important;         
+        background: #17191f !important;         
     }
 
     .header {
-        background: rgb(3, 3, 3) !important;
+        // background: rgb(3, 3, 3) !important;
+        background: #17191f !important;         
     }                            
 
     #chaptercontent {
