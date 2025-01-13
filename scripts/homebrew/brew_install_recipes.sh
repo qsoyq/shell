@@ -36,6 +36,14 @@ recipes=(
   tree
   wget
   wrk
+  openssl
+  zlib
+  readline
+  gettext
+  tcl-tk@8
+  sqlite3
+  xz
+  mpdecimal
 )
 
 brew_install_recipes
