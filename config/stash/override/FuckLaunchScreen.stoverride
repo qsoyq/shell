@@ -1,3 +1,4 @@
+# - 2025-01-15 02:40:42: missav 重定向
 # - 2025-01-11 09:40:48: 优化 response-jq 表达式
 # - 2025-01-11 09:30:57: 修复 推特网页版 点击显示评论无效的问题
 # - 2025-01-09 21:36:24: 引入 可莉油管去广告 插件
@@ -26,7 +27,7 @@
 # - 2024-12-02 20:16:07: 去除 reddit 首页列表和详情页的广告
 name: 去他妈的广告
 desc: |-
-  - 2025-01-11 09:40:48: 优化 response-jq 表达式
+  - 2025-01-15 02:40:42: missav 重定向
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
@@ -129,6 +130,9 @@ http:
     - "*.googlevideo.com"
     - youtubei.googleapis.com
 
+    # missav
+    - "missav.com"
+
   url-rewrite:
     # 叮咚买菜
     - ^https://maicai.api.ddxq.mobi/advert/startUpScreen - reject
@@ -186,6 +190,9 @@ http:
 
     # 油管去广告
     - ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad - reject
+
+    # missav 重定向
+    - https://missav.com/(.*) https://missav.ai/$1 307
 
   header-rewrite:
     # 下载狗
