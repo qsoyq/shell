@@ -78,6 +78,16 @@ payload:
   - "+.sjv.io"
   - "+.nsloon.app"
   - "+.twilio.com"
+  - "+.dmm.co.jp"
+  - "+.unsplash.com"
+  - "+.missav.ai"
+  - "+.v2fly.org"
+  - "+.vercel.app"
+  - "+.gnu.org"
+  - "+.hongxingdl.com"
+  - "+.apricot.red"
+  - "+.python.org"
+  - "+.pypi.org"
 
   # 19940731.xyz
   - "telegraph.19940731.xyz"
