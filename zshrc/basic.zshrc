@@ -10,7 +10,8 @@ export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PA
 alias pwdcopy="pwd|pbcopy"
 alias works="cd $HOME/works"
 alias github="cd $HOME/works/github"
-alias shell="cd $HOME/works/github/shell"
+alias shell="code $HOME/works/github/shell"
+alias app="code $HOME/works/github/services/app"
 alias reload=". ~/.zshrc"
 alias envactive="set -o allexport && . .env"
 alias grep='grep --color=auto'
