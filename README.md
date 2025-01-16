@@ -4,7 +4,6 @@
 
 ```bash
 if [[ -d "$directory_to_search" ]]; then
-    # 遍历指定目录下所有以 .zshrc 结尾的文件
     for file in "$directory_to_search"/zshrc/*.zshrc; do
         if [[ -f "$file" ]]; then
             echo "Sourcing $file"
