@@ -27,7 +27,7 @@ def main():
         if d.is_dir():
             for f in d.rglob("*.log"):
                 echo(f)
-                cmd = f"truncate -s 0 {f.absolute()}"
+                cmd = f"cat /dev/null > {f.absolute()}"
                 os.system(cmd)
 
 
