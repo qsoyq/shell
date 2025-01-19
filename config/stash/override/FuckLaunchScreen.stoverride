@@ -311,12 +311,12 @@ script-providers:
         interval: 86400
 
 rule-providers:
-    # anti-AD:
-    #     behavior: domain
-    #     format: yaml
-    #     interval: 7200
-    #     type: http
-    #     url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-clash.yaml
+    anti-AD:
+        behavior: domain
+        format: yaml
+        interval: 7200
+        type: http
+        url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-clash.yaml
 
     秋风广告规则:
         behavior: domain
@@ -330,7 +330,7 @@ rules:
     - SCRIPT,googlevideo-quic,REJECT
     - SCRIPT,youtubei-quic,REJECT
     # 可跳过番茄小说广告
-    #   - RULE-SET,anti-AD,REJECT,no-resolve,no-track
+    - RULE-SET,anti-AD,REJECT,no-resolve,no-track
     - RULE-SET,秋风广告规则,REJECT,no-resolve,no-track
 
 script:
