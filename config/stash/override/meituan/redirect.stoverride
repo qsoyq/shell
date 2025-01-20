@@ -1,14 +1,12 @@
-
-#SUBSCRIBED https://raw.githubusercontent.com/kamingchan/snippet/main/override/redirect-google.stoverride
 name: 美团域名重定向
 desc: |-
-  https://www.blueskyxn.com/202311/6919.html
-  
+    https://www.blueskyxn.com/202311/6919.html
+
 category: qsoyq
 icon: https://www.meituan.com/favicon.ico
 
 http:
-  mitm:
-    - "*.d.meituan.net"
-  rewrite:
-    - ^http(s)?:\/\/(.*).d.meituan.net http$1://$2.dreport.meituan.net 302
+    mitm:
+        - "*.d.meituan.net"
+    rewrite:
+        - ^http(s)?:\/\/(.*).d.meituan.net http$1://$2.dreport.meituan.net 302
