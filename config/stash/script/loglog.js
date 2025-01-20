@@ -489,8 +489,19 @@ async function pushMessage(message) {
     return res
 }
 
+/**
+ * @param {...any} args - Arguments to log
+ */
+function echo(...args) {
+    let date = getLocalDateString()
+    let logMessage = `${args.join(' ')}`
+    logMessage = `[${date}] ${logMessage}`
+    console.log(logMessage)
+}
+
 async function main() {
-    console.log("test")
+    echo(`[Argument] ${$argument}`)
+    echo(`[Argument] [JSON] ${parseJsonBody($argument)}`)
 }
 
 (async () => {
