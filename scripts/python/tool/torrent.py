@@ -3,7 +3,6 @@ import sys
 import rich
 from datetime import datetime
 import typer
-from pathlib import Path
 
 
 app = typer.Typer()

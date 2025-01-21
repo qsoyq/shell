@@ -2,6 +2,7 @@
 """
 https://mikanani.me/Home/Bangumi
 """
+
 import httpx
 from rich import print
 import typer
