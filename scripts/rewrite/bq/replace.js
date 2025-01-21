@@ -2,6 +2,7 @@
 let ele = document.getElementById("chaptercontent")
 if (ele) {
     let words = [
+        ["（本章未完，请翻页）", ""],
         ["&amp;nb", ''],
         ["体lì", "体力"],
         ["顺lì", "顺利"],
