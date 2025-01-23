@@ -2,7 +2,7 @@ name: 推特网页去广告
 desc: |-
     可能会导致移动端不可用
 category: Network
-icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
+icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
 
 http:
     mitm:
@@ -15,11 +15,3 @@ http:
         - ^https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null)) end
         # 详情页评论广告
         - ^https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
-
-        - name: 油管去广告
-          match: ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)
-          type: response
-          require-body: true
-          binary-mode: true
-          timeout: 10
-          argument: >-
