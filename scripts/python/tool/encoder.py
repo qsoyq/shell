@@ -5,6 +5,7 @@ from datetime import datetime
 import typer
 import sys
 import urllib.parse
+import base64
 
 
 app = typer.Typer()
@@ -34,7 +35,6 @@ def quote(
     if data == "-":
         data = stdin_input()
     print(urllib.parse.quote(data), end=end)
-    pass
 
 
 @app.command()
@@ -46,7 +46,28 @@ def unquote(
     if data == "-":
         data = stdin_input()
     print(urllib.parse.unquote(data), end=end)
-    pass
+
+
+@app.command()
+def b64encode(
+    data: str = typer.Argument(..., help="输入字符串. `-`表示从标准输入获取"),
+    end: str = typer.Option("", help="输出追加字符"),
+):
+    """base64 编码"""
+    if data == "-":
+        data = stdin_input()
+    print(base64.b64encode(data.encode()).decode(), end=end)
+
+
+@app.command()
+def b64decode(
+    data: str = typer.Argument(..., help="输入字符串. `-`表示从标准输入获取"),
+    end: str = typer.Option("", help="输出追加字符"),
+):
+    """base64 解码"""
+    if data == "-":
+        data = stdin_input()
+    print(base64.b64decode(data).decode(), end=end)
 
 
 if __name__ == "__main__":

@@ -15,7 +15,6 @@ curl -sL -o /usr/local/bin/clear-docker-log "https://raw.githubusercontent.com/q
 curl -sL -o /usr/local/bin/url-watcher "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/python/tool/url-watcher.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/dump-clash-connections "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/clash/dump_connections.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/pudp "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/network/udp.py?v=$(date +%s)"
+curl -sL -o /usr/local/bin/encoder "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/tool/encoder.py?v=$(date +%s)"
 
 chmod +x /usr/local/bin/*
-
-

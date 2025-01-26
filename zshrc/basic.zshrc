@@ -25,13 +25,9 @@ alias tarfix="gtar --mtime='2024-01-01' --sort=name --numeric-owner -czf"
 alias uuid="python -c 'import uuid;print(uuid.uuid4().hex)'"
 alias dstorrent="find ~/Movies/Anime -name '*.torrent' -type f -ls -delete "
 
-quote() {
-    python3 -c "import urllib.parse; print(urllib.parse.quote_plus('$1'.encode()))"
-}
+alias quote="encoder quote"
+alias unquote="encoder unquote"
 
-unquote() {
-    python3 -c "import urllib.parse; print(urllib.parse.unquote_plus('$1'))" 
-}
 
 b64encode() {
     python3 -c "import base64; print(base64.urlsafe_b64encode('$1'.encode()).decode())"
@@ -39,14 +35,6 @@ b64encode() {
 
 b64decode() {
     python3 -c "import base64; print(base64.urlsafe_b64decode('$1'.encode('utf-8')).decode())" 
-}
-
-urlencode() {
-    python3 -c "import urllib.parse; print(urllib.parse.quote_plus('$1'))"
-}
-
-urldecode() {
-    python3 -c "import urllib.parse; print(urllib.parse.unquote_plus('$1'))"
 }
 
 magnet_url(){
