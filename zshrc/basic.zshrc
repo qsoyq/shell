@@ -27,15 +27,8 @@ alias dstorrent="find ~/Movies/Anime -name '*.torrent' -type f -ls -delete "
 
 alias quote="encoder quote"
 alias unquote="encoder unquote"
-
-
-b64encode() {
-    python3 -c "import base64; print(base64.urlsafe_b64encode('$1'.encode()).decode())"
-}
-
-b64decode() {
-    python3 -c "import base64; print(base64.urlsafe_b64decode('$1'.encode('utf-8')).decode())" 
-}
+alias b64encode="encoder b64encode"
+alias b64decode="encoder b64decode"
 
 magnet_url(){
     echo "magnet:?xt=urn:btih:$1"
