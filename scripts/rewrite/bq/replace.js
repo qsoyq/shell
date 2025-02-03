@@ -37,9 +37,10 @@ if (ele) {
         ["重dà", "重大"],
         ["告sù", "告诉"],
         ["龗", ""],
-        ["请收藏：https://m.bq02.cc", ""],
         ["请收藏：https://m.bq\d+.cc", ""],
         ["请收藏：https://m.bi\d+.cc", ""],
+        ["请收藏：https://m.bq02.cc", ""],
+        ["请收藏：https://m.bi02.cc", ""],
         ["\\?\\?", ""]
     ]
     let origin = ele.innerHTML
