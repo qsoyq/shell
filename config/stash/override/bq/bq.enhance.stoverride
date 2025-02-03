@@ -1,28 +1,30 @@
 name: 笔趣阁增强
 desc: |-
-  - 替换污染词汇
-  - 记忆护眼/关灯
-  - 移除推荐链接/页脚
-  - 使用手势左滑/双击跳转到下一章
-  - 适配加载后的关灯模式
+    - 替换污染词汇
+    - 记忆护眼/关灯
+    - 移除推荐链接/页脚
+    - 使用手势左滑/双击跳转到下一章
+    - 适配加载后的关灯模式
 category: Network
 icon: https://www.bq16.cc/favicon.ico
 http:
-  mitm:
-    - "*.bi25.cc"
-    - "*.bq16.cc"
-    - "*.bq02.cc"
+    mitm:
+        - "*.bi25.cc"
+        - "*.bq16.cc"
+        - "*.bq02.cc"
+        - "*.bi16.cc"
+        - "*.bi02.cc"
 
-  script:
-    - name: 笔趣阁增强
-      match: https://.*.bq.*.cc/(kan|book)/\d+/.*\.html
-      type: response
-      require-body: true
-      timeout: 3
-      argument: >-
-        {"scripts": [{"parent":"head","src": "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/css.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/swipe.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/remove.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/replace.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/bg.js"}]}
+    script:
+        - name: 笔趣阁增强
+          match: https://.*.(bq|bi).*.cc/(kan|book)/\d+/.*\.html
+          type: response
+          require-body: true
+          timeout: 3
+          argument: >-
+              {"scripts": [{"parent":"head","src": "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/css.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/swipe.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/remove.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/replace.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/bg.js"}]}
 
 script-providers:
-  笔趣阁增强:
-    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/html-add-script.js
-    interval: 86400
+    笔趣阁增强:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/html-add-script.js
+        interval: 86400
