@@ -1,3 +1,4 @@
+# - 2025-02-10 12:24:33: 修复 google 搜索页面点击`搜索更多结果`时无法加载的问题
 # - 2025-01-18 21:57:21: 移除 anti-AD 去广告(使用 adguardhome 覆盖)
 # - 2025-01-15 02:40:42: missav 重定向
 # - 2025-01-11 09:40:48: 优化 response-jq 表达式
@@ -28,7 +29,7 @@
 # - 2024-12-02 20:16:07: 去除 reddit 首页列表和详情页的广告
 name: 去他妈的广告轻量版
 desc: |-
-
+    - 2025-02-10 12:24:33: 修复 google 搜索页面点击`搜索更多结果`时无法加载的问题
 category: Network
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
 
@@ -271,7 +272,7 @@ http:
           argument: >-
               {"rewriteHttpResponseBodyRegexps":[{"search":"alert","replace":"console.log"}]}
 
-        - match: ^https?://www.google.com/search\?.*$
+        - match: ^https?://www.google.com/search\?q=.*$
           name: google-search-rewrite
           type: response
           require-body: true
