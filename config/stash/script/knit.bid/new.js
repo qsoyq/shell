@@ -462,8 +462,9 @@ async function handler(page) {
                 let page = 1
                 let imgList = []
                 let maxPageNum = 99
-                while (page < maxPageNum) {
-                    let url = `${article.href}/page/${page}/`
+                while (page <= maxPageNum) {
+                    let url = `${article.href}page/${page}/`
+                    console.log(`current page href about ${article.title}: ${url}`)
                     let res = await get({ url, headers })
                     if (res.error || !res.data) {
                         throw `请求页面数据失败: ${res.error}, ${article.title}, ${article.time}, ${article.href}`
