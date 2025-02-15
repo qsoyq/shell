@@ -384,6 +384,24 @@ async function main() {
     }
 }
 
+function parseArticlePage(document) {
+    // let srcList = Array.from(document.querySelectorAll("#img-box > p > img")).map(img => {
+    //     let src = `${host}${img.attributes["data-src"].textContent}`
+    //     return { src }
+    // })    
+    let host = 'https://xx.knit.bid'
+    // 2025.02.16 更新
+    let articleList = Array.from(document.querySelectorAll(".image-container > .item-image > img")).map(image => {
+        let title = image?.attributes["alt"]?.textContent.trim();
+        let src = image?.attributes["src"]?.textContent.trim();
+        if (src) {
+            src = `${host}${src}`
+        }
+        return { title, src }
+    })
+
+    return articleList
+}
 
 async function handler(page) {
     try {
@@ -439,14 +457,11 @@ async function handler(page) {
                     }
                     let domParser = new DOMParser();
                     let document = domParser.parseFromString(res.data, 'text/html');
-                    let host = 'https://xx.knit.bid'
-                    let srcList = Array.from(document.querySelectorAll("#img-box > p > img")).map(img => {
-                        let src = `${host}${img.attributes["data-src"].textContent}`
-                        return { src }
-                    })
-                    if (srcList.length > 0) {
+                    let srcList = parseArticlePage(document)
+                    if (articleList.length > 0) {
                         imgList.push(...srcList)
                         page += 1
+                        console.log(`fetch page ${page} for ${article.title}`)
                     } else {
                         break
                     }
