@@ -406,7 +406,7 @@ function parseArticlePage(document) {
     // 2025.02.16 更新
     let articleList = Array.from(document.querySelectorAll(".image-container > .item-image > img")).map(image => {
         let title = image?.attributes["alt"]?.textContent.trim();
-        let src = image?.attributes["src"]?.textContent.trim();
+        let src = image?.attributes["data-src"]?.textContent.trim();
         if (src) {
             src = `${host}${src}`
         }
@@ -414,6 +414,7 @@ function parseArticlePage(document) {
     })
     return articleList
 }
+
 
 function parseArticleMaxPage(document) {
     let pages = Array.from(document.querySelectorAll("ul.pagination > li > a")).map(a => {
