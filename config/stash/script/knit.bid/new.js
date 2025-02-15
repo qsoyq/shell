@@ -452,6 +452,10 @@ async function handler(page) {
                     }
                 }
                 console.log(`title: ${article.title}, image count: ${imgList.length}`)
+                if (imgList.length === 0) {
+                    console.log(`Image not obtained, skipping.`)
+                    continue
+                }
                 let telegram = getScriptArgument('telegram')
                 let telegraph = getScriptArgument("telegra.ph")
                 let telegraphHost = telegraph?.host || "https://telegra.ph"
