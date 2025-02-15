@@ -396,7 +396,6 @@ function parseArticleList(document) {
         })
     return articleList
 }
-parseArticleList(document)
 
 function parseArticlePage(document) {
     // let srcList = Array.from(document.querySelectorAll("#img-box > p > img")).map(img => {
