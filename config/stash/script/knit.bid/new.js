@@ -475,10 +475,11 @@ async function handler(page) {
 
                     if (articleList.length > 0) {
                         imgList.push(...srcList)
-                        page += 1
                         console.log(`fetch page ${page} for ${article.title}`)
+                        page += 1
                         if (maxPageNum === 99) {
                             maxPageNum = parseArticleMaxPage(document)
+                            console.log(`max page about ${article.title}: ${maxPageNum}`)
                         }
                     }
                 }
