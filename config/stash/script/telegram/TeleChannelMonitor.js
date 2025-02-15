@@ -356,12 +356,20 @@ function parseMessages(document) {
             if (ele.querySelector(".js-message_text>b")) {
                 // @ts-ignore
                 title = ele.querySelector(".js-message_text>b")?.outerText || ""
+            } else {
+
             }
             if (ele.querySelector(".js-message_text")) {
                 // @ts-ignore
                 text = ele.querySelector(".js-message_text")?.outerText || ""
+                if (!title && text) {
+                    title = text.split('\n')[0]
+                }
             }
+        } else {
+            title = "Please open Telegram to view this post"
         }
+        console.log(msgid, textTag, title)
         resp.push({ head: headImg, channelName, username, msgid, title, text })
     })
     return resp
@@ -454,58 +462,60 @@ function makePushMessages(groupMessages) {
 }
 
 async function main() {
+    // 遍历频道
+    /** @type {number[]} */
+    let channels = mustGetScriptArgument("channels")
+    if (typeof channels !== 'object') {
+        throw `invalid channles: ${channels}`
+    }
+    let groupMessages = []
+    // 使用 Promise.all 并行获取所有频道的消息
     try {
-        // 遍历频道
-        /** @type {number[]} */
-        let channels = mustGetScriptArgument("channels")
-        if (typeof channels !== 'object') {
-            throw `invalid channles: ${channels}`
-        }
-        let groupMessages = []
-        // 使用 Promise.all 并行获取所有频道的消息
-        try {
-            groupMessages = await Promise.all(
-                channels.map(async channel => await getChannelMessages(channel))
-            );
-        } catch (error) {
-            throw `get channel messages error: ${error}`
-        }
-
-        if (!groupMessages) {
-            throw `invali groupMessages: ${groupMessages}`
-        }
-        groupMessages = groupMessages.filter(element => typeof element !== 'undefined')
-
-        let messages = makePushMessages(groupMessages)
-        if (messages.length !== 0) {
-            let body = JSON.stringify({ messages: messages }, null, 4)
-            // console.log(`body: ${body}`)
-            let res
-            try {
-                res = await post({ url: 'https://p.19940731.xyz/api/notifications/push/v2', headers: { 'Content-Type': "application/json" }, body: body })
-                console.log(`push success`)
-            } catch (error) {
-                throw `push messages error: ${error}`
-            }
-
-            if (res.error) {
-                throw `push messages to bark failed. error: ${res.error}`
-            }
-
-            // 写入本地持久化    
-            console.log(`write local persistent`)
-            for (const messages of groupMessages) {
-                if (messages.length !== 0) {
-                    let lastMessage = messages.at(-1)
-                    console.log(`更新 ${lastMessage.username} 缓存成功.`)
-                    writePersistentArgument(`TelegramLastMessageId-${lastMessage.username}`, lastMessage.msgid)
-                }
-            }
-        }
-        $done({})
+        groupMessages = await Promise.all(
+            channels.map(async channel => await getChannelMessages(channel))
+        );
     } catch (error) {
-        console.log(`run main function error ${error}`)
-        $done({})
+        throw `get channel messages error: ${error}`
+    }
+
+    if (!groupMessages) {
+        throw `invali groupMessages: ${groupMessages}`
+    }
+    groupMessages = groupMessages.filter(element => typeof element !== 'undefined')
+
+    let messages = makePushMessages(groupMessages)
+    if (messages.length !== 0) {
+        let body = JSON.stringify({ messages: messages }, null, 4)
+        let res
+        try {
+            res = await post({ url: 'https://p.19940731.xyz/api/notifications/push/v2', headers: { 'Content-Type': "application/json" }, body: body })
+            console.log(`push success`)
+        } catch (error) {
+            throw `push messages error: ${error}`
+        }
+
+        if (res.error) {
+            throw `push messages to bark failed. error: ${res.error}`
+        }
+
+        // 写入本地持久化    
+        console.log(`write local persistent`)
+        for (const messages of groupMessages) {
+            if (messages.length !== 0) {
+                let lastMessage = messages.at(-1)
+                console.log(`更新 ${lastMessage.username} 缓存成功.`)
+                writePersistentArgument(`TelegramLastMessageId-${lastMessage.username}`, lastMessage.msgid)
+            }
+        }
     }
 }
-main()
+
+(async () => {
+    main().then(_ => {
+        $done({})
+    }).catch(error => {
+        console.log(`[Error]: ${error?.message || error}`)
+        $done({})
+    })
+})();
+
