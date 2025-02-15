@@ -384,6 +384,20 @@ async function main() {
     }
 }
 
+function parseArticleList(document) {
+    let host = 'https://xx.knit.bid'
+    let articleList = Array.from(document.querySelectorAll("#main > div.excerpts-wrapper > div > article"))
+        .map(article => {
+            const title = article.querySelector("h2 > a")?.attributes["title"].textContent;
+            const category = article.querySelector("div > a.imgbox-a")?.attributes["title"].textContent.trim();
+            const href = `${host}${article.querySelector("div > a.imgbox")?.attributes["href"].textContent}`;
+            const time = article.querySelector("footer > a > time")?.textContent;
+            return { title, category, href, time };
+        })
+    return articleList
+}
+parseArticleList(document)
+
 function parseArticlePage(document) {
     // let srcList = Array.from(document.querySelectorAll("#img-box > p > img")).map(img => {
     //     let src = `${host}${img.attributes["data-src"].textContent}`
@@ -399,8 +413,15 @@ function parseArticlePage(document) {
         }
         return { title, src }
     })
-
     return articleList
+}
+
+function parseArticleMaxPage(document) {
+    let pages = Array.from(document.querySelectorAll("ul.pagination > li > a")).map(a => {
+        let page = a.attributes['data-page']?.textContent
+        return Number(page) ? page : 0
+    })
+    return Math.max(...pages)
 }
 
 async function handler(page) {
@@ -418,15 +439,7 @@ async function handler(page) {
         if (res.data) {
             let domParser = new DOMParser();
             let document = domParser.parseFromString(res.data, 'text/html');
-            let host = 'https://xx.knit.bid'
-            let articleList = Array.from(document.querySelectorAll("#main > div.excerpts-wrapper > div > article"))
-                .map(article => {
-                    const title = article.querySelector("h2 > a")?.attributes["title"].textContent;
-                    const category = article.querySelector("div > a.imgbox-a")?.attributes["title"].textContent.trim();
-                    const href = `${host}${article.querySelector("div > a.imgbox")?.attributes["href"].textContent}`;
-                    const time = article.querySelector("footer > a > time")?.textContent;
-                    return { title, category, href, time };
-                })
+            let articleList = parseArticleList(document)
             if (page === 1 && articleList.length === 0) {
                 notificationPost("爱妹子", '数据下拉失败', '访问排行榜新发布数据失败， 请检查 cookie 有效期')
                 throw "访问排行榜新发布数据失败， 请检查 cookie 有效期"
@@ -449,8 +462,9 @@ async function handler(page) {
 
                 let page = 1
                 let imgList = []
-                while (true) {
-                    let url = `${article.href}?page=${page}`
+                let maxPageNum = 99
+                while (page < maxPageNum) {
+                    let url = `${article.href}/page/${page}/`
                     let res = await get({ url, headers })
                     if (res.error || !res.data) {
                         throw `请求页面数据失败: ${res.error}, ${article.title}, ${article.time}, ${article.href}`
@@ -458,12 +472,14 @@ async function handler(page) {
                     let domParser = new DOMParser();
                     let document = domParser.parseFromString(res.data, 'text/html');
                     let srcList = parseArticlePage(document)
+
                     if (articleList.length > 0) {
                         imgList.push(...srcList)
                         page += 1
                         console.log(`fetch page ${page} for ${article.title}`)
-                    } else {
-                        break
+                        if (maxPageNum === 99) {
+                            maxPageNum = parseArticleMaxPage(document)
+                        }
                     }
                 }
                 console.log(`title: ${article.title}, image count: ${imgList.length}`)
