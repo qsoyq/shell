@@ -1,0 +1,11 @@
+name: dns
+category: DNS
+icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/debug.png
+desc: AdguardHome
+dns:
+    default-nameserver:
+        - https://223.5.5.5/dns-query
+    nameserver:
+        - https://ahd.19940731.xyz/dns-query/wangqishengdeMacBook-Pro
+    udp-nameserver:
+        - 47.79.36.95:53
