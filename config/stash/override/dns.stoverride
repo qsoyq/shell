@@ -1,11 +1,12 @@
+#SUBSCRIBED https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/override/dns.stoverride
 name: dns
 category: DNS
-icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/debug.png
+icon: https://st.agrd.eu/favicons/adguard/favicon.ico
 desc: AdguardHome
 dns:
-    default-nameserver:
+    default-nameserver: #!replace
         - https://223.5.5.5/dns-query
-    nameserver:
+    nameserver: #!replace
         - https://ahd.19940731.xyz/dns-query/wangqishengdeMacBook-Pro
-    udp-nameserver:
+    udp-nameserver: #!replace
         - 47.79.36.95:53
