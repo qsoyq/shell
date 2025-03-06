@@ -1,0 +1,12 @@
+name: 淘宝
+desc: |-
+    - 开屏广告
+category: qsoyq
+icon: https://gw.alicdn.com/imgextra/i4/O1CN01qOI6vB1zaqrBKbyFr_!!6000000006731-73-tps-64-64.ico
+http:
+    mitm:
+        # 哔哩哔哩
+        - gw.alicdn.com
+        - heic.alicdn.com
+    url-rewrite:
+        - ^https?://(gw|heic).alicdn.com/imgextra/i\d/\d*/?[\w!]+-\d-(octopus|tps-1125-1602).(jp|pn)g_(1\d{3}|9\d{2})x(1\d{3}|9\d{2})q[59]0 - reject # 开屏广告

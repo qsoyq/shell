@@ -1,0 +1,20 @@
+name: 哔哩哔哩
+desc: |-
+    - 开屏广告
+    - Bilibili HD 首页 banner 轮播
+    - Bilibili HD 首页推荐广告
+category: qsoyq
+icon: https://i0.hdslb.com/bfs/static/jinkela/long/images/favicon.ico
+http:
+    mitm:
+        # 哔哩哔哩
+        - app.bilibili.com
+    url-rewrite:
+        # 哔哩哔哩开屏广告
+        - ^https?://app.bilibili.com/x/v2/splash/show - reject
+
+        # Bilibili HD 首页 banner 轮播
+        - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq if .data.items!=null then .data.items |= map(select(.card_type!="banner_ipad_v8")) end
+
+        # Bilibili HD 首页推荐广告
+        - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq if .data.items!=null then .data.items |= map(select(.card_goto!="ad_web_s")) end

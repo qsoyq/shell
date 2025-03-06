@@ -1,0 +1,16 @@
+name: 小黑盒
+desc: |-
+    - 开屏广告
+    - 首页推荐广告
+category: qsoyq
+icon: https://www.xiaoheihe.cn/favicon.ico
+http:
+    mitm:
+        - api.xiaoheihe.cn
+    body-rewrite:
+        # 小黑盒去开屏广告
+        - ^https?://api.xiaoheihe.cn/account/get_ads_info_v2.* response-jq .result.open_screen=[]
+        - ^https?://api.xiaoheihe.cn/account/get_ads_info_v2.* response-jq .result.inner_ads=[]
+
+        # 小黑盒去首页推荐推广
+        - ^https?://api.xiaoheihe.cn/bbs/app/feeds[^/]*$ response-jq if .result.links != null then .result.links|=map(select(.ad_report==null)) end

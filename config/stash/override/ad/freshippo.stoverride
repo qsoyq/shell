@@ -1,0 +1,15 @@
+name: 盒马
+desc: |-
+    - 开屏广告
+category: qsoyq
+icon: https://www.freshippo.com/favicon.ico
+http:
+    mitm:
+        - acs.m.taobao.com
+        - acs-m.freshippo.com
+        - wdk-unity.alibabausercontent.com
+    url-rewrite:
+        # 盒马
+        - ^https?://acs.m.taobao.com/gw/mtop.wdk.render.querysinglepage - reject
+        - ^https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage - reject
+        - ^https?://wdk-unity.alibabausercontent.com/frontend/common/20240929/d0080be19219db69be5ecf2127dc745e.mp4 - reject

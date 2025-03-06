@@ -1,0 +1,13 @@
+name: 美团外卖
+desc: |-
+    - 开屏广告
+category: qsoyq
+icon: https://p1.meituan.net/travelcube/e3e5824a81a19bd254e586be3192d0c01883.png
+http:
+    mitm:
+        - img.meituan.net
+        - s3plus.meituan.net
+    url-rewrite:
+        # 美团外卖开屏广告
+        - ^https?://img.meituan.net/bizad/bizad_brandCpt_\d+\.jpg\.webp - reject
+        - ^https?://s3plus.meituan.net/v1/\w+/brandcpt-vedio/.*$ - reject

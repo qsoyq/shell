@@ -1,0 +1,32 @@
+name: amdc
+desc: |-
+    墨鱼自用amdc脚本
+category: qsoyq
+icon: https://cdn5.cdn-telegram.org/file/HpCBhcA-XU4RDo43Yii5WJxP0Y_hevL9Rbf7hVYuc8yd_Eh0ELDePuploRU8hk_GIbzyLWkIG82OiEwdQi25uAFvnZL2WGE_2-kGk5of-FPERxhQ7-S7juF_QvkGfi9ZJjbutxx-C8COpys92AorWCIq4dFQKaqLShEyvPNYg1VgDLzsFlJcMWOF2Up6Nrx5LdGnBYXLm73lsQ4AIuoQFC_LGGnn-4m4w9f6_PT9fUdvud21cYMYbneSr8NqJGs6Z8t8T3xLZXzNrbuvL-9RgLE_DkTX4qKyhotDgwE9v5kdHdG3Ne-Ytavc_yg1FYEwQF_3MrvhSorjPGv_8wdmmw.jpg
+http:
+    mitm:
+        # https://raw.githubusercontent.com/ddgksf2013/Scripts/master/amdc.js
+        # /***********************************************
+        # > 应用名称：墨鱼自用amdc脚本
+        # > 脚本作者：@ddgksf2013
+        # > 微信账号：墨鱼手记
+        # > 更新时间：2024-01-21
+        # > 通知频道：https://t.me/ddgksf2021
+        # > 贡献投稿：https://t.me/ddgksf2013_bot
+        # > 问题反馈：ddgksf2013@163.com
+        # > 特别提醒：如需转载请注明出处，谢谢合作！
+        # ***********************************************/
+        # //使用AMDC的APP有：咸鱼、淘宝、盒马、高德、菜鸟、飞猪
+        - amdc.m.taobao.com
+    script:
+        - match: ^https?://amdc.m.taobao.com
+          name: amdc
+          type: response
+          require-body: true
+          max-size: -1
+          timeout: 60
+
+script-providers:
+    amdc:
+        url: https://github.com/ddgksf2013/Scripts/raw/master/amdc.js
+        interval: 86400

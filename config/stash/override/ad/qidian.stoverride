@@ -5,10 +5,12 @@ desc: |-
     - 首页上方养书提醒弹窗
 category: qsoyq
 icon: https://qdfepccdn.qidian.com/www.qidian.com/favicon/qd_icon.ico
-
 http:
     mitm:
         - magev6.if.qidian.com
+        - ataru.qidian.com
+    url-reject:
+        - ^https?://ataru.qidian.com/noah/\d+ - reject # 角色生日
     body-rewrite:
         - https?://magev6.if.qidian.com/argus/api/v4/client/getsplashscreen response-jq .Data.List=[] # 开屏
         - https?://magev6.if.qidian.com/argus/api/v1/message/getPopup response-jq .Data={} # 首页上方弹窗，好评

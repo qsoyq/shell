@@ -1,0 +1,10 @@
+name: 微博国际版
+desc: |-
+    - 微博国际版首页和帖子内广告
+category: qsoyq
+icon: https://m.weibo.cn/favicon.ico
+http:
+    mitm:
+        - api.weibo.cn
+    url-rewrite:
+        - ^https://api.weibo.cn/2/ad/weibointl - reject

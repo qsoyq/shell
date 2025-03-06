@@ -1,0 +1,10 @@
+name: 便利蜂
+desc: |-
+    - 开屏广告
+category: qsoyq
+icon: https://www.bianlifeng.com/favicon.ico
+http:
+    mitm:
+        - cvsnotify-api.blibee.com
+    url-rewrite:
+        - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 response-jq .data.HomeLoadNew.adItems=[]
