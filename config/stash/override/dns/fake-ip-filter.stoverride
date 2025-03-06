@@ -1,24 +1,24 @@
 name: fake-ip-filter
 desc: fake-ip白名单
-category: DNS
+category: qsoyq
 icon: https://stash.wiki/favicon-32x32.png
 
 dns:
-  fake-ip-filter:
-    - +.argotunnel.com
-    - api.cloudflareclient.com
-    - +.orb.local
-    - '*.orb.local'
-    - +.stun.*.*
-    - +.stun.*.*.*
-    - +.stun.*.*.*.*
-    - +.stun.*.*.*.*.*
-    - lens.l.google.com
-    - '*.n.n.srv.nintendo.net'
-    - +.stun.playstation.net
-    - xbox.*.*.microsoft.com
-    - '*.*.xboxlive.com'
-    - '*.msftncsi.com'
-    - '*.msftconnecttest.com'
-    - '*.mcdn.bilivideo.cn'
-    - '*.qidian.com'
+    fake-ip-filter:
+        - +.argotunnel.com
+        - api.cloudflareclient.com
+        - +.orb.local
+        - "*.orb.local"
+        - +.stun.*.*
+        - +.stun.*.*.*
+        - +.stun.*.*.*.*
+        - +.stun.*.*.*.*.*
+        - lens.l.google.com
+        - "*.n.n.srv.nintendo.net"
+        - +.stun.playstation.net
+        - xbox.*.*.microsoft.com
+        - "*.*.xboxlive.com"
+        - "*.msftncsi.com"
+        - "*.msftconnecttest.com"
+        - "*.mcdn.bilivideo.cn"
+        - "*.qidian.com"
