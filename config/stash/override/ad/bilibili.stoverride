@@ -13,6 +13,7 @@ http:
         # 哔哩哔哩开屏广告
         - ^https?://app.bilibili.com/x/v2/splash/show - reject
 
+    body-rewrite:
         # Bilibili HD 首页 banner 轮播
         - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq if .data.items!=null then .data.items |= map(select(.card_type!="banner_ipad_v8")) end
 
