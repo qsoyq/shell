@@ -4,7 +4,7 @@ desc: |-
     https://kelee.one/Tool/Loon/Plugin/YouTube_remove_ads.plugin
     #!date=2024-11-28 02:07:31
 icon: https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png
-category: YouTube
+category: qsoyq
 http:
     mitm:
         - "*.googlevideo.com"
