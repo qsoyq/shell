@@ -1,7 +1,7 @@
 name: 推特网页去广告
 desc: |-
     可能会导致移动端不可用
-category: Network
+category: qsoyq
 icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
 
 http:
