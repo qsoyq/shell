@@ -6,5 +6,5 @@ icon: https://www.bianlifeng.com/favicon.ico
 http:
     mitm:
         - cvsnotify-api.blibee.com
-    url-rewrite:
+    body-rewrite:
         - ^https?://cvsnotify-api.blibee.com/cvs/notify/app/banner/v4 response-jq .data.HomeLoadNew.adItems=[]
