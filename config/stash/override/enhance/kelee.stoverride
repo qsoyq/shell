@@ -1,0 +1,13 @@
+name: 可莉资源浏览器访问
+desc: |-
+    - 绕过浏览器访问 WAF 拦截
+category: qsoyq
+icon: https://cdn5.cdn-telegram.org/file/mkUeWRu4hl5M_KrddsD4J5iwKtahN3X_5LoPJzpkCNulD3mAWv1v_Sqx-7OHbT80gH7kVqrhZHDFsmWuN2CnBZ2y3NX9aJdgf-rgwD3xcS6vdlb_d_Y8AjQcKjLESlxZLnTAanM_m0vdknBSvvO4oGugQG0DvXxWMcr4I_alviuoLu_-A247Bv4bBQS6EcGbTrXwt5bncusk06SSsuKG3FqM2Ie8wDyF54vsaurjAX5o6JEzg4xMaNDmKiUMfGu_iDa0mUHjhkm9xtzVsXPDFDkytjfTg2oALfTSRELz186L0f4DfKsGV-YEJoIdAfRf1BKvZj2sTjEpB2zVer737A.jpg
+http:
+    mitm:
+        - "kelee.one"
+    header-rewrite:
+        # 允许访问可莉插件
+        - ^https?://kelee.one request-replace User-Agent StashCore/2.7.1 Stash/2.7.1 Clash/1.11.0
+        - ^https?://kelee.one response-add Content-Disposition inline
+        - ^https?://kelee.one response-replace Content-Type text/plain;charset=utf-8

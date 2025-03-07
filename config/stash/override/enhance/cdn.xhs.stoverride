@@ -1,0 +1,9 @@
+name: 小红书图床浏览器预览
+desc: |-
+category: qsoyq
+icon: https://fe-video-qc.xhscdn.com/fe-platform/ed8fe781ce9e16c1bfac2cd962f0721edabe2e49.ico
+http:
+    mitm:
+        - "*.xhscdn.com"
+    header-rewrite:
+        - ^https?://.*.xhscdn.com response-add Content-Disposition inline
