@@ -1,5 +1,5 @@
 name: HTTP 抓包
-category: qsoyq
+category: debug
 icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/debug.png
 
 script-providers:
