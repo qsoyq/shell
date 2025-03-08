@@ -347,7 +347,9 @@ async function main() {
             let body = (typeof $request.body === 'object') ? (new TextDecoder('utf-8')).decode(new Uint8Array($request.body)) : $request.body;
             command = `${command} \\\n  -d'${body}'`
         }
+        console.log(`[Url]:${$request.url}`)
         console.log(`[Curl]:${command}`)
+
         let data = {
             request: {
                 url: $request.url,
