@@ -1,0 +1,17 @@
+name: 七猫小说
+desc: |-
+    - 开屏广告
+category: qsoyq
+icon: https://www.qimao.com/favicon.ico
+http:
+    mitm:
+        - "mobads.baidu.com"
+        - "api-access.pangolin-sdk-toutiao.com"
+        - "lf-cdn-tos.bytescm.com"
+        - "sf3-fe-tos.pglstatp-toutiao.com"
+    url-rewrite:
+        - https://api-access.pangolin-sdk-toutiao.com/api/ad/* - reject
+        - https://lf-cdn-tos.bytescm.com/obj/static/ad/ - reject
+        - https://sf3-fe-tos.pglstatp-toutiao.com/obj/ad-pattern/ - reject
+    body-rewrite:
+        - https?://mobads.baidu.com/cpro/ui/mads.php response-jq .ad=[]
