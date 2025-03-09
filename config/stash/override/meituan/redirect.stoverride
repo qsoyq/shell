@@ -9,4 +9,4 @@ http:
     mitm:
         - "*.d.meituan.net"
     rewrite:
-        - ^http(s)?:\/\/(.*).d.meituan.net http$1://$2.dreport.meituan.net 302
+        - ^http(s)?://(route-stats|maplocatesdksnapshot|metrics-picture)\.d.meituan.net http$1://$2.dreport.meituan.net 302
