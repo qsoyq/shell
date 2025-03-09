@@ -1,0 +1,17 @@
+name: speedtest
+desc: |-
+    - iOS App 测速结果页广告(好像没什么用)
+category: qsoyq
+icon: https://www.speedtest.net/favicon.ico
+http:
+    mitm:
+        - "pubads.g.doubleclick.net"
+        - "aax.amazon-adsystem.com"
+        - "api.pubnative.net"
+        - "cdn.chinaliftoff-creatives.io"
+    body-rewrite:
+        - https://pubads.g.doubleclick.net/gampad/ads response-jq .ad_networks=[]
+        - https://api.pubnative.net/api/v3/native response-jq .ads=[]
+    url-rewrite:
+        - https://aax.amazon-adsystem.com/e/msdk/ads - reject
+        - https://cdn.chinaliftoff-creatives.io - reject
