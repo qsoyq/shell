@@ -7,6 +7,8 @@ icon: https://www.meituan.com/favicon.ico
 
 http:
     mitm:
-        - "*.d.meituan.net"
+        - "route-stats.d.meituan.net"
+        - "maplocatesdksnapshot.d.meituan.net"
+        - "metrics-picture.d.meituan.net"
     rewrite:
         - ^http(s)?://(route-stats|maplocatesdksnapshot|metrics-picture)\.d.meituan.net http$1://$2.dreport.meituan.net 302
