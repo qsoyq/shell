@@ -26,4 +26,4 @@ http:
         - https://maicai.api.ddxq.mobi/homeApi/newDetails response-jq .data.top_advert_data=[] # 顶部右上角签到
 
     url-rewrite:
-        - ^https://pub.ddimg.mobi/compass-admin/\w+.(png|jpg)\?(height=1624&width=750|width=750&height=1624) - reject-img
+        - ^https://pub.ddimg.mobi/compass-admin/\w+.(png|jpg)\?(height=1624&width=750|width=750&height=1624) - reject-img # 广告图片
