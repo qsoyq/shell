@@ -297,7 +297,7 @@ function getPersistentArgument(key) {
 
 /**
  * 返回当前的脚本类型
-* @returns {'request' | 'response' | 'tile'}
+* @returns {'request' | 'response' | 'tile' | 'undefined'}
  */
 function getScriptType() {
     return typeof $script !== 'undefined' ? $script.type : 'undefined'
@@ -360,7 +360,8 @@ async function main() {
             response: {
                 status: $response.status,
                 headers: $response.headers,
-                body: $response.body
+                body: $response.body,
+                decodeBody: parseJsonBody($response.body)
             },
             dev: {
                 timestamp: ts,
