@@ -312,7 +312,7 @@ function getPersistentArgument(key) {
 
 /**
  * 返回当前的脚本类型
-* @returns {'request' | 'response' | 'tile' | 'cron'}
+* @returns {'request' | 'response' | 'tile' | 'cron' | 'undefined'}
  */
 function getScriptType() {
     return typeof $script !== 'undefined' ? $script.type : 'undefined'
@@ -497,6 +497,17 @@ function echo(...args) {
     let logMessage = `${args.join(' ')}`
     logMessage = `[${date}] ${logMessage}`
     console.log(logMessage)
+}
+
+/**
+ * 在指定作用域中执行代码
+ * @param {*} code 执行代码
+ * @param {*} context 上下文作用域
+ * @returns 
+ */
+function safeEval(code, context) {
+    const func = new Function(...Object.keys(context), code);
+    return func(...Object.values(context));
 }
 
 async function main() {

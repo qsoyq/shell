@@ -300,7 +300,7 @@ function getPersistentArgument(key) {
 
 /**
  * 返回当前的脚本类型
-* @returns {'request' | 'response' | 'tile' | 'cron'}
+* @returns {'request' | 'response' | 'tile' | 'cron' | 'undefined'}
  */
 function getScriptType() {
     return typeof $script !== 'undefined' ? $script.type : 'undefined'
@@ -346,10 +346,28 @@ function getScriptResponseBody() {
     return body
 }
 
+/**
+ * 在指定作用域中执行代码
+ * @param {*} code 执行代码
+ * @param {*} context 上下文作用域
+ * @returns 
+ */
+function safeEval(code, context) {
+    const func = new Function(...Object.keys(context), code);
+    return func(...Object.values(context));
+}
+
 async function main() {
     let type = getScriptType()
+    // {"rewriteHttpResponseBodyRegexps": [{"search": "a", "replace": "b"}]}                    
     let regexps = getScriptArgument("rewriteHttpResponseBodyRegexps") || []
+
+    // {"rewriteHttpResponseBodyRegexpsArray": [["a", "b"]]}                    
     let regexpsArray = getScriptArgument("rewriteHttpResponseBodyRegexpsArray") || []
+
+    // {"documentEvalCodes": ["console.log(1)"], "console.log(2)"]}
+    let documentEvalCodes = getScriptArgument("documentEvalCodes") || []
+
     let debug = getScriptArgument("debug")
     let now = getLocalDateString()
     switch (type) {
@@ -361,8 +379,9 @@ async function main() {
             }
             if (body) {
                 let modified = body
-                // {"rewriteHttpResponseBodyRegexps": [{"search": "a", "replace":"b"}]}
+                // 正则替换文本
                 for (const regexp of regexps) {
+                    console.log(`[DeprecationWarning]: use a rewriteHttpResponseBodyRegexpsArray of rewriteHttpResponseBodyRegexps.`)
                     let search = regexp?.search
                     let replace = regexp?.replace
                     if (search && typeof replace === 'string') {
@@ -376,7 +395,7 @@ async function main() {
                     }
                 }
 
-                // {"rewriteHttpResponseBodyRegexps": [["a", "b"]]}                    
+
                 for (const regexp of regexpsArray) {
                     let search = regexp[0]
                     let replace = regexp[1]
@@ -390,6 +409,25 @@ async function main() {
                         }
                     }
                 }
+
+                body = modified
+
+                let context = {}
+                if (documentEvalCodes) {
+                    let domParser = new DOMParser();
+                    context.document = domParser.parseFromString(body, 'text/html');
+                }
+
+                for (const code of documentEvalCodes) {
+                    safeEval(code, { context })
+                }
+
+                if (documentEvalCodes) {
+                    modified = document.documentElement.outerHTML
+                }
+
+
+                // html 文档
                 return $done({ body: modified })
             }
             break
