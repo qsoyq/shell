@@ -8,6 +8,5 @@ dns:
         - https://223.6.6.6/dns-query
     nameserver: #!replace
         - https://ahd.19940731.xyz/dns-query/
-        - 192.168.71.4 # 局域网自用
     udp-nameserver: #!replace
         - 223.6.6.6:53
