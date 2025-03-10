@@ -13,7 +13,7 @@ http:
         - https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage response-jq .data.scenes|=map(select(.bizCode!="poweron_ad"))
 
         # 首页底部常驻广告
-        - https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage response-jq .data.scenes|=map(select(.bizCode!="bottom_bar"))
+        - https?://acs-m.freshippo.com/gw/mtop.wdk.render.queryindexpage response-jq .data.scenes|=map(select(.bizCode!="bottom_bar"))
 
         # 首页右下角浮动窗口
-        - https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage response-jq .data.scenes|=map(select(.bizCode!="float_channel"))
+        - https?://acs-m.freshippo.com/gw/mtop.wdk.render.queryindexpage response-jq .data.scenes|=map(select(.bizCode!="float_channel"))
