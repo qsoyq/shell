@@ -519,7 +519,7 @@ async function main() {
     let body = getScriptResponseBody()
     if (body) {
         let document = parseDocument(body)
-        Array.from(document.getElementsByClassName("half")).forEach(e => { })
+        Array.from(document.getElementsByClassName("half")).forEach(e => { e.remove() })
         echo("execute done.")
         return $done({ body: document.documentElement.outerHTML })
     }
