@@ -1,6 +1,6 @@
 name: AiHubMix
 desc: |-
-    - 重定向 OpenAI 街口请求到AiHubMix
+    - 重定向 OpenAI 接口请求到AiHubMix
 category: qsoyq
 icon: https://aihubmix.com/favicon.ico
 http:
