@@ -1,0 +1,21 @@
+name: 1024.day
+desc: |-
+    - 详情页广告位
+category: qsoyq
+icon: https://1024.day/favicon.ico
+http:
+    mitm:
+        - "1024.day"
+    script:
+        - argument: null
+          binary-mode: false
+          match: https://1024.day/d/\d+
+          max-size: 1048576
+          name: 1024.day
+          require-body: true
+          timeout: 20
+          type: response
+script-providers:
+    1024.day:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/ad/1024.day.js
+        interval: 86400
