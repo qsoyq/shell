@@ -420,6 +420,7 @@ async function main() {
 
                 for (const code of documentEvalCodes) {
                     safeEval(code, { context })
+                    console.log(`execute ${code} done.`)
                 }
 
                 if (documentEvalCodes) {
