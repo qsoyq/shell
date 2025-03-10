@@ -527,10 +527,12 @@ async function main() {
 }
 
 (async () => {
+    echo("start")
     main().then(_ => {
-        echo("start")
+
     }).catch(error => {
         console.log(`[Error]: ${error?.message || error}`)
         $done({})
     })
+    echo('done.')
 })();
