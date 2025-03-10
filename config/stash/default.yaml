@@ -1,0 +1,307 @@
+allow-lan: true
+mode: rule
+log-level: info
+dns:
+    default-nameserver:
+        - https://223.6.6.6/dns-query
+    nameserver:
+        - https://dns.alidns.com/dns-query
+proxy-groups:
+    - name: PROXY
+      icon: "https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/select.png"
+      type: select
+      proxies:
+          - 自动选择
+          - 手动选择
+    - name: 漏网之鱼🐟
+      icon: "https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/select.png"
+      type: select
+      proxies:
+          - DIRECT
+          - PROXY
+    - name: Apple
+      icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - DIRECT
+          - PROXY
+          - US
+    - name: Google
+      icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google.png
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - PROXY
+    - name: Telegram
+      icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - PROXY
+    - name: Docker
+      icon: https://www.docker.com/favicon.ico
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - PROXY
+          - 手动选择
+    - name: Media
+      icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - PROXY
+    - name: APTV
+      icon: https://raw.githubusercontent.com/YanG-1989/m3u/main/APTV.png
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - DIRECT
+          - PROXY
+    - name: 动画疯
+      icon: https://ani.gamer.com.tw/favicon.ico
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - 港澳台
+          - PROXY
+    - name: Tiktok
+      icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png
+      interval: 300
+      lazy: true
+      type: select
+      tolerance: 15
+      proxies:
+          - PROXY
+          - JP
+    - name: Steam
+      icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Steam.png
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - DIRECT
+          - PROXY
+    - name: Riot
+      icon: https://www.riotgames.com/assets/img/meta/6e86ac3d497a87330d381e3ee6e193c3/favicon.ico
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - DIRECT
+          - PROXY
+    - name: Talkatone
+      icon: https://www.talkatone.com/favicon.ico
+      interval: 300
+      lazy: true
+      type: select
+      proxies:
+          - DIRECT
+          - PROXY
+          - US
+    - name: OpenAI
+      icon: "https://cdn.oaistatic.com/_next/static/media/favicon-32x32.be48395e.png"
+      filter: ^(?!.*(?:中国|香港)).*().*
+      type: select
+      proxies:
+          - PROXY
+    - name: Gemini
+      icon: >-
+          https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png
+      type: select
+      proxies:
+          - PROXY
+    - name: MetaAI
+      icon: https://static.xx.fbcdn.net/rsrc.php/v3/y4/r/WUJbsVI4ruF.png
+      lazy: true
+      type: select
+      proxies:
+          - PROXY
+    - name: PayPal
+      icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/PayPal.png
+      type: select
+      proxies:
+          - UK
+          - 港澳台
+          - PROXY
+    - name: US
+      icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png
+      type: select
+      filter: "美国|US|us|🇺🇸"
+      include-all: true
+      lazy: true
+      tolerance: 15
+    - name: JP
+      icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png
+      type: select
+      filter: "JP|日本|🇯🇵"
+      include-all: true
+      lazy: true
+      tolerance: 15
+    - name: 韩国
+      icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/KR.png
+      type: select
+      filter: "韩国"
+    - name: UK
+      icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_Kingdom.png
+      type: select
+      filter: "英国|🇬🇧|UK|uk"
+    - name: 港澳台
+      icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png
+      type: url-test
+      lazy: true
+      tolerance: 15
+      filter: "香港|澳门|台湾"
+    - name: 自动选择
+      icon: "https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/urltest.png"
+      interval: 300
+      lazy: true
+      type: url-test
+      tolerance: 10
+      include-all: true
+    - name: 手动选择
+      icon: "https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/select.png"
+      interval: 300
+      lazy: true
+      type: select
+      include-all: true
+rules:
+    # 去广告
+    - DOMAIN,ali-stats.jpush.cn,REJECT-DROP
+    - DOMAIN,gd-stats.jpush.cn,REJECT-DROP
+    - DOMAIN-SUFFIX,stats.jpush.cn,REJECT-DROP
+    - DOMAIN,rmonitor.qq.com,REJECT-DROP,no-track # 起点
+    - DOMAIN,unitelogreport.reader.qq.com,REJECT-DROP,no-track # 起点
+    - DOMAIN,otheve.beacon.qq.com,REJECT-DROP,no-track # 起点
+    - DOMAIN,othstr.beacon.qq.com,REJECT-DROP,no-track # 起点
+    - DOMAIN,app-analytics-services.com,REJECT-DROP,no-track
+    # 分流
+    - DOMAIN-SUFFIX,aihubmix.com,PROXY
+    - DOMAIN-SUFFIX,iturrit.com,PROXY
+    - DOMAIN-SUFFIX,steamserver.net,DIRECT # Steam 下载
+    - DOMAIN-SUFFIX,openwrt.org,US
+    - DOMAIN-SUFFIX,uscardforum.com,PROXY
+    - DOMAIN-SUFFIX,.jp,JP
+    - DOMAIN-SUFFIX,18comic.vip,US
+    - DOMAIN-SUFFIX,media.nijigem.by,Media # 二刺螈 emby
+    - DOMAIN,generativelanguage.googleapis.com,Gemini
+    - DOMAIN-SUFFIX,apple-relay.apple.com,OpenAI
+    - DOMAIN-SUFFIX,apple-relay.cloudflare.com,OpenAI
+    - DOMAIN-SUFFIX,apple-relay,OpenAI
+    - DOMAIN-SUFFIX,19940731.xyz,19940731
+    - DOMAIN-SUFFIX,gamer.com.tw,动画疯
+    - DOMAIN-SUFFIX,argotunnel.com,Cloudflare
+    - DOMAIN-SUFFIX,cftunnel.com,Cloudflare
+    - DOMAIN-SUFFIX,cloudflareclient.com,Cloudflare
+    - GEOSITE,riot,Riot
+    - GEOSITE,youtube,Media
+    - GEOSITE,twitch,Media
+    - GEOSITE,netflix,Media
+    - GEOSITE,paypal,PayPal
+    - GEOSITE,apple,Apple
+    - GEOSITE,tiktok,Tiktok
+    - GEOSITE,openai,OpenAI
+    - GEOSITE,steam,Steam
+    - GEOSITE,steam@cn,Steam
+    - GEOSITE,telegram,PROXY
+    - GEOSITE,disney,PROXY
+    - GEOSITE,google,Google
+    - GEOSITE,quora,PROXY
+    - GEOSITE,gitlab,PROXY
+    - GEOSITE,discord,PROXY
+    - GEOSITE,google-gemini,Gemini
+    - GEOSITE,whatsapp,PROXY
+    - GEOSITE,duckduckgo,PROXY
+    - GEOSITE,github,PROXY
+    - GEOSITE,pikpak,PROXY
+    - GEOSITE,x,PROXY
+    - GEOSITE,instagram,PROXY
+    - GEOSITE,reddit,PROXY
+    - GEOSITE,speedtest,PROXY
+    - GEOSITE,nvidia,PROXY
+    - GEOSITE,cloudflare,PROXY
+    - GEOSITE,cloudflare-ipfs,PROXY
+    - GEOSITE,cloudflare-cn,PROXY
+    - GEOSITE,docker,Docker
+    - RULE-SET,accept-domain,PROXY,no-resolve
+    - RULE-SET,direct-domain,DIRECT,no-resolve
+    - RULE-SET,reject-domain,REJECT-DROP,no-resolve
+    - RULE-SET,telegram-ipcidr,Telegram,no-resolve
+    - RULE-SET,talkatone-domain,Talkatone,no-resolve
+    - RULE-SET,talkatone-ipcidr,Talkatone,no-resolve
+    - IP-CIDR,127.0.0.1/24,DIRECT,no-track
+    - IP-CIDR,169.254.169.254/32,REJECT,no-track
+    - IP-CIDR,0.0.0.0/24,REJECT,no-track
+    - IP-CIDR6,::/128,REJECT-DROP,no-track
+    - IP-CIDR,87.194.0.0/16,giffgaff,no-resolve,no-track # giffgaff vowifi
+    - IP-ASN,62041,Telegram,no-resolve # Telegram
+    - IP-ASN,6507,Riot,no-resolve # Riot
+    - IP-ASN,15169,PROXY,no-resolve # Google
+    - RULE-SET,wechat-ipcidr,DIRECT,no-resolve
+    - RULE-SET,wechat-domain,DIRECT,no-resolve
+    - GEOSITE,cn,DIRECT
+    - GEOIP,cn,DIRECT,no-resolve
+    - MATCH,漏网之鱼🐟
+rule-providers:
+    lan-cidr:
+        behavior: ipcidr
+        format: yaml
+        type: http
+        url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+        interval: 86400
+    accept-domain:
+        behavior: domain
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/domain/proxy.yaml?v=1734499493
+    direct-domain:
+        behavior: domain
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/direct/domain/proxy.yaml?v=1734499493
+    reject-domain:
+        behavior: domain
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/reject/domain/proxy.yaml?v=1734499493
+    telegram-ipcidr:
+        behavior: ipcidr
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/ipcidr/telegram.yaml?v=1734499493
+    wechat-domain:
+        behavior: domain
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/bypass/wechat/domain.yaml?v=1734499493
+    wechat-ipcidr:
+        behavior: ipcidr
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/bypass/wechat/ip.yaml?v=1734499493
+    talkatone-domain:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/domain/talkatone.yaml
+        type: http
+        format: yaml
+        interval: 86400
+        behavior: domain
+    talkatone-ipcidr:
+        behavior: ipcidr
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/ipcidr/talkatone.yaml
