@@ -1,6 +1,8 @@
 name: 盒马
 desc: |-
     - 开屏广告
+    - 首页底部常驻广告
+    - 首页右下角浮动窗口
 category: qsoyq
 icon: https://www.freshippo.com/favicon.ico
 http:
@@ -9,3 +11,9 @@ http:
     body-rewrite:
         # 开屏广告
         - https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage response-jq .data.scenes|=map(select(.bizCode!="poweron_ad"))
+
+        # 首页底部常驻广告
+        - https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage response-jq .data.scenes|=map(select(.bizCode!="bottom_bar"))
+
+        # 首页右下角浮动窗口
+        - https?://acs-m.freshippo.com/gw/mtop.wdk.render.querysinglepage response-jq .data.scenes|=map(select(.bizCode!="float_channel"))
