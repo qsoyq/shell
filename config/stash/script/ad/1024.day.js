@@ -528,7 +528,7 @@ async function main() {
 
 (async () => {
     main().then(_ => {
-
+        echo("start")
     }).catch(error => {
         console.log(`[Error]: ${error?.message || error}`)
         $done({})
