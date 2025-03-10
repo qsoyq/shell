@@ -424,7 +424,7 @@ async function main() {
                 }
 
                 if (documentEvalCodes) {
-                    modified = document.documentElement.outerHTML
+                    modified = context.document.documentElement.outerHTML
                 }
 
 
