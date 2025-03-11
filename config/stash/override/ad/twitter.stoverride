@@ -3,6 +3,7 @@ desc: |-
     移动端不兼容
     - 首页时间线广告
     - 首页时间线 | Pinned by people you follow
+    - 首页时间线 | Discover new Communities
     - 详情页评论广告
 category: qsoyq
 icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
