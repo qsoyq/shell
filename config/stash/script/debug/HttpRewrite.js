@@ -249,7 +249,7 @@ function parseJsonBody(string) {
     try {
         return JSON.parse(string)
     } catch (e) {
-        console.log(`invalid json: ${e}`)
+        console.log(`invalid json: ${e}\nraw: ${string}`)
         return null
     }
 }
@@ -264,14 +264,12 @@ function getScriptArgument(key) {
         return;
     }
 
-    let body;
-    try {
-        body = JSON.parse($argument);
-    } catch (error) {
-        console.log("Invalid JSON:", error);
-        return null; // JSON 解析失败返回 null
+    // let body;
+    let body = parseJsonBody($argument)
+    if (body) {
+        return body[key]
     }
-    return body[key]
+    return null
 }
 
 /**
