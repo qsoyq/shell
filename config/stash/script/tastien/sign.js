@@ -565,10 +565,9 @@ async function signCron() {
 async function signRequest() {
     let userToken = $request.headers["User-Token"]
     let body = $request.body
-    echo(`token: ${userToken}, body: ${body}`)
+    echo(`[Sign.Request]token: ${userToken}, body: ${body}`)
     if (userToken && body) {
         // 持久化
-        echo(`token: ${userToken}, body: ${body}`)
         writePersistentArgument(persistentKeyName, JSON.stringify({ "token": userToken, "body": body }))
     }
 }
