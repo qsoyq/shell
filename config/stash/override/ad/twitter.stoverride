@@ -4,7 +4,8 @@ desc: |-
     - 首页时间线广告
     - 首页时间线新推文通知浮动窗口 | NewTweets | TimelineShowAlert
     - 首页时间线 | Pinned by people you follow
-    - 首页时间线 | Discover new Communities
+    - 首页时间线 | Discover new Communities    
+    - 首页时间线 | Creators for you | suggest_who_to_subscribe
     - 详情页评论广告
 category: qsoyq
 icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
@@ -26,6 +27,9 @@ http:
 
         # 首页时间线 | Discover new Communities
         - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="community_to_join")) end
+
+        # 首页时间线 | Creators for you | suggest_who_to_subscribe
+        - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="suggest_who_to_subscribe")) end
 
         # 详情页评论广告
         - https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
