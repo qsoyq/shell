@@ -7,15 +7,16 @@ http:
     mitm:
         - "1024.day"
     script:
-        - argument: null
+        - name: 1024.day
           binary-mode: false
           match: https://1024.day/d/\d+
           max-size: 1048576
-          name: 1024.day
           require-body: true
           timeout: 20
           type: response
+          argument: >-
+              {"documentEvalCodes": ["Array.from(context.document.getElementsByClassName(\\\"half\\\")).forEach(e => { e.remove() })"]}
 script-providers:
     1024.day:
-        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/ad/1024.day.js
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
         interval: 86400
