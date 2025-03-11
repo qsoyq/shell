@@ -264,7 +264,6 @@ function getScriptArgument(key) {
         return;
     }
 
-    // let body;
     let body = parseJsonBody($argument)
     if (body) {
         return body[key]
