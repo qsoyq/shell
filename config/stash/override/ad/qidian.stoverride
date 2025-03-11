@@ -3,6 +3,7 @@ desc: |-
     - 启动页广告
     - 首页上方好评弹窗
     - 首页上方养书提醒弹窗
+    - 首页推书弹窗
 category: qsoyq
 icon: https://qdfepccdn.qidian.com/www.qidian.com/favicon/qd_icon.ico
 http:
@@ -12,7 +13,21 @@ http:
     url-reject:
         - ^https?://ataru.qidian.com/noah/\d+ - reject # 角色生日
     body-rewrite:
-        - https?://magev6.if.qidian.com/argus/api/v4/client/getsplashscreen response-jq .Data.List=[] # 开屏
-        - https?://magev6.if.qidian.com/argus/api/v1/message/getPopup response-jq .Data={} # 首页上方弹窗，好评
-        - https?://magev6.if.qidian.com/argus/api/v1/maintain/playstrip response-jq .Data={} # 首页上方弹窗，开启养书提醒
+        - https://magev6.if.qidian.com/argus/api/v4/client/getsplashscreen response-jq .Data.List=[] # 开屏
+        - https://magev6.if.qidian.com/argus/api/v1/message/getPopup response-jq .Data={} # 首页上方弹窗，好评
+        - https://magev6.if.qidian.com/argus/api/v1/maintain/playstrip response-jq .Data={} # 首页上方弹窗，开启养书提醒
         # - https?://magev6.if.qidian.com/argus/api/v2/dailyrecommend/getdailyrecommend response-jq .Data.Items=[] # 首页上方每日导读推荐
+
+        - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ActivityPopup.Data=[] # 首页推书弹窗
+        # 以下参数未验证
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.RiskUrlList=[] # 风险链接列表？
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.AudioGuide=[] # 长时间阅读提醒
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.IsBackUser=1 # 回归用户？
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.IsFreeReadingUser=true # 免费阅读用户？
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.AddBookShelfNoticeFrequency=100 # 添加书架通知频率？
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ActivityPageBackPushNoticeFrequency="100" # 活动页面返回通知频率？
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.EnableClipboardReading=0 # 启用剪切板读取？
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ReadToolBarConfigs=[]
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ShowFreshManTab=0 # ?
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.BookUpdateBannerInterval="100" # 书籍更新横幅间隔？
+        # - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.IsFreshmanLimitFree=true # 新人限免？
