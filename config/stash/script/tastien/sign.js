@@ -311,7 +311,7 @@ function getPersistentArgument(key) {
 
 /**
  * 返回当前的脚本类型
-* @returns {'request' | 'response' | 'tile' | 'cron'}
+* @returns {'request' | 'response' | 'tile' | 'cron' | 'undefined'}
  */
 function getScriptType() {
     return typeof $script !== 'undefined' ? $script.type : 'undefined'
@@ -488,9 +488,34 @@ async function pushMessage(message) {
     return res
 }
 
-async function main() {
-    let now = getLocalDateString()
+/**
+ * @param {...any} args - Arguments to log
+ */
+function echo(...args) {
+    let date = getLocalDateString()
+    let logMessage = `${args.join(' ')}`
+    logMessage = `[${date}] ${logMessage}`
+    console.log(logMessage)
+}
 
+async function signCron() {
+    let cache = getPersistentArgument(persistentKeyName)
+    if (!cache) {
+        echo("需要手动在小程序上进行一次签到以获取信息")
+        return
+    }
+
+    // 从持久化读取拦截的请求参数
+    let cacheBody = JSON.parse(cache)
+    let userToken = cacheBody?.token
+    let requestBody = cacheBody?.body
+    if (!userToken || !requestBody) {
+        echo(`bad cache: ${userToken}, ${requestBody}`)
+        return
+    }
+
+    // 检查签到缓存
+    let now = getLocalDateString()
     let today = getLocalTodayString()
     let cacheKey = `tastien.sign.${today}`
     let result = getPersistentArgument(cacheKey)
@@ -499,11 +524,10 @@ async function main() {
         return
     }
 
-    let userToken = mustGetScriptArgument('userToken')
-    let data = mustGetScriptArgument("data")
+    // 模拟签到请求
     let url = 'https://sss-web.tastientech.com/api/sign/member/signV2'
-    let body = JSON.stringify(data)
-    let headers = { "Host": "sss-web.tastientech.com", "Referer": "https://servicewechat.com/wx557473f23153a429/378/page-frame.html", "Accept-Encoding": "gzip,compress,br,deflate", "Content-Length": "70", "User-Token": userToken, "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.54(0x18003622) NetType/WIFI Language/zh_CN", "Version": "3.2.3", "Channel": "1", "Content-Type": "application/json", "Connection": "keep-alive" }
+    let body = requestBody
+    let headers = { "Host": "sss-web.tastientech.com", "Referer": "https://servicewechat.com/wx557473f23153a429/378/page-frame.html", "Accept-Encoding": "gzip,compress,br,deflate", "User-Token": userToken, "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.54(0x18003622) NetType/WIFI Language/zh_CN", "Version": "3.2.3", "Channel": "1", "Content-Type": "application/json", "Connection": "keep-alive" }
     let res = await post({ url, body, headers })
     if (res.error || res.response.status >= 400) {
         console.log(`${now} [Error] request error: ${res.error}, ${res.response.status}, ${res.data}`)
@@ -532,8 +556,35 @@ async function main() {
         }
         writePersistentArgument(cacheKey, cacheKey)
     }
+}
 
 
+
+// 捕获签到请求，拦截参数
+// https://sss-web.tastientech.com/api/sign/member/signV2
+async function signRequest() {
+    let userToken = $request.headers["User-Token"]
+    let body = $request.body
+    echo(`token: ${userToken}, body: ${body}`)
+    if (userToken && body) {
+        // 持久化
+        echo(`token: ${userToken}, body: ${body}`)
+        writePersistentArgument(persistentKeyName, JSON.stringify({ "token": userToken, "body": body }))
+    }
+}
+
+let persistentKeyName = 'tastien.sign.detail'
+
+async function main() {
+    let type = getScriptType()
+    switch (type) {
+        case 'request':
+            await signRequest()
+            break
+        case 'response':
+        case 'cron':
+            await signCron()
+    }
 }
 
 (async () => {
