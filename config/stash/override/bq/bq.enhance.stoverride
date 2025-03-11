@@ -1,11 +1,13 @@
 name: 笔趣阁增强
 desc: |-
+    https://www.qu07.cc/
+    https://m.qu07.cc/
     - 替换污染词汇
     - 记忆护眼/关灯
     - 移除推荐链接/页脚
     - 使用手势左滑/双击跳转到下一章
     - 适配加载后的关灯模式
-category: Network
+category: qsoyq
 icon: https://www.bq16.cc/favicon.ico
 http:
     mitm:
@@ -14,10 +16,11 @@ http:
         - "*.bq02.cc"
         - "*.bi16.cc"
         - "*.bi02.cc"
+        - "*.qu07.cc"
 
     script:
         - name: 笔趣阁增强
-          match: https://.*.(bq|bi).*.cc/(kan|book)/\d+/.*\.html
+          match: https://.*.(bq|bi|qu).*.cc/(kan|book)/\d+/.*\.html
           type: response
           require-body: true
           timeout: 3
