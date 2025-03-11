@@ -2,6 +2,7 @@ name: 推特网页去广告
 desc: |-
     移动端不兼容
     - 首页时间线广告
+    - 首页时间线新推文通知浮动窗口 | NewTweets | TimelineShowAlert
     - 首页时间线 | Pinned by people you follow
     - 首页时间线 | Discover new Communities
     - 详情页评论广告
@@ -15,51 +16,55 @@ http:
 
     body-rewrite:
         # 首页时间线广告
-        - ^https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null)) end
+        - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.itemContent?.promotedMetadata==null)) end
+
+        # 首页时间线新推文通知浮动窗口 | NewTweets | TimelineShowAlert
+        - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq .data.home.home_timeline_urt.instructions|=map(select(.alertType!="NewTweets"))
 
         # 首页时间线 | Pinned by people you follow
-        - ^https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="for_you_pinned")) end
+        - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="for_you_pinned")) end
 
         # 首页时间线 | Discover new Communities
-        - ^https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="community_to_join")) end
+        - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="community_to_join")) end
 
         # 详情页评论广告
-        - ^https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
-#     script:
-#         - match: https://x.com/i/api/fleets/v1/fleetline
-#           name: x-catpure
-#           type: response
-#           require-body: true
+        - https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
 
-#         - match: https://x.com/i/api/graphql/.*/HomeTimeline
-#           name: x-catpure
-#           type: response
-#           require-body: true
+    script:
+        - match: https://x.com/i/api/fleets/v1/fleetline
+          name: x-catpure
+          type: response
+          require-body: true
 
-#         - match: https://api.x.com/1.1/live_pipeline/update_subscriptions
-#           name: x-catpure
-#           type: response
-#           require-body: true
+        - match: https://x.com/i/api/graphql/.*/HomeTimeline
+          name: x-catpure
+          type: response
+          require-body: true
 
-#         - match: https://x.com/i/api/1.1/jot/client_event.json
-#           name: x-catpure
-#           type: response
-#           require-body: true
+        - match: https://api.x.com/1.1/live_pipeline/update_subscriptions
+          name: x-catpure
+          type: response
+          require-body: true
 
-#         - name: x.home
-#           binary-mode: false
-#           match: https://x.com/home
-#           max-size: 1048576
-#           require-body: true
-#           timeout: 20
-#           type: response
-#           argument: >-
-#               {"documentEvalCodes": ["console.log(\'x.home\')"]}
+        - match: https://x.com/i/api/1.1/jot/client_event.json
+          name: x-catpure
+          type: response
+          require-body: true
 
-# script-providers:
-#     x.home:
-#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
-#         interval: 86400
-#     x-catpure:
-#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
-#         interval: 86400
+        - name: x.home
+          binary-mode: false
+          match: https://x.com/home
+          max-size: 1048576
+          require-body: true
+          timeout: 20
+          type: response
+          argument: >-
+              {"documentEvalCodes": ["console.log(\'x.home\')"]}
+
+script-providers:
+    x.home:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
+        interval: 86400
+    x-catpure:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+        interval: 86400
