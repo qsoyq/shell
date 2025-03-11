@@ -567,7 +567,6 @@ async function signRequest() {
     let body = $request.body
     echo(`[Sign.Request]token: ${userToken}, body: ${body}`)
     if (userToken && body) {
-        // 持久化
         writePersistentArgument(persistentKeyName, JSON.stringify({ "token": userToken, "body": body }))
     }
 }
