@@ -1,0 +1,23 @@
+name: 352-mitm
+category: debug
+icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/debug.png
+desc: |-
+    {"documentEvalCodes": ["console.log(\"1\")"]}
+    疑似因为上述脚本参数导致 stash 启动后出现 mitm 失效， 需要重新打开 mitm
+
+http:
+    mitm:
+        - "httpbin.org"
+
+    script:
+        - match: https?://httpbin.org/
+          name: http-rewrite
+          type: response
+          require-body: true
+          argument: >-
+              {"documentEvalCodes": ["console.log(\"1\")"]}
+
+script-providers:
+    http-rewrite:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
+        interval: 86400
