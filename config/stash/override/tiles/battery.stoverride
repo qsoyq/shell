@@ -4,15 +4,15 @@ category: tiles
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png
 
 tiles:
-  - name: MacbookPro电量
-    argument: '{"key":"adce2b5ba19243a097a5bd24e6123da8","icon":"https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png"}'
-    title: "初始化中"
-    content: "初始化中"
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png    
-    backgroundColor: "#178BD8"
-    interval: 300    
+    - name: MacbookPro电量
+      argument: '{"key":"adce2b5ba19243a097a5bd24e6123da8","icon":"https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png"}'
+      title: "初始化中"
+      content: "初始化中"
+      icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png
+      backgroundColor: "#178BD8"
+      interval: 300
 
 script-providers:
-  MacbookPro电量:
-    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/tiles/battery.js
-    interval: 86400
+    MacbookPro电量:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/tiles/battery.js
+        interval: 86400
