@@ -1,6 +1,12 @@
 name: 饿了么
 desc: |-
-    - 首页红包弹窗
+    - 开屏红包弹窗
+    - 首页推荐 | 30元超级吃货卡 | 仅限爆红包商家可用
+    - 首页推荐 | 横幅 | 爆款好价天天有
+    - 首页推荐 | 附近热门趋势
+    - 首页推荐 | 浏览体验评价
+    - 首页推荐 | 精选限时抢
+    - 首页推荐 | 智能零售平台 | 便利店商品推荐
 category: qsoyq
 icon: https://www.ele.me/favicon.ico
 http:
@@ -8,14 +14,34 @@ http:
         - waimai-guide.ele.me
     body-rewrite:
         - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.trigger.respond.v2 response-jq .data.data={} # 开屏红包弹窗
-        # - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1
-#     script:
-#         - match: https://waimai-guide.ele.me/gw/
-#           name: ele.me
-#           type: response
-#           require-body: true
-#           timeout: 20
-#           max-size: 1048576 # 1MB
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_theme_coupon_card")) # 30元超级吃货卡 | 仅限爆红包商家可用
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="banner")) # 横幅
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_search_trends_weex")) # 附近热门趋势
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="experience_survey_v2")) # 浏览体验评价
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_theme_v3")) # 精选限时抢
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_retail_platform_entrance")) # 精选限时抢
+
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_theme_coupon_card")) # 30元超级吃货卡 | 仅限爆红包商家可用
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="banner")) # 横幅
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_search_trends_weex")) # 附近热门趋势
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="experience_survey_v2")) # 浏览体验评价
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_theme_v3")) # 精选限时抢
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_retail_platform_entrance")) # 精选限时抢
+
+    script:
+        # - match: https://waimai-guide.ele.me/
+        #   name: ele.me
+        #   type: response
+        #   require-body: true
+        #   timeout: 20
+        #   max-size: 1048576 # 1MB
+
+        # - match: https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1
+        #   name: ele.me
+        #   type: response
+        #   require-body: true
+        #   timeout: 20
+        #   max-size: 1048576 # 1MB
 # script-providers:
 #     ele.me:
 #         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
