@@ -1,4 +1,4 @@
-name: 流媒体解锁检测
+name: 解锁检测
 desc: |-
 category: tiles
 icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/override.png
