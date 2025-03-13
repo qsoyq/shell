@@ -175,32 +175,27 @@ proxy-groups:
       include-all: true
 rules:
     # 去广告
-    - DOMAIN,ali-stats.jpush.cn,REJECT-DROP
-    - DOMAIN,gd-stats.jpush.cn,REJECT-DROP
-    - DOMAIN-SUFFIX,stats.jpush.cn,REJECT-DROP
+    - DOMAIN-SUFFIX,googleads.g.doubleclick.net,REJECT
+
+    # REJECT-DROP
     - DOMAIN,rmonitor.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,unitelogreport.reader.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,otheve.beacon.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,othstr.beacon.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,app-analytics-services.com,REJECT-DROP,no-track
+
     # 分流
     - DOMAIN-SUFFIX,aihubmix.com,PROXY
     - DOMAIN-SUFFIX,iturrit.com,PROXY
     - DOMAIN-SUFFIX,steamserver.net,DIRECT # Steam 下载
-    - DOMAIN-SUFFIX,openwrt.org,US
     - DOMAIN-SUFFIX,uscardforum.com,PROXY
-    - DOMAIN-SUFFIX,.jp,JP
-    - DOMAIN-SUFFIX,18comic.vip,US
     - DOMAIN-SUFFIX,media.nijigem.by,Media # 二刺螈 emby
     - DOMAIN,generativelanguage.googleapis.com,Gemini
     - DOMAIN-SUFFIX,apple-relay.apple.com,OpenAI
     - DOMAIN-SUFFIX,apple-relay.cloudflare.com,OpenAI
     - DOMAIN-SUFFIX,apple-relay,OpenAI
-    - DOMAIN-SUFFIX,19940731.xyz,19940731
+    - DOMAIN-SUFFIX,19940731.xyz,PROXY
     - DOMAIN-SUFFIX,gamer.com.tw,动画疯
-    - DOMAIN-SUFFIX,argotunnel.com,Cloudflare
-    - DOMAIN-SUFFIX,cftunnel.com,Cloudflare
-    - DOMAIN-SUFFIX,cloudflareclient.com,Cloudflare
     - GEOSITE,riot,Riot
     - GEOSITE,youtube,Media
     - GEOSITE,twitch,Media
@@ -233,22 +228,22 @@ rules:
     - GEOSITE,docker,Docker
     - RULE-SET,accept-domain,PROXY,no-resolve
     - RULE-SET,direct-domain,DIRECT,no-resolve
-    - RULE-SET,reject-domain,REJECT-DROP,no-resolve
+    - RULE-SET,reject-domain,REJECT,no-resolve
     - RULE-SET,telegram-ipcidr,Telegram,no-resolve
     - RULE-SET,talkatone-domain,Talkatone,no-resolve
     - RULE-SET,talkatone-ipcidr,Talkatone,no-resolve
-    - IP-CIDR,127.0.0.1/24,DIRECT,no-track
-    - IP-CIDR,169.254.169.254/32,REJECT,no-track
-    - IP-CIDR,0.0.0.0/24,REJECT,no-track
-    - IP-CIDR6,::/128,REJECT-DROP,no-track
-    - IP-CIDR,87.194.0.0/16,giffgaff,no-resolve,no-track # giffgaff vowifi
+    - IP-CIDR,127.0.0.1/24,DIRECT,no-resolve
+    - IP-CIDR,169.254.169.254/32,REJECT,no-resolve,no-track
+    - IP-CIDR6,::/128,REJECT,no-resolve,no-track
+    - IP-CIDR,87.194.0.0/16,PROXY,no-resolve,no-track # giffgaff vowifi
     - IP-ASN,62041,Telegram,no-resolve # Telegram
     - IP-ASN,6507,Riot,no-resolve # Riot
     - IP-ASN,15169,PROXY,no-resolve # Google
     - RULE-SET,wechat-ipcidr,DIRECT,no-resolve
     - RULE-SET,wechat-domain,DIRECT,no-resolve
+    - IP-CIDR,0.0.0.0/24,REJECT,no-resolve
     - GEOSITE,cn,DIRECT
-    - GEOIP,cn,DIRECT,no-resolve
+    - GEOIP,cn,DIRECT
     - MATCH,漏网之鱼🐟
 rule-providers:
     lan-cidr:
