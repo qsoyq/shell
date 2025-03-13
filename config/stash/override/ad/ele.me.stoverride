@@ -1,0 +1,22 @@
+name: 饿了么
+desc: |-
+    - 首页红包弹窗
+category: qsoyq
+icon: https://www.ele.me/favicon.ico
+http:
+    mitm:
+        - waimai-guide.ele.me
+    body-rewrite:
+        - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.trigger.respond.v2 response-jq .data.data={} # 开屏红包弹窗
+        # - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1
+#     script:
+#         - match: https://waimai-guide.ele.me/gw/
+#           name: ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+# script-providers:
+#     ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
