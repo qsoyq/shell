@@ -185,17 +185,17 @@ rules:
     - DOMAIN,app-analytics-services.com,REJECT-DROP,no-track
 
     # 分流
+    - DOMAIN,generativelanguage.googleapis.com,Gemini
     - DOMAIN-SUFFIX,aihubmix.com,PROXY
     - DOMAIN-SUFFIX,iturrit.com,PROXY
-    - DOMAIN-SUFFIX,steamserver.net,DIRECT # Steam 下载
     - DOMAIN-SUFFIX,uscardforum.com,PROXY
-    - DOMAIN-SUFFIX,media.nijigem.by,Media # 二刺螈 emby
-    - DOMAIN,generativelanguage.googleapis.com,Gemini
     - DOMAIN-SUFFIX,apple-relay.apple.com,OpenAI
     - DOMAIN-SUFFIX,apple-relay.cloudflare.com,OpenAI
     - DOMAIN-SUFFIX,apple-relay,OpenAI
     - DOMAIN-SUFFIX,19940731.xyz,PROXY
     - DOMAIN-SUFFIX,gamer.com.tw,动画疯
+
+    # 分流
     - GEOSITE,riot,Riot
     - GEOSITE,youtube,Media
     - GEOSITE,twitch,Media
@@ -226,12 +226,15 @@ rules:
     - GEOSITE,cloudflare-ipfs,PROXY
     - GEOSITE,cloudflare-cn,PROXY
     - GEOSITE,docker,Docker
+
+    # 规则集
     - RULE-SET,accept-domain,PROXY,no-resolve
     - RULE-SET,direct-domain,DIRECT,no-resolve
     - RULE-SET,reject-domain,REJECT,no-resolve
     - RULE-SET,telegram-ipcidr,Telegram,no-resolve
     - RULE-SET,talkatone-domain,Talkatone,no-resolve
     - RULE-SET,talkatone-ipcidr,Talkatone,no-resolve
+
     - IP-CIDR,127.0.0.1/24,DIRECT,no-resolve
     - IP-CIDR,169.254.169.254/32,REJECT,no-resolve,no-track
     - IP-CIDR6,::/128,REJECT,no-resolve,no-track
@@ -239,9 +242,9 @@ rules:
     - IP-ASN,62041,Telegram,no-resolve # Telegram
     - IP-ASN,6507,Riot,no-resolve # Riot
     - IP-ASN,15169,PROXY,no-resolve # Google
+    - IP-CIDR,0.0.0.0/24,REJECT # DNS拦截后返回空 IP
     - RULE-SET,wechat-ipcidr,DIRECT,no-resolve
     - RULE-SET,wechat-domain,DIRECT,no-resolve
-    - IP-CIDR,0.0.0.0/24,REJECT,no-resolve
     - GEOSITE,cn,DIRECT
     - GEOIP,cn,DIRECT
     - MATCH,漏网之鱼🐟
