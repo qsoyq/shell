@@ -1,7 +1,7 @@
 # https://whatshub.top/stoverride/rates.stoverride
 name: 当前汇率
 desc: 汇率面板
-category: tiles
+category: qsoyq
 icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/override.png
 tiles:
     - name: currency-exchange-rate

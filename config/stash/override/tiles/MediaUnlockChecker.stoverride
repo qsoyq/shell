@@ -1,6 +1,6 @@
 name: 解锁检测
 desc: |-
-category: tiles
+category: qsoyq
 icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/override.png
 
 tiles:

@@ -1,6 +1,6 @@
 name: MacbookPro电量
 desc: 用于显示指定设备的电量信息
-category: tiles
+category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png
 
 tiles:

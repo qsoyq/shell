@@ -1,6 +1,6 @@
 name: IP 信息 Tile 面板
 desc: 用于显示 IP 信息的面板 (Stash 2.0)
-category: tiles
+category: qsoyq
 icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/override.png
 
 tiles:
