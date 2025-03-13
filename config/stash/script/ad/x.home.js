@@ -360,7 +360,7 @@ async function main() {
     let domParser = new DOMParser();
     document = domParser.parseFromString(body, 'text/html');
     let node = document.createElement("script")
-    node.textContent = "console.log(x.home.v3)"
+    node.textContent = "console.log('x.home.v3')"
     document.head.appendChild(node)
     let outerHTML = document.documentElement.outerHTML
     return $done({ body: outerHTML })

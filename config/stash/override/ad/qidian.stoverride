@@ -5,6 +5,7 @@ desc: |-
     - 首页上方养书提醒弹窗
     - 首页推书弹窗
     - 阅读页面新闻 | 书友xxxx成为了本作品长老
+    - 首页消息推送 | 夜冭殇支持《二手穿越：大耳贼刘备》白银宝箱,成为本作品的白银大盟
 category: qsoyq
 icon: https://qdfepccdn.qidian.com/www.qidian.com/favicon/qd_icon.ico
 http:
@@ -14,10 +15,12 @@ http:
         - https://magev6.if.qidian.com/argus/api/v4/client/getsplashscreen response-jq .Data.List=[] # 开屏
         - https://magev6.if.qidian.com/argus/api/v1/message/getPopup response-jq .Data={} # 首页上方弹窗，好评
         - https://magev6.if.qidian.com/argus/api/v1/maintain/playstrip response-jq .Data={} # 首页上方弹窗，开启养书提醒
-        # - https?://magev6.if.qidian.com/argus/api/v2/dailyrecommend/getdailyrecommend response-jq .Data.Items=[] # 首页上方每日导读推荐
 
         - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ActivityPopup.Data=[] # 首页推书弹窗
         - https://magev6.if.qidian.com/argus/api/v1/assembly/toolbar response-jq .Data.Getbooknews={} # 书友xxxx成为了本作品长老
+
+        - https://magev6.if.qidian.com/argus/api/v1/message/getpushedmessagelist response-jq .Data.MsgList=[] # 推送消息 | 夜冭殇支持《二手穿越：大耳贼刘备》白银宝箱,成为本作品的白银大盟
+        # - https?://magev6.if.qidian.com/argus/api/v2/dailyrecommend/getdailyrecommend response-jq .Data.Items=[] # 首页上方每日导读推荐
         # - https://magev6.if.qidian.com/argus/api/v1/assembly/toolbar response-jq .Data.Getfrontactivity={} # 前台活动？
 
         # 以下参数未验证
