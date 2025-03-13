@@ -1,14 +1,14 @@
 name: 流媒体解锁检测
 desc: |-
 category: tiles
-icon: https://telegraph.19940731.xyz/file/7044fd6b39224ecfd42ab.png
+icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/override.png
 
 tiles:
-  - name: MediaUnlockChecker
-    backgroundColor: "#178BD8"
-    interval: 1800
+    - name: MediaUnlockChecker
+      backgroundColor: "#178BD8"
+      interval: 1800
 
 script-providers:
-  MediaUnlockChecker:
-    url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/tiles/MediaUnlockChecker.js
-    interval: 86400
+    MediaUnlockChecker:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/tiles/MediaUnlockChecker.js
+        interval: 86400
