@@ -15,7 +15,7 @@ desc: |-
     - 阅读页底部广告
     - 阅读页支持方向键翻页
 category: qsoyq
-icon: https://18comic.vip/favicon.ico
+icon: https://raw.githubusercontent.com/qsoyq/shell/main/assets/icon/18comic.ico
 http:
     mitm:
         - "18comic.vip"
