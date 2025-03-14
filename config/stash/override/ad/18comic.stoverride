@@ -14,7 +14,7 @@ desc: |-
     - 阅读页中间插入广告
     - 阅读页底部广告
     - 阅读页支持方向键翻页
-category: A1
+category: qsoyq
 icon: https://18comic.vip/favicon.ico
 http:
     mitm:
