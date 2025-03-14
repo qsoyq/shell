@@ -1,5 +1,6 @@
 name: 1024.day
 desc: |-
+    - 官网首页广告位
     - 详情页广告位
 category: qsoyq
 icon: https://1024.day/favicon.ico
@@ -9,12 +10,22 @@ http:
     script:
         - name: 1024.day
           binary-mode: false
+          match: https://1024.day/$
+          max-size: 1048576
+          require-body: true
+          timeout: 20
+          type: response
+          argument: |-
+              {"documentEvalCodes": ["Array.from(context.document.getElementsByClassName(\\\"half\\\")).forEach(e => { e.remove() })"]}
+
+        - name: 1024.day
+          binary-mode: false
           match: https://1024.day/d/\d+
           max-size: 1048576
           require-body: true
           timeout: 20
           type: response
-          argument: >-
+          argument: |-
               {"documentEvalCodes": ["Array.from(context.document.getElementsByClassName(\\\"half\\\")).forEach(e => { e.remove() })"]}
 script-providers:
     1024.day:
