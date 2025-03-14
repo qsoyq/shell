@@ -383,15 +383,15 @@ async function parseGemini() {
 async function parseYoutubePremium() {
     /**
      * 从网页中提取 country-code
-     * @param {*} text 
-     * @returns 
+     * @returns
+     * @param {string} htmlString
      */
     function parseYoutubePremiumCountryCode(htmlString) {
         try {
             let parser = new DOMParser();
             let doc = parser.parseFromString(htmlString, 'text/html');
             let ele = doc.getElementById("country-code")
-            if (ele) {
+            if (ele && ele.textContent) {
                 return ele.textContent.trim()
             }
         } catch (error) {
@@ -410,6 +410,7 @@ async function parseYoutubePremium() {
 
     } else if (res.data.toLowerCase().includes("ad-free")) {
         let countryCode = parseYoutubePremiumCountryCode(res.data)
+        // @ts-ignore
         let region = `, Region: ${countryCodeToEmoji(countryCode)}${countryCode}` ? countryCode : ``
         return `Youtube Premium: Yes${region}`
     }
