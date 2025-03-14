@@ -1,19 +1,40 @@
 name: 饿了么
 desc: |-
     - 开屏红包弹窗
-    - 首页推荐 | 30元超级吃货卡 | 仅限爆红包商家可用
-    - 首页推荐 | 横幅 | 爆款好价天天有
-    - 首页推荐 | 附近热门趋势
-    - 首页推荐 | 浏览体验评价
-    - 首页推荐 | 精选限时抢
-    - 首页推荐 | 智能零售平台 | 便利店商品推荐
 category: qsoyq
 icon: https://www.ele.me/favicon.ico
+# - 首页推荐 | 30元超级吃货卡 | 仅限爆红包商家可用
+# - 首页推荐 | 横幅 | 爆款好价天天有
+# - 首页推荐 | 附近热门趋势
+# - 首页推荐 | 浏览体验评价
+# - 首页推荐 | 精选限时抢
+# - 首页推荐 | 智能零售平台 | 便利店商品推荐
 http:
     mitm:
         - waimai-guide.ele.me
+        # - highway-tb.ele.me
+        # - nr-op.elemecdn.com
+        # - o2oad.elemecdn.com
+        # - air.tb.ele.me
+        # - amdc.m.ele.me
+        # - tls-eleme.dingtalk.com
+        # - zconfig.elemecdn.com
+        # - alsc-config.ele.me
+        # - rsc-api.ele.me
+        # - openacs.m.taobao.com
+        # - guide-acs.m.taobao.com
+        # - nt2.ele.me
+        # - mtop.ele.me
+        # - shadow.elemecdn.com
+        # - cloud.video.taobao.com
+        # - restapi.ele.me
+        # - a-rsc.elemecdn.com
+        # - cube.elemecdn.com
+        # - alsc-buy2.ele.me
+        # - shopping.ele.me
     body-rewrite:
         - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.trigger.respond.v2 response-jq .data.data={} # 开屏红包弹窗
+
         - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_theme_coupon_card")) # 30元超级吃货卡 | 仅限爆红包商家可用
         - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="banner")) # 横幅
         - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_search_trends_weex")) # 附近热门趋势
@@ -28,21 +49,200 @@ http:
         - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_cloud_theme_v3")) # 精选限时抢
         - https://waimai-guide.ele.me/gw/mtop.alsc.eleme.collection.homepagev2 response-jq .data.data.shop_list_recommend_magex3_tab.fields.items|=map(select(.bizCode!="smart_retail_platform_entrance")) # 精选限时抢
 
-    script:
-        # - match: https://waimai-guide.ele.me/
-        #   name: ele.me
-        #   type: response
-        #   require-body: true
-        #   timeout: 20
-        #   max-size: 1048576 # 1MB
 
-        # - match: https://waimai-guide.ele.me/gw/mtop.alsc.eleme.homepagev1
-        #   name: ele.me
-        #   type: response
-        #   require-body: true
-        #   timeout: 20
-        #   max-size: 1048576 # 1MB
+        # waimai-guide.ele.me/gw/mtop.alsc.eleme.bootup.screen.data.get
+#     script:
+#         - match: https?://waimai-guide.ele.me/
+#           name: waimai-guide.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://highway-tb.ele.me/
+#           name: highway-tb.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://nr-op.elemecdn.com/
+#           name: nr-op.elemecdn.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://o2oad.elemecdn.com/
+#           name: o2oad.elemecdn.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://air.tb.ele.me/
+#           name: air.tb.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://amdc.m.ele.me/
+#           name: amdc.m.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://tls-eleme.dingtalk.com/
+#           name: tls-eleme.dingtalk.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://zconfig.elemecdn.com/
+#           name: zconfig.elemecdn.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://alsc-config.ele.me/
+#           name: alsc-config.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://rsc-api.ele.me/
+#           name: rsc-api.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://openacs.m.taobao.com/
+#           name: openacs.m.taobao.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://guide-acs.m.taobao.com/
+#           name: guide-acs.m.taobao.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://nt2.ele.me/
+#           name: nt2.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://mtop.ele.me/
+#           name: mtop.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://shadow.elemecdn.com/
+#           name: shadow.elemecdn.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://cloud.video.taobao.com/
+#           name: cloud.video.taobao.com
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://restapi.ele.me/
+#           name: restapi.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://a-rsc.elemecdn.com/
+#           name: restapi.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://cube.elemecdn.com/
+#           name: restapi.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://alsc-buy2.ele.me/
+#           name: restapi.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+#         - match: https?://shopping.ele.me/
+#           name: restapi.ele.me
+#           type: response
+#           require-body: true
+#           timeout: 20
+#           max-size: 1048576 # 1MB
+
 # script-providers:
-#     ele.me:
+#     ele:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     waimai-guide.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     highway-tb.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     nr-op.elemecdn.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     o2oad.elemecdn.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     air.tb.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     amdc.m.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     tls-eleme.dingtalk.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     zconfig.elemecdn.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     alsc-config.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     rsc-api.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     openacs.m.taobao.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     guide-acs.m.taobao.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     nt2.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     mtop.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     shadow.elemecdn.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     cloud.video.taobao.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     restapi.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     a-rsc.elemecdn.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     cube.elemecdn.com:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     alsc-buy2.ele.me:
+#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
+#         interval: 86400
+#     shopping.ele.me:
 #         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
 #         interval: 86400
