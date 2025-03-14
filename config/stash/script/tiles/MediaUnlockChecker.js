@@ -421,7 +421,7 @@ async function main() {
         console.log("Starting the parallel execution...");
         let contents = await Promise.all([
             parseBilibiliHKMCTW(),
-            parseTiktok(),
+            // parseTiktok(),
             getChatGPTCountryCode(),
             parseChatGPTiOS(),
             parseChatGPTWeb(),
