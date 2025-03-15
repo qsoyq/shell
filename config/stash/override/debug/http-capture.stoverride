@@ -15,3 +15,8 @@ http:
           name: http-catpure
           type: response
           require-body: true
+          timeout: 20
+          argument: ""
+          binary-mode: false
+          max-size: 1048576 # 1MB
+
