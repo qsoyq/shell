@@ -1,8 +1,9 @@
 name: 哔哩哔哩
 desc: |-
-    - 开屏广告
+    - 美区白哔 | Bilibili HD 开屏广告
     - Bilibili HD 首页 banner 轮播
     - Bilibili HD 首页推荐广告
+    - Bilibili HD 后台切前台闪屏广告
 category: qsoyq
 icon: https://i0.hdslb.com/bfs/static/jinkela/long/images/favicon.ico
 http:
@@ -11,7 +12,7 @@ http:
         - app.bilibili.com
     url-rewrite:
         # 哔哩哔哩开屏广告
-        - ^https?://app.bilibili.com/x/v2/splash/show - reject
+        - https?://app.bilibili.com/x/v2/splash/show - reject
 
     body-rewrite:
         # Bilibili HD 首页 banner 轮播
@@ -19,3 +20,6 @@ http:
 
         # Bilibili HD 首页推荐广告
         - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq if .data.items!=null then .data.items |= map(select(.card_goto!="ad_web_s")) end
+
+        # Bilibili HD 后台切前台闪屏广告
+        - https?://app.bilibili.com/x/v2/splash/list response-jq .data.list=[]
