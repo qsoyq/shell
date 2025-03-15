@@ -1,0 +1,10 @@
+name: instagram
+desc: |-
+    - 首页时间线广告
+category: qsoyq
+icon: https://www.instagram.com/favicon.ico
+http:
+    mitm:
+        - "www.instagram.com"
+    body-rewrite:
+        - https://www.instagram.com/graphql/query response-jq .data.xdt_api__v1__feed__timeline__connection.edges|=map(select(.node.ad==null))
