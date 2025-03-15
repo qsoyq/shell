@@ -4,6 +4,7 @@ desc: |-
     - Bilibili HD 首页 banner 轮播
     - Bilibili HD 首页推荐广告
     - Bilibili HD 后台切前台闪屏广告
+    - Bilibili HD 直播右下角横幅小组件 | 航海粉丝日 | 团战燃魂赛
 category: qsoyq
 icon: https://i0.hdslb.com/bfs/static/jinkela/long/images/favicon.ico
 http:
@@ -23,3 +24,6 @@ http:
 
         # Bilibili HD 后台切前台闪屏广告
         - https?://app.bilibili.com/x/v2/splash/list response-jq .data.list=[]
+
+        # Bilibili HD 直播右下角横幅小组件
+        - https://api.live.bilibili.com/xlive/play-interface/widgetService/GetWidgetBannerList response-jq .data.list={}
