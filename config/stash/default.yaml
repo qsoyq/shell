@@ -175,17 +175,16 @@ proxy-groups:
       include-all: true
 rules:
     # 去广告
+    - DOMAIN,h.trace.qq.com,REJECT,no-track
     - DOMAIN-SUFFIX,googleads.g.doubleclick.net,REJECT
-
     # REJECT-DROP
     - DOMAIN,rmonitor.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,unitelogreport.reader.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,otheve.beacon.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,othstr.beacon.qq.com,REJECT-DROP,no-track # 起点
     - DOMAIN,app-analytics-services.com,REJECT-DROP,no-track
-
     # 分流
-    - DOMAIN,generativelanguage.googleapis.com,Gemini
+    - IP-CIDR,0.0.0.0/24,REJECT # DNS拦截后返回空 IP
     - DOMAIN-SUFFIX,aihubmix.com,PROXY
     - DOMAIN-SUFFIX,iturrit.com,PROXY
     - DOMAIN-SUFFIX,uscardforum.com,PROXY
@@ -194,8 +193,8 @@ rules:
     - DOMAIN-SUFFIX,apple-relay,OpenAI
     - DOMAIN-SUFFIX,19940731.xyz,PROXY
     - DOMAIN-SUFFIX,gamer.com.tw,动画疯
-
     # 分流
+    - GEOSITE,google-gemini,Gemini
     - GEOSITE,riot,Riot
     - GEOSITE,youtube,Media
     - GEOSITE,twitch,Media
@@ -208,11 +207,9 @@ rules:
     - GEOSITE,steam@cn,Steam
     - GEOSITE,telegram,PROXY
     - GEOSITE,disney,PROXY
-    - GEOSITE,google,Google
     - GEOSITE,quora,PROXY
     - GEOSITE,gitlab,PROXY
     - GEOSITE,discord,PROXY
-    - GEOSITE,google-gemini,Gemini
     - GEOSITE,whatsapp,PROXY
     - GEOSITE,duckduckgo,PROXY
     - GEOSITE,github,PROXY
@@ -226,7 +223,7 @@ rules:
     - GEOSITE,cloudflare-ipfs,PROXY
     - GEOSITE,cloudflare-cn,PROXY
     - GEOSITE,docker,Docker
-
+    - GEOSITE,google,Google
     # 规则集
     - RULE-SET,accept-domain,PROXY,no-resolve
     - RULE-SET,direct-domain,DIRECT,no-resolve
@@ -234,7 +231,6 @@ rules:
     - RULE-SET,telegram-ipcidr,Telegram,no-resolve
     - RULE-SET,talkatone-domain,Talkatone,no-resolve
     - RULE-SET,talkatone-ipcidr,Talkatone,no-resolve
-
     - IP-CIDR,127.0.0.1/24,DIRECT,no-resolve
     - IP-CIDR,169.254.169.254/32,REJECT,no-resolve,no-track
     - IP-CIDR6,::/128,REJECT,no-resolve,no-track
@@ -242,11 +238,10 @@ rules:
     - IP-ASN,62041,Telegram,no-resolve # Telegram
     - IP-ASN,6507,Riot,no-resolve # Riot
     - IP-ASN,15169,PROXY,no-resolve # Google
-    - IP-CIDR,0.0.0.0/24,REJECT # DNS拦截后返回空 IP
     - RULE-SET,wechat-ipcidr,DIRECT,no-resolve
     - RULE-SET,wechat-domain,DIRECT,no-resolve
     - GEOSITE,cn,DIRECT
-    - GEOIP,cn,DIRECT
+    - GEOIP,cn,DIRECT,no-resolve
     - MATCH,漏网之鱼🐟
 rule-providers:
     lan-cidr:
