@@ -517,13 +517,26 @@ function parseDocument(body) {
 
 async function main() {
     echo(`[Argument] ${$argument}`)
-    echo(`[Argument] [JSON] ${parseJsonBody($argument)}`)
-
-    let body = getScriptResponseBody()
-    let document = parseDocument(body)
-    Array.from(document.querySelectorAll("script[type='application/json']")).forEach(e => {
-        console.log(`${e.textContent}`)
-    })
+    if (getScriptType() === "response") {
+        let body = getScriptResponseBody()
+        let document = parseDocument(body)
+        Array.from(document.querySelectorAll("script[type='application/json']")).forEach(e => {
+            if (e.textContent?.indexOf("xdt_api__v1__feed__timeline__connection") !== -1) {
+                // .require.[0].[3].[0].__bbox.require.[0].[3].[1].__bbox.result.data.xdt_api__v1__feed__timeline__connection.edges
+                // .data.xdt_api__v1__feed__timeline__connection.edges|=map(select(.node.ad==null))
+                // .data.xdt_api__v1__feed__timeline__connection.edges|=map(select(.node?.ad?.label|tostring!="赞助内容"))
+                let detail = parseJsonBody(e.textContent)
+                if (detail) {
+                    let edges = detail?.require?.[0]?.[3]?.[0]?.__bbox?.require?.[0]?.[3]?.[1]?.__bbox?.result?.data?.xdt_api__v1__feed__timeline__connection?.edges
+                    if (edges) {
+                        edges.filter(e => {
+                            return e?.node?.ad === null
+                        })
+                    }
+                }
+            }
+        })
+    }
 }
 
 (async () => {
