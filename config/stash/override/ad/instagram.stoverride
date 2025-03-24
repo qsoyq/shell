@@ -1,7 +1,6 @@
-#SUBSCRIBED https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/override/ad/instagram.stoverride
 name: instagram
 desc: |-
-    - 首页时间线广告
+    - 网页端首页时间线广告
 category: qsoyq
 icon: https://www.instagram.com/favicon.ico
 http:
