@@ -6,11 +6,13 @@ desc: |-
     - 点单页商品列表横幅 banner
     - 订单页弹窗
     - 首页弹窗
+    - 支付界面超值换购弹窗
 category: qsoyq
 icon: https://www.tasiting.com/templates/tastien/image/29440_16868769529842.ico
 http:
     mitm:
         - sss-web.tastientech.com
+
     body-rewrite:
         # 塔斯汀 Banner
         - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("INDEX_TOP_BANNER")|not)) end # 首页顶部Banner
@@ -24,3 +26,4 @@ http:
         - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("INDEX_WAIST_AREA")|not)) end
         - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/list response-jq if .result != null then .result|=map(select(.locationCode|index("HOME_PAGE_BOTTOM_FLOATING_ICON")|not)) end
         - https://sss-web.tastientech.com/api/minic/shop/intelligence/banner/c/firstBanner response-jq .result={} # 小程序启动页弹窗
+        - https://sss-web.tastientech.com/api/activity/productDiscountRecommend/recommend response-jq .result.popupFlag=false # 支付界面超值换购弹窗
