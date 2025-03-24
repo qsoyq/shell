@@ -6,7 +6,9 @@ desc: |-
     - 首页时间线 | Pinned by people you follow
     - 首页时间线 | Discover new Communities    
     - 首页时间线 | Creators for you | suggest_who_to_subscribe
+    - 首页时间线 | Who to follow | suggest_who_to_follow
     - 详情页评论广告
+    - 删除 CSP 策略，允许在网页上执行
 category: qsoyq
 icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
 
@@ -31,48 +33,28 @@ http:
         # 首页时间线 | Creators for you | suggest_who_to_subscribe
         - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="suggest_who_to_subscribe")) end
 
+        # 首页时间线 | Who to follow | suggest_who_to_follow
+        - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="suggest_who_to_follow")) end
+
         # 详情页评论广告
         - https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
-#     script:
-#         - match: https://x.com/i/api/fleets/v1/fleetline
-#           name: x-capture
-#           type: response
-#           require-body: true
+    url-rewrite:
+    header-rewrite:
+        # - https://x.com/home response-replace "Content-Security-Policy:default-src 'self'; script-src 'self' 'unsafe-inline';"
+        - https://x.com/home response-del content-security-policy
 
-#         - match: https://x.com/i/api/graphql/.*/HomeTimeline
-#           name: x-capture
-#           type: response
-#           require-body: true
+    script:
+        - name: x.home
+          binary-mode: false
+          match: https://x.com/home
+          max-size: 1048576
+          require-body: true
+          timeout: 20
+          type: response
+          debug: true
+          argument: |-
 
-#         - match: https://x.com/i/api/graphql/.*/PinnedTimelines
-#           name: x-capture
-#           type: response
-#           require-body: true
-
-#         - match: https://api.x.com/1.1/live_pipeline/update_subscriptions
-#           name: x-capture
-#           type: response
-#           require-body: true
-
-#         - match: https://x.com/i/api/1.1/jot/client_event.json
-#           name: x-capture
-#           type: response
-#           require-body: true
-
-#         - name: x.home
-#           binary-mode: false
-#           match: https://x.com/home
-#           max-size: 1048576
-#           require-body: true
-#           timeout: 20
-#           type: response
-#           argument: >-
-#               {"documentEvalCodes": ["console.log(\'x.home\')"]}
-
-# script-providers:
-#     x.home:
-#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
-#         interval: 86400
-#     x-capture:
-#         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/http-capture.js
-#         interval: 86400
+script-providers:
+    x.home:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
+        interval: 86400
