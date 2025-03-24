@@ -530,7 +530,7 @@ async function main() {
                 if (detail) {
                     let edges = detail?.require?.[0]?.[3]?.[0]?.__bbox?.require?.[0]?.[3]?.[1]?.__bbox?.result?.data?.xdt_api__v1__feed__timeline__connection?.edges
                     if (edges) {
-                        edges.filter(e => {
+                        detail.require[0][3][0].__bbox.require[0][3][1].__bbox.result.data.xdt_api__v1__feed__timeline__connection.edges = edges.filter(e => {
                             return e?.node?.ad === null
                         })
                     }
