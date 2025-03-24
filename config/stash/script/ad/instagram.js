@@ -520,6 +520,7 @@ async function main() {
     if (getScriptType() === "response") {
         let body = getScriptResponseBody()
         let document = parseDocument(body)
+        let flag = false
         Array.from(document.querySelectorAll("script[type='application/json']")).forEach(e => {
             if (e.textContent?.indexOf("xdt_api__v1__feed__timeline__connection") !== -1) {
                 // .require.[0].[3].[0].__bbox.require.[0].[3].[1].__bbox.result.data.xdt_api__v1__feed__timeline__connection.edges
@@ -533,15 +534,22 @@ async function main() {
                             return e?.node?.ad === null
                         })
                     }
+                    e.textContent = JSON.stringify(detail)
+                    flag = true
                 }
             }
         })
+        if (flag) {
+            $done({ body: document.documentElement.outerHTML })
+        } else {
+            $done({})
+        }
     }
 }
 
 (async () => {
     main().then(_ => {
-        $done({})
+
     }).catch(error => {
         console.log(`[Error]: ${error?.message || error}`)
         $done({})
