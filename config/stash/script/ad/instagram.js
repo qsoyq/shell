@@ -536,6 +536,7 @@ async function main() {
                     }
                     e.textContent = JSON.stringify(detail)
                     flag = true
+                    echo("移除赞助内容成功")
                 }
             }
         })
