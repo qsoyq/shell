@@ -12,11 +12,17 @@ desc: |-
 
 category: qsoyq
 icon: https://wx.m.ddxq.mobi/favicon.ico
+dns:
+    fake-ip-filter:
+        # 透明代理下使用 fake-ip Tunnel 会导致未知原因的请求无法被还原成域名
+        - "maicai.api.ddxq.mobi"
 http:
     mitm:
         # 叮咚买菜
         - maicai.api.ddxq.mobi
         - pub.ddimg.mobi
+    force-http-engine:
+        - maicai.api.ddxq.mobi
     body-rewrite:
         - https://maicai.api.ddxq.mobi/advert/getAd response-jq .data={}
         - https://maicai.api.ddxq.mobi/advert/startUpScreen response-jq .data={} # 开屏
