@@ -5,6 +5,8 @@ desc: |-
 icon: https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png
 category: qsoyq
 http:
+    force-http-engine:
+        - "youtubei.googleapis.com"
     mitm:
         - "*.googlevideo.com"
         - youtubei.googleapis.com
