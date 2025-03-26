@@ -1,0 +1,17 @@
+name: 电报分流代理
+desc: |-
+    分流策略组 -> Telegram
+category: qsoyq
+icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+
+rules:
+    - RULE-SET,telegram-ipcidr,Telegram,no-resolve
+    - geosite,telegram,Telegram
+
+rule-providers:
+    telegram-ipcidr:
+        behavior: ipcidr
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/ipcidr/telegram.yaml?v=1734499493

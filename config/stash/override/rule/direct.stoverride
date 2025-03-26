@@ -1,0 +1,15 @@
+name: 分流直连规则集
+desc: |-
+category: qsoyq
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Direct.png
+
+rules:
+    - RULE-SET,direct-domain,DIRECT,no-resolve
+
+rule-providers:
+    direct-domain:
+        behavior: domain
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/direct/domain/proxy.yaml?v=1734499493

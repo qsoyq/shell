@@ -1,0 +1,23 @@
+name: Talkatone分流代理
+desc: |-
+    分流策略组 -> Talkatone
+category: qsoyq
+icon: https://www.talkatone.com/favicon.ico
+
+rules:
+    - RULE-SET,talkatone-domain,Talkatone,no-resolve
+    - RULE-SET,talkatone-ipcidr,Talkatone,no-resolve
+
+rule-providers:
+    talkatone-domain:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/domain/talkatone.yaml
+        type: http
+        format: yaml
+        interval: 86400
+        behavior: domain
+    talkatone-ipcidr:
+        behavior: ipcidr
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/accept/ipcidr/talkatone.yaml
