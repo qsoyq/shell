@@ -1,0 +1,23 @@
+name: 微信直连
+desc: |-
+category: qsoyq
+icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/WeChat.png
+
+rule-providers:
+    wechat-domain:
+        behavior: domain
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/bypass/wechat/domain.yaml?v=1734499493
+
+    wechat-ipcidr:
+        behavior: ipcidr
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/bypass/wechat/ip.yaml?v=1734499493
+
+rules:
+    - RULE-SET,wechat-ipcidr,DIRECT,no-resolve
+    - RULE-SET,wechat-domain,DIRECT,no-resolve
