@@ -18,6 +18,10 @@ http:
         # 哔哩哔哩开屏广告
         - https?://app.bilibili.com/x/v2/splash/show - reject
 
+        # 直播间一对一教学推荐
+        - https://api.live.bilibili.com/xlive/app-ucenter/v2/playTogether/GetPlayTogetherUserAnchorInfoV2 - reject
+        - https://api.live.bilibili.com/xlive/app-ucenter/v2/playTogether/PlayTogetherServiceCardDetail - reject
+
     body-rewrite:
         # Bilibili HD 首页 banner 轮播
         - ^https?://app.bilibili.com/x/v2/feed/index.*$ response-jq if .data.items!=null then .data.items |= map(select(.card_type!="banner_ipad_v8")) end
@@ -33,6 +37,3 @@ http:
 
         # 直播间推荐购买商品悬浮窗 | 大家都在买
         - https://api.live.bilibili.com/xlive/e-commerce-interface/v1/ecommerce-user/get_shopping_info response-jq .data.recommend_card_detail=[]
-
-        # 直播间一对一教学推荐
-        - https://api.live.bilibili.com/xlive/app-ucenter/v2/playTogether/PlayTogetherServiceCardDetail response-jq .data={}
