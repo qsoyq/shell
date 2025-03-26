@@ -7,6 +7,7 @@ icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.
 rules:
     - RULE-SET,telegram-ipcidr,Telegram,no-resolve
     - geosite,telegram,Telegram
+    - IP-ASN,62041,Telegram,no-resolve # Telegram
 
 rule-providers:
     telegram-ipcidr:

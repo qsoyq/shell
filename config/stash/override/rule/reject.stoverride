@@ -4,6 +4,7 @@ category: qsoyq
 icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Reject.png
 
 rules:
+    - RULE-SET,reject-drop-domain,REJECT-DROP,no-resolve
     - RULE-SET,reject-domain,REJECT,no-resolve
 
 rule-providers:
@@ -13,3 +14,10 @@ rule-providers:
         interval: 86400
         type: http
         url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/reject/domain/proxy.yaml?v=1734499493
+
+    reject-drop-domain:
+        behavior: domain
+        format: yaml
+        interval: 86400
+        type: http
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/clash/rules/reject/domain/reject-drop.yaml?v=1734499493
