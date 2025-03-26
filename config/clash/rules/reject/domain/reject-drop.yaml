@@ -5,3 +5,6 @@ payload:
     - "unitelogreport.reader.qq.com"
     - "otheve.beacon.qq.com"
     - "othstr.beacon.qq.com"
+    - "+.jpush.cn"
+    - "metrics.icloud.com"
+    - "firebaselogging-pa.googleapis.com"
