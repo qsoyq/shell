@@ -5,6 +5,7 @@ export DYLD_LIBRARY_PATH="/opt/homebrew/opt/cairo/lib:$DYLD_LIBRARY_PATH"
 # pmset
 alias enablesleep="sudo pmset -b sleep 5; sudo pmset -b disablesleep 0"
 alias disablesleep="sudo pmset -b sleep 0; sudo pmset -b disablesleep 1"
+alias psleep="pmset displaysleepnow"
 
 # Delete Apple System Logs
 alias dasl="sudo rm -rf /private/var/log/asl/*.asl"
