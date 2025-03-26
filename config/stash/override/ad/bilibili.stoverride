@@ -6,6 +6,7 @@ desc: |-
     - Bilibili HD 后台切前台闪屏广告
     - 直播右下角横幅小组件 | 航海粉丝日 | 团战燃魂赛
     - 直播间推荐购买商品悬浮窗 | 大家都在买
+    - 直播间一对一教学推荐
 
 category: qsoyq
 icon: https://i0.hdslb.com/bfs/static/jinkela/long/images/favicon.ico
@@ -32,3 +33,6 @@ http:
 
         # 直播间推荐购买商品悬浮窗 | 大家都在买
         - https://api.live.bilibili.com/xlive/e-commerce-interface/v1/ecommerce-user/get_shopping_info response-jq .data.recommend_card_detail=[]
+
+        # 直播间一对一教学推荐
+        - https://api.live.bilibili.com/xlive/app-ucenter/v2/playTogether/PlayTogetherServiceCardDetail response-jq .data={}
