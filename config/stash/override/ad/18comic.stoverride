@@ -76,6 +76,8 @@ http:
                     "console.log(\'123\')",\
                     "let node=context.document.querySelector(\'img[src=\\\"/templates/frontend/airav/img/daily/index_sign_in.png?v=\\\"]\');if(node){node.remove()}",\
                     "let node=context.document.querySelector(\'img[src=\\\"/templates/frontend/airav/img/float-right-close.png?v=\\\"]\');if(node){node.remove()}",\
+                    "Array.from(context.document.querySelectorAll(\'div[data-group=\\\"content_page1\\\"]\')).forEach(e=>{e.remove()})",\
+                    "Array.from(context.document.querySelectorAll(\'div[data-group=\\\"content_page2\\\"]\')).forEach(e=>{e.remove()})",\
                     "Array.from(context.document.querySelectorAll(\'div[class=\\\"col-6 col-md-6 col-sm-6\\\"]\')).forEach(e=>{e.remove()})",\
                     "Array.from(context.document.querySelectorAll(\'div[class=\\\"col-6 col-md-6 col-sm-6 col-xs-6\\\"]\')).forEach(e=>{e.remove()})",\
                     "Array.from(context.document.querySelectorAll(\'div[data-group=\\\"album_detail\\\"]\')).forEach(e=>{e.remove()})",\
