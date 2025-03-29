@@ -8,3 +8,6 @@ payload:
     - "+.jpush.cn"
     - "metrics.icloud.com"
     - "firebaselogging-pa.googleapis.com"
+    - "data.bilibili.com"
+    - "ios.bugly.qq.com"
+    - "g1.tagtic.cn"
