@@ -4,7 +4,7 @@ desc: |-
     - 首页上方好评弹窗
     - 首页上方养书提醒弹窗
     - 首页推书弹窗
-    - 首页右下角活动浮窗
+    - 首页右下角活动浮窗 | 
     - 阅读页面新闻 | 书友xxxx成为了本作品长老
     - 首页消息推送 | 夜冭殇支持《二手穿越：大耳贼刘备》白银宝箱,成为本作品的白银大盟
 category: qsoyq
@@ -17,8 +17,9 @@ http:
         - https://magev6.if.qidian.com/argus/api/v1/message/getPopup response-jq .Data={} # 首页上方弹窗，好评
         - https://magev6.if.qidian.com/argus/api/v1/maintain/playstrip response-jq .Data={} # 首页上方弹窗，开启养书提醒
 
-        - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ActivityPopup.Data=[] # 首页推书弹窗
-        - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ActivityIcon=null # 首页右下角活动浮窗
+        - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ActivityPopup={} # 首页推书弹窗
+        - https://magev6.if.qidian.com/argus/api/v1/client/getconf response-jq .Data.ActivityIcon={}
+        - https://magev6.if.qidian.com/argus/api/v1/bookshelf/getHoverAdv response-jq .Data.ItemList=[] # 首页右下角活动浮窗
 
         - https://magev6.if.qidian.com/argus/api/v1/assembly/toolbar response-jq .Data.Getbooknews={} # 书友xxxx成为了本作品长老
 
