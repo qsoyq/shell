@@ -17,17 +17,32 @@ http:
         - "*.bi16.cc"
         - "*.bi02.cc"
         - "*.qu07.cc"
+        - "*.biqu07.cc"
 
     script:
-        - name: 笔趣阁增强
-          match: https://.*.(bq|bi|qu).*.cc/(kan|book)/\d+/.*\.html
-          type: response
+        - name: bq
+          match: https://.*.(bq|bi|qu|biqu).*.cc/(kan|book)/\d+/.*\.html
+          binary-mode: false
+          max-size: 1048576
           require-body: true
-          timeout: 3
-          argument: >-
-              {"scripts": [{"parent":"head","src": "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/css.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/swipe.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/remove.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/replace.js"},{"src": "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/bg.js"}]}
-
+          timeout: 20
+          type: response
+          argument: |-
+              {\
+                "documentEvalCodes": [\
+                    "console.log(\'123\')",\
+                    "let ele=context.document.createElement(\'script\');ele.src=\\\"https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/css.js\\\";context.document.head.appendChild(ele)",\
+                    "let ele=context.document.createElement(\'script\');ele.src=\\\"https://raw.githubusercontent.com/qsoyq/shell/refs/heads/main/scripts/rewrite/bq/swipe.js\\\";context.document.body.appendChild(ele)",\
+                    "let ele=context.document.createElement(\'script\');ele.src=\\\"https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/remove.js\\\";context.document.body.appendChild(ele)",\
+                    "let ele=context.document.createElement(\'script\');ele.src=\\\"https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/replace.js\\\";context.document.body.appendChild(ele)",\
+                    "let ele=context.document.createElement(\'script\');ele.src=\\\"https://raw.githubusercontent.com/qsoyq/shell/main/scripts/rewrite/bq/bg.js\\\";context.document.body.appendChild(ele)",\
+                    "Array.from(context.document.querySelectorAll(\'div[id=\\\"read_error\\\"]\')).forEach(e=>{e.remove()})",\
+                    "Array.from(context.document.querySelectorAll(\'div[class=\\\"search\\\"]\')).forEach(e=>{e.remove()})",\
+                    "Array.from(context.document.querySelectorAll(\'div[class=\\\"readon\\\"]\')).forEach(e=>{e.remove()})",\
+                    "console.log(\'345\')"\
+                ]\
+              }
 script-providers:
-    笔趣阁增强:
-        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/html-add-script.js
+    bq:
+        url: https://raw.githubusercontent.com/qsoyq/shell/main/config/stash/script/debug/HttpRewrite.js
         interval: 86400
