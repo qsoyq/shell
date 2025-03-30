@@ -43,6 +43,8 @@ if (ele) {
         ["请收藏：https://m.bi02.cc", ""],
         ["请收藏：https://m.qu07.cc", ""],
         ["请收藏：https://www.qu07.cc", ""],
+        ["请收藏：https://m.biqu07.cc", ""],
+        ["请收藏：https://www.biqu07.cc", ""],
         ["\\?\\?", ""]
     ]
     let origin = ele.innerHTML
