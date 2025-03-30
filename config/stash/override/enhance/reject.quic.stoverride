@@ -2,9 +2,6 @@ name: QUIC 屏蔽
 desc: |-
 category: debug
 icon: https://stash.wiki/favicon.ico
-script:
-    shortcuts:
-        quic: network == 'udp' and dst_port == 443
 
 rules:
-    - SCRIPT,quic,REJECT
+    - PROTOCOL,QUIC,REJECT
