@@ -13,16 +13,16 @@ desc: |-
 
 category: qsoyq
 icon: https://wx.m.ddxq.mobi/favicon.ico
-dns:
-    fake-ip-filter:
-        # 透明代理下使用 fake-ip Tunnel 会导致未知原因的请求无法被还原成域名
-        - "maicai.api.ddxq.mobi"
+# dns:
+#     fake-ip-filter:
+#         # 透明代理下使用 fake-ip Tunnel 会导致未知原因的请求无法被还原成域名
+#         # 最新版已修复
+#         - "maicai.api.ddxq.mobi"
 http:
+    # force-http-engine:
+    #     - maicai.api.ddxq.mobi
     mitm:
         # 叮咚买菜
-        - maicai.api.ddxq.mobi
-        - pub.ddimg.mobi
-    force-http-engine:
         - maicai.api.ddxq.mobi
     body-rewrite:
         - https://maicai.api.ddxq.mobi/advert/getAd response-jq .data={}
@@ -42,6 +42,3 @@ http:
         - https://maicai.api.ddxq.mobi/homeApi/bottomNavi response-jq .data.bottom_list|=map(select(.name!="榜单")) # 底部导航栏移除榜单
 
         - https://maicai.api.ddxq.mobi/coupon/unused response-jq .data.ad_info={} # 我的优惠券 ｜ 邀请有礼
-
-    url-rewrite:
-        - ^https://pub.ddimg.mobi/compass-admin/\w+.(png|jpg)\?(height=1624&width=750|width=750&height=1624) - reject-img # 广告图片
