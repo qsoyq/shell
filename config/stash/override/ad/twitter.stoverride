@@ -7,6 +7,7 @@ desc: |-
     - 首页时间线 | Discover new Communities    
     - 首页时间线 | Creators for you | suggest_who_to_subscribe
     - 首页时间线 | Who to follow | suggest_who_to_follow
+    - 首页时间线 | Go ad-free with Premium+ | premium-plus-upsell-prompt
     - 详情页评论广告
     - 删除 CSP 策略，允许在网页上执行
 category: qsoyq
@@ -35,6 +36,9 @@ http:
 
         # 首页时间线 | Who to follow | suggest_who_to_follow
         - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="suggest_who_to_follow")) end
+
+        # 首页时间线 | Go ad-free with Premium+ | premium-plus-upsell-prompt
+        - https?://x.com/i/api/graphql/.+/HomeTimeline.*$ response-jq if .data.home.home_timeline_urt.instructions[0].entries != null then .data.home.home_timeline_urt.instructions[0].entries|=map(select(.content?.clientEventInfo?.component!="premium-plus-upsell-prompt")) end
 
         # 详情页评论广告
         - https?://x.com/i/api/graphql/.+/TweetDetail.*$ response-jq if .data.threaded_conversation_with_injections_v2.instructions[0].entries!=null then .data.threaded_conversation_with_injections_v2.instructions[0].entries|=map(select(.content?.items[0]?.item?.itemContent?.promotedMetadata==null)) end
