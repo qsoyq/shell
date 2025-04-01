@@ -427,6 +427,7 @@ function parseArticleMaxPage(document) {
 function encodeKeyname(keyname) {
     // keyname = `xx.knit.bid-${article.category}-${article.href}-${article.time}`.replace('/', '-')
     keyname = keyname.replace(/\[(.*)\]（.*）/, "$1")
+    keyname = keyname.replace(/(.*)\]（.*）/, "$1")
     keyname = keyname.replace('/', '-')
     // keyname = encodeURI(keyname)
     return keyname
