@@ -295,7 +295,7 @@ function getPersistentArgument(key) {
 
 /**
  * 返回当前的脚本类型
-* @returns {'request' | 'response' | 'tile' | 'cron'}
+* @returns {'request' | 'response' | 'tile' | 'cron' | 'undefined'}
  */
 function getScriptType() {
     return typeof $script !== 'undefined' ? $script.type : 'undefined'
@@ -426,7 +426,10 @@ function parseArticleMaxPage(document) {
 
 function encodeKeyname(keyname) {
     // keyname = `xx.knit.bid-${article.category}-${article.href}-${article.time}`.replace('/', '-')
-    return encodeURI(keyname).replace('/', '-')
+    keyname = keyname.replace(/\[(.*)\]（.*）/, "$1")
+    keyname = keyname.replace('/', '-')
+    // keyname = encodeURI(keyname)
+    return keyname
 }
 
 async function handler(page) {
