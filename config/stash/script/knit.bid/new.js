@@ -424,6 +424,11 @@ function parseArticleMaxPage(document) {
     return Math.max(...pages)
 }
 
+function encodeKeyname(keyname) {
+    // keyname = `xx.knit.bid-${article.category}-${article.href}-${article.time}`.replace('/', '-')
+    return encodeURI(keyname).replace('/', '-')
+}
+
 async function handler(page) {
     try {
         let headers = getScriptArgument('headers')
@@ -449,7 +454,8 @@ async function handler(page) {
             console.log(`article count: ${articleList.length}`)
             let force = getScriptArgument("force") || false
             for (const article of articleList) {
-                let keyname = `xx.knit.bid-${article.category}-${article.title}-${article.time}`.replace('/', '-')
+                let keyname = `xx.knit.bid-${article.category}-${article.title}-${article.time}`
+                keyname = encodeKeyname(keyname)
                 if (force !== true && getPersistentArgument(keyname)) {
                     console.log(`${article.title} skip`)
                     continue
@@ -530,10 +536,6 @@ async function handler(page) {
                     }
 
                     console.log(`[push] success.`)
-                    writePersistentArgument(keyname, keyname)
-
-                    // 兼容部分标题导致的缓存异常，不优雅，但是应该有用
-                    keyname = `xx.knit.bid-${article.category}-${article.href}-${article.time}`.replace('/', '-')
                     writePersistentArgument(keyname, keyname)
                 }
             }
