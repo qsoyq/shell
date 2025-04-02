@@ -3,7 +3,8 @@ desc: |-
     - 微博国际版首页和帖子内广告
     - 访问网页版微博时，发送通知, 经过点击通知跳转到微博国际版
 category: ad
-icon: https://m.weibo.cn/favicon.ico
+icon: https://raw.githubusercontent.com/qsoyq/icons/main/assets/icon/weibointl.png
+
 http:
     mitm:
         - api.weibo.cn
