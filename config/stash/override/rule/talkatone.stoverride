@@ -2,7 +2,7 @@ name: Talkatone分流代理
 desc: |-
     分流策略组 -> Talkatone
 category: qsoyq
-icon: https://www.talkatone.com/favicon.ico
+icon: https://raw.githubusercontent.com/qsoyq/icons/main/assets/icon/talkatone.png
 
 rules:
     - RULE-SET,talkatone-domain,Talkatone,no-resolve

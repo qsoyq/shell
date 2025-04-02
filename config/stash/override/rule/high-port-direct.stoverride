@@ -2,7 +2,7 @@ name: 高端口直连
 desc: |-
     - 端口大于 10000 直连
 category: qsoyq
-icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Direct.png
+icon: https://raw.githubusercontent.com/qsoyq/icons/main/assets/icon/stash.png
 
 rules:
     - SCRIPT,high-port-direct,DIRECT

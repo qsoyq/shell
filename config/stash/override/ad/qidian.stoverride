@@ -9,7 +9,8 @@ desc: |-
     - 首页消息推送 | 夜冭殇支持《二手穿越：大耳贼刘备》白银宝箱,成为本作品的白银大盟
     - 阅读页上方工具栏通知弹窗｜上月订阅满1000点，获得3张月票
 category: qsoyq
-icon: https://qdfepccdn.qidian.com/www.qidian.com/favicon/qd_icon.ico
+icon: https://raw.githubusercontent.com/qsoyq/icons/main/assets/icon/qidian.png
+
 http:
     mitm:
         - magev6.if.qidian.com
