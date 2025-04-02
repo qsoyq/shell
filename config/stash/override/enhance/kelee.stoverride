@@ -1,8 +1,9 @@
 name: 可莉资源浏览器访问
 desc: |-
+    - https://t.me/ibilibili
     - 绕过浏览器访问 WAF 拦截
 category: qsoyq
-icon: https://cdn5.cdn-telegram.org/file/mkUeWRu4hl5M_KrddsD4J5iwKtahN3X_5LoPJzpkCNulD3mAWv1v_Sqx-7OHbT80gH7kVqrhZHDFsmWuN2CnBZ2y3NX9aJdgf-rgwD3xcS6vdlb_d_Y8AjQcKjLESlxZLnTAanM_m0vdknBSvvO4oGugQG0DvXxWMcr4I_alviuoLu_-A247Bv4bBQS6EcGbTrXwt5bncusk06SSsuKG3FqM2Ie8wDyF54vsaurjAX5o6JEzg4xMaNDmKiUMfGu_iDa0mUHjhkm9xtzVsXPDFDkytjfTg2oALfTSRELz186L0f4DfKsGV-YEJoIdAfRf1BKvZj2sTjEpB2zVer737A.jpg
+icon: https://cdn5.cdn-telegram.org/file/dnOSp8bAvU9oBBZAQzz3HcfkphhtdTlDCRkQTPus2AC5BZmpr-bHlUVnJO8Mg23K-D4Y0aNFFFQqxT--93z8-lz5Qbp7LXP1PYtpbFwAHE9DyMN_2TIpKNYbLt57_wKCJ7zY9jNzwtECCR1_PNtB1zPckymPt7GjJElmuwwaedPjKwcOW85IXTZZ1KgiiY2SjLwbDUlexIOGCRkCYcsxKiNKmadlgGcVH65guAzaiFXEK0sENB0a3OWKLpXrDSu-r85vCCUo0zG9i8-RGnVBZS9ZsxHAy-uNHG4uRwSVBozOTsc_QhHQ4vIHt2WvyicTjkPReJ6_g7OSjrthE_cxYg.jpg
 http:
     mitm:
         - "kelee.one"
