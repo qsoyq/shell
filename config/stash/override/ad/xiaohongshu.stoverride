@@ -2,7 +2,7 @@ name: 小红书
 desc: |-
     - 首页推荐广告
 category: qsoyq
-icon: https://fe-video-qc.xhscdn.com/fe-platform/ed8fe781ce9e16c1bfac2cd962f0721edabe2e49.ico
+icon: https://raw.githubusercontent.com/qsoyq/icons/main/assets/icon/rednote.png
 http:
     mitm:
         - edith.xiaohongshu.com
