@@ -11,3 +11,8 @@ payload:
     - "data.bilibili.com"
     - "ios.bugly.qq.com"
     - "g1.tagtic.cn"
+    - "app-analytics-services.com"
+    - "firebaselogging-pa.googleapis.com"
+    - "mdap.alipay.com"
+    - "amdc.alipay.com"
+    - "dataflow.biliapi.com"
