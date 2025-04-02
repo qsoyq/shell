@@ -2,7 +2,7 @@ name: 高德地图
 desc: |-
     - 首页下方卡片
     - 首页顶部提醒
-category: A0
+category: qsoyq
 icon: https://www.amap.com/favicon.ico
 http:
     mitm:
