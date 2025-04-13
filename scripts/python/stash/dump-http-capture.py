@@ -144,6 +144,7 @@ def fetch_video(url: str, *, prefix="shcp/video/") -> None:
 def download(
     file: Path = typer.Argument(..., help="日志文件路径"),
 ):
+    """下载图片和视频"""
     image_urls = []
     video_urls = []
     for line in parse_log(file):
@@ -174,7 +175,7 @@ def urls(
     uniq: bool = typer.Option(True, "--uniq", help="去重"),
     sort: bool = typer.Option(True, "--sort", help="对结果排序"),
 ):
-    """分析 url"""
+    """返回所有请求的 URL"""
     urls = [line["request"]["url"] for line in parse_log(file) if line]
 
     hosts = []
