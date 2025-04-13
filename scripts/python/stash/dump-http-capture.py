@@ -30,7 +30,7 @@ class Response(BaseModel):
     status: int
     headers: dict
     body: str | None = Field(None)
-    decodeBody: object = Field(None)
+    json_: object | None = Field(None, alias='json')
 
 
 class Dev(BaseModel):
