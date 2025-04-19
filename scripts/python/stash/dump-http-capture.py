@@ -23,7 +23,7 @@ class Request(BaseModel):
     url: str
     method: str
     headers: dict
-    body: str | None = Field(None)
+    body: str | None | dict | list = Field(None)
 
 
 class Response(BaseModel):
