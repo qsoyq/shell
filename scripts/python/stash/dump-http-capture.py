@@ -29,8 +29,8 @@ class Request(BaseModel):
 class Response(BaseModel):
     status: int
     headers: dict
-    body: str | None = Field(None)
-    json_: object | None = Field(None, alias='json')
+    body: str | None | dict | list = Field(None)
+    json_: object | None = Field(None, alias="json")
 
 
 class Dev(BaseModel):
