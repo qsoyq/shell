@@ -3,6 +3,8 @@
 cp /Users/qs/works/github/shell/scripts/python/stash/dump-http-capture.py /usr/local/bin/shcp && chmod +x /usr/local/bin
 """
 
+import uuid
+import traceback
 import re
 import json
 import typer
@@ -102,12 +104,6 @@ def fetch_media(url: str, *, prefix="shcp") -> None:
             + parse_result.path[0]
             + parse_result.path[1:].replace("/", "-")
         )
-        path = Path(download_path)
-        if path.exists():
-            echo(f"file {path} exists, skip")
-            return
-
-        path.parent.mkdir(parents=True, exist_ok=True)
         resp = httpx.get(
             url,
             verify=False,
@@ -119,7 +115,25 @@ def fetch_media(url: str, *, prefix="shcp") -> None:
             echo(f"fetch {url} error: {resp.status_code}, body: {resp.text}")
             return
         ct = resp.headers.get("content-type", "")
-
+        ext = ""
+        path = Path(download_path)
+        try:
+            if path.exists():
+                echo(f"file {path} exists, skip")
+                return
+        except OSError as e:
+            if "File name too long" in str(e):
+                uid = uuid.uuid4().hex
+                new_download_path = prefix + uid + ext
+                new_path = Path(new_download_path)
+                echo(f"file name mapping: {path}->{new_path}")
+                path = new_path
+                if path.exists():
+                    echo(f"file {path} exists, skip")
+                    return
+            else:
+                traceback.print_exc()
+        path.parent.mkdir(parents=True, exist_ok=True)
         if ct.startswith("image/") or ct.startswith("video/"):
             ext = str(resp.headers.get("content-type", "")).split("/", 1)[-1]
             path = path.with_suffix(f".{ext}")
@@ -128,7 +142,8 @@ def fetch_media(url: str, *, prefix="shcp") -> None:
             return
         path.write_bytes(resp.content)
     except Exception as e:
-        echo(f"fetch {url} error: {e}")
+        traceback.print_exc()
+        echo(f"fetch {url} error: {type(e)} {e}")
         return
 
 
