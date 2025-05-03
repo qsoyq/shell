@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-cp /Users/qs/works/github/shell/scripts/python/stash/dump-http-capture.py /usr/local/bin/shcp && chmod +x /usr/local/bin
-"""
 
 import uuid
 import traceback
@@ -98,18 +95,11 @@ def fetch_media(url: str, *, prefix="shcp") -> None:
     try:
         echo(f"url: {url}")
         parse_result = urllib.parse.urlparse(url)
-        download_path = (
-            prefix
-            + parse_result.netloc
-            + parse_result.path[0]
-            + parse_result.path[1:].replace("/", "-")
-        )
+        download_path = prefix + parse_result.netloc + parse_result.path[0] + parse_result.path[1:].replace("/", "-")
         resp = httpx.get(
             url,
             verify=False,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
-            },
+            headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"},
         )
         if resp.is_error:
             echo(f"fetch {url} error: {resp.status_code}, body: {resp.text}")
