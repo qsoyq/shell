@@ -27,12 +27,13 @@ def get_current_datetime_str() -> str:
 @app.command()
 def main(endpoint: str = typer.Option("http://127.0.0.1:9090/", "--endpoint"), cmd: Path = typer.Option("open /Applications/Stash.app/", "--cmd", help="启动命令")):
     try:
-        resp = httpx.get(endpoint)
-        echo(resp.text)
+        httpx.get(endpoint)
     except httpx.ConnectError:
         exitcode = os.system(cmd)
         if exitcode:
             echo(f"execute {cmd} failed, exit: {exitcode}")
+        else:
+            echo(f"execute {cmd} successed, exit: {exitcode}")
 
 
 if __name__ == "__main__":
