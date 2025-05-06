@@ -25,7 +25,7 @@ def get_current_datetime_str() -> str:
 
 
 @app.command()
-def main(endpoint: str = typer.Option("http://127.0.0.1:9090/", "--endpoint"), cmd: Path = typer.Option("open /Applications/Stash.app/", "--cmd", help="启动命令")):
+def main(endpoint: str = typer.Option("http://127.0.0.1:9090/", "--endpoint"), cmd: str = typer.Option("open /Applications/Stash.app/", "--cmd", help="启动命令")):
     try:
         httpx.get(endpoint)
     except httpx.ConnectError:
