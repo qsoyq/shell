@@ -75,6 +75,7 @@ def main(cachepath: Path = typer.Option("~/.homechef", "--cachepath", help="ÊåÅ‰
     bark_token = get("bark_token")
     if not bark_token:
         echo("bark_token must exists. please execute update-env to save.")
+        raise typer.Exit(-3)
     url = "https://www.homechefapp.com/api/v1/public_dishes?lang=zh_cn&page=1&q&q_ingredient"
     resp = httpx.get(url, verify=False)
     resp.raise_for_status()
