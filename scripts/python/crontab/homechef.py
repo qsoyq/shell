@@ -5,7 +5,6 @@ import rich
 import rich.errors
 import shelve
 from pathlib import Path
-import functools
 import httpx
 from pydantic import BaseModel, Field
 
@@ -54,14 +53,39 @@ def get_current_datetime_str() -> str:
     return datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")
 
 
-def read_by_cache(filepath: str | Path, key):
-    with shelve.open(str(filepath), "c") as shl:
-        return shl.get(key)
+class ShelveStorage:
+    def __init__(self, path: str | Path):
+        if isinstance(path, str):
+            path = Path(path).expanduser()
+        self.path = path
 
+    def _get(self, key):
+        if not self.path.exists():
+            return None
+        with shelve.open(str(self.path), "r") as shl:
+            return shl.get(key)
 
-def write_cache(filepath: str | Path, key, value):
-    with shelve.open(str(filepath), "c") as shl:
-        shl[key] = value
+    def _set(self, key, value):
+        with shelve.open(str(self.path), "c") as shl:
+            shl[key] = value
+
+    def __setitem__(self, key, value):
+        return self._set(key, value)
+
+    def __getitem__(self, key):
+        return self._get(key)
+
+    def keys(self):
+        with shelve.open(str(self.path), "r") as shl:
+            for key in shl:
+                yield key
+
+    def iterall(self):
+        if not self.path.exists():
+            return
+        with shelve.open(str(self.path), "r") as shl:
+            for key in shl:
+                yield (key, shl[key])
 
 
 @app.command()
@@ -70,9 +94,8 @@ def main(cachepath: Path = typer.Option("~/.homechef", "--cachepath", help="持�
     if cachepath.is_dir():
         echo(f"{cachepath} must not be folder")
         raise typer.Exit(-2)
-    get = functools.partial(read_by_cache, cachepath)
-    write = functools.partial(write_cache, cachepath)
-    bark_token = get("bark_token")
+    shl = ShelveStorage(cachepath)
+    bark_token = shl["bark_token"]
     if not bark_token:
         echo("bark_token must exists. please execute update-env to save.")
         raise typer.Exit(-3)
@@ -80,7 +103,7 @@ def main(cachepath: Path = typer.Option("~/.homechef", "--cachepath", help="持�
     resp = httpx.get(url, verify=False)
     resp.raise_for_status()
     dishes = PublicDishesResSchema(**resp.json())
-    dishes = [dish for dish in dishes.items if not get(f"dishes-items-{dish.server_id}")]
+    dishes = [dish for dish in dishes.items if not shl[f"dishes-items-{dish.server_id}"]]
     if verbose:
         echo(f"fetch new dish count: {len(dishes)}")
     messages = []
@@ -104,17 +127,21 @@ def main(cachepath: Path = typer.Option("~/.homechef", "--cachepath", help="持�
     resp = httpx.post(url, json=payload, verify=False, timeout=60)
     resp.raise_for_status()
     for dish in dishes:
-        write(f"dishes-items-{dish.server_id}", dish.model_dump_json())
+        shl[f"dishes-items-{dish.server_id}"] = dish.model_dump_json()
 
 
 @app.command()
-def update_env(cachepath: Path = typer.Option("~/.homechef", "--cachepath", help="持久化存储目录"), bark_token: str = typer.Option(..., "--bark-token", prompt=True, help="Bark 推送 API Token")):
+def update_env(
+    cachepath: Path = typer.Option("~/.homechef", "--cachepath", help="持久化存储目录"), bark_token: str = typer.Option(None, "--bark-token", prompt="输入 Bark Token", help="Bark 推送 API Token")
+):
     cachepath = cachepath.expanduser()
     if cachepath.is_dir():
         echo(f"{cachepath} must not be folder")
         raise typer.Exit(-2)
-    write = functools.partial(write_cache, cachepath)
-    write("bark_token", bark_token)
+    shl = ShelveStorage(cachepath)
+    if bark_token:
+        shl["bark_token"] = bark_token
+        echo("更新 bark_token 成功")
 
 
 @app.command()
@@ -123,9 +150,10 @@ def env(cachepath: Path = typer.Option("~/.homechef", "--cachepath", help="持�
     if cachepath.is_dir():
         echo(f"{cachepath} must not be folder")
         raise typer.Exit(-2)
-    get = functools.partial(read_by_cache, cachepath)
-    bark_token = get("bark_token")
-    echo(f"bark_token: {bark_token}")
+    shl = ShelveStorage(cachepath)
+    envs = ["bark_token"]
+    for env in envs:
+        echo(f"{env}: {shl[env]}")
 
 
 @app.callback()
