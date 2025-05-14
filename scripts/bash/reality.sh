@@ -1,6 +1,7 @@
 #!/bin/sh
 # forum: https://1024.day
 # https://github.com/yeahwu/v2ray-wss
+# curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/bash/reality.sh > reality.sh ; bash reality.sh
 
 if [[ $EUID -ne 0 ]]; then
     clear
@@ -14,13 +15,13 @@ v2uuid=$(cat /proc/sys/kernel/random/uuid)
 read -t 15 -p "回车或等待15秒为默认端口443，或者自定义端口请输入(1-65535)："  getPort
 if [ -z $getPort ];then
     getPort=443
-    echo "\n"
+    echo ""
 fi
 
 read -t 15 -p "回车或等待15秒为默认域名 www.amazon.com，或者自定义SNI请输入："  getSni
 if [ -z $getSni ];then
     getSni=www.amazon.com
-    echo "\n"
+    echo ""
 fi
 
 getIP(){
