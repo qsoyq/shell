@@ -16,7 +16,7 @@ if [ -z $getPort ];then
     getPort=443
 fi
 
-read -t 15 -p "回车或等待15秒为默认域名 www.amazon.com，或者自定义端口请输入："  getSni
+read -t 15 -p "回车或等待15秒为默认域名 www.amazon.com，或者自定义SNI请输入："  getSni
 if [ -z $getSni ];then
     getSni=www.amazon.com
 fi
