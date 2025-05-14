@@ -122,7 +122,7 @@ cat >/usr/local/etc/xray/config.json<<EOF
                     "dokodemo-in"
                 ],
                 "domain": [
-                    "www.amazon.com"
+                    "$getSni"
                 ],
                 "outboundTag": "direct"
             },
