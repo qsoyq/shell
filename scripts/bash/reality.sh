@@ -1,7 +1,10 @@
 #!/bin/sh
 # forum: https://1024.day
 # https://github.com/yeahwu/v2ray-wss
-# curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/bash/reality.sh > reality.sh ; bash reality.sh
+# bash -c "$(curl -s https://raw.githubusercontent.com/qsoyq/shell/main/scripts/bash/reality.sh)"
+# systemctl stop xray
+# bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove
+
 
 if [[ $EUID -ne 0 ]]; then
     clear
