@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 pip install --upgrade certifi   --trusted-host pypi.org --trusted-host files.pythonhosted.org
 pip install --upgrade pip   --trusted-host pypi.org --trusted-host files.pythonhosted.org
-pip install PyYAML httpx bs4 typer rich tabulate socksio ipython pysocks ipython pyvim ruff you-get vcron --trusted-host pypi.org --trusted-host files.pythonhosted.org
+pip install PyYAML httpx bs4 typer rich tabulate socksio ipython pysocks ipython pyvim ruff you-get vcron pythonping dnspython --trusted-host pypi.org --trusted-host files.pythonhosted.org
 
 curl -sL -o /usr/local/bin/mikanani-magnet "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/mikanani/filter.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/replace-all "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/terminal/replace-all.py?v=$(date +%s)"
@@ -22,5 +22,6 @@ curl -sL -o /usr/local/bin/keep-last-log "https://raw.githubusercontent.com/qsoy
 curl -sL -o /usr/local/bin/stash-guardian "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/stash/guardian.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/pmonitor "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/tool/pmonitor.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/homechef "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/crontab/homechef.py?v=$(date +%s)"
+curl -sL -o /usr/local/bin/dns-latency-ranker "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/tool/dns_latency_ranker.py?v=$(date +%s)"
 
 chmod +x /usr/local/bin/*
