@@ -11,7 +11,7 @@ elif [ -e "/usr/bin/yum" ]; then
 elif [ -e "/usr/bin/dnf" ]; then
     dnf install make gcc patch zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel libuuid-devel gdbm-libs libnsl2 -y
 elif [ -e "/usr/bin/pacman" ]; then
-    pacman -S --needed base-devel openssl zlib xz tk --noconfirm
+    pacman -S --needed base-devel openssl zlib xz tk git --noconfirm
 elif [ -e "/sbin/apk" ]; then
     apk add --no-cache git bash build-base libffi-dev openssl-dev bzip2-dev zlib-dev xz-dev readline-dev sqlite-dev tk-dev
 else
