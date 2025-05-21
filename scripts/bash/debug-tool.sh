@@ -23,5 +23,6 @@ curl -sL -o /usr/local/bin/stash-guardian "https://raw.githubusercontent.com/qso
 curl -sL -o /usr/local/bin/pmonitor "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/tool/pmonitor.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/homechef "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/crontab/homechef.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/dns-latency-ranker "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/tool/dns_latency_ranker.py?v=$(date +%s)"
+curl -sL -o /usr/local/bin/FeedAlert "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/tool/FeedAlert.py?v=$(date +%s)"
 
 chmod +x /usr/local/bin/*
