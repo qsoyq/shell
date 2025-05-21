@@ -15,7 +15,7 @@ elif [ -e "/usr/bin/pacman" ]; then
 elif [ -e "/sbin/apk" ]; then
     apk add --no-cache git bash build-base libffi-dev openssl-dev bzip2-dev zlib-dev xz-dev readline-dev sqlite-dev tk-dev
 else
-    echo "cat /etc/os-release"
+    echo "Unsupported distribution"
     cat /etc/os-release
     exit 1
 fi
