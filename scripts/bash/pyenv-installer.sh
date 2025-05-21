@@ -31,4 +31,3 @@ echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bas
 echo 'eval "$(pyenv init - bash)"' >> ~/.bash_profile
 source ~/.bash_profile
 
-pacman -S --needed base-devel openssl zlib xz tk
