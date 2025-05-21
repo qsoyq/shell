@@ -6,8 +6,7 @@ elif [ -e "/usr/bin/apt" ]; then
     libbz2-dev libreadline-dev libsqlite3-dev curl git \
     libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev -y
 elif [ -e "/usr/bin/yum" ]; then
-    yum install gcc make patch zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel -y
-    yum install openssl11-devel -y
+    yum install git make patch zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel -y
 elif [ -e "/usr/bin/dnf" ]; then
     dnf install make gcc patch zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel libuuid-devel gdbm-libs libnsl2 -y
 elif [ -e "/usr/bin/pacman" ]; then
