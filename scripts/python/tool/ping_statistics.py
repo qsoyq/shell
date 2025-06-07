@@ -38,7 +38,8 @@ def main(ip: list[str] = typer.Argument(..., help="待测试 ip 列表"), count:
             _ip = ip[index]
             item: executor.ResponseList
             rows.append((_ip, int(item.rtt_min * 1000), int(item.rtt_avg * 1000), int(item.rtt_max * 1000), item.packet_loss))
-    rows = sorted(rows, key=lambda x: (x[4], x[2]))
+    # 目前实现中丢包视为延迟 2000, 所以仅需根据 avg 排序更直观
+    rows = sorted(rows, key=lambda x: x[2])
     output = tabulate(rows, headers=headers, tablefmt="pipe")
 
     print(output)
