@@ -146,7 +146,7 @@ def main(
     for item in feed.item:
         if verbose:
             echo(f"[Entry]\n{item}")
-        keyname = f"{item.link}-{item.pubDate}"
+        keyname = f"{item.guid.text or item.link} - {item.pubDate}"
         if shl[keyname]:
             continue
         payload = make_push_messages([item], bark_token, bark_icon, bark_level, bark_group)
