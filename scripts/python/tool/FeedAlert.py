@@ -12,6 +12,12 @@ import xmltodict
 app = typer.Typer()
 
 
+class ChannelImage(BaseModel):
+    url: str | None = Field(None)
+    title: str | None = Field(None)
+    link: str | None = Field(None)
+
+
 class GUID(BaseModel):
     isPermaLink: str | None = Field(None, alias="@isPermaLink")
     text: str | None = Field(None, alias="@text")
@@ -42,6 +48,7 @@ class Feed(BaseModel):
     description: str = Field(...)
     link: str = Field(...)
     item: list[Entry] = Field(...)
+    image: ChannelImage | None = Field(None)
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -149,6 +156,8 @@ def main(
         keyname = f"{item.guid.text or item.link} - {item.pubDate}"
         if shl[keyname]:
             continue
+        if bark_icon is None and feed.image and feed.image.url:
+            bark_icon = feed.image.url
         payload = make_push_messages([item], bark_token, bark_icon, bark_level, bark_group)
         url = "https://p.19940731.xyz/api/notifications/push/v3"
         if verbose:
