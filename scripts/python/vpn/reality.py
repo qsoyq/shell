@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import os
 import json
-import uuid
 import sys
 import select
 import rich
 from datetime import datetime
+from uuid import uuid4
 import typer
 from subprocess import run, CompletedProcess
 import shlex
@@ -146,6 +146,10 @@ def main(
     sni: str | None = typer.Option(None),
     sniff: bool | None = typer.Option(None),
     port: str | None = typer.Option(None),
+    uuid: str | None = typer.Option(None),
+    short_ids: int | None = typer.Option(None),
+    public_key: str | None = typer.Option(None),
+    private_key: str | None = typer.Option(None),
 ):
     if not is_root():
         echo("必须以 root 用户运行")
@@ -156,7 +160,10 @@ def main(
         sni = input_with_timeout("回车或等待15秒为默认域名 www.amazon.com，或者自定义SNI请输入：", 15) or "www.amazon.com"
     if sniff is None:
         sniff = (input_with_timeout("回车或等待15秒为默认关闭sniffing，启用请输入 y/Y：", 15) or "n").lower() == "y"
-    uid = str(uuid.uuid4())
+    if short_ids is None:
+        short_ids = int(input_with_timeout("回车或等待15秒为默认88，或者自定义输入", 15) or 88)
+    if uuid is None:
+        uuid = str(uuid4())
     echo(port, sni, sniff)
     p, addr = get_v4_ip()
     if not addr:
@@ -169,7 +176,11 @@ def main(
         raise typer.Exit(2)
 
     install_xray()
-    private_key, public_key = get_xray_key()
+    if public_key is None and private_key is None:
+        private_key, public_key = get_xray_key()
+    elif public_key is None or private_key is None:
+        echo("The public_key and private_key must be provided together.")
+        raise typer.Exit(3)
     xray_config_template["log"]["loglevel"] = loglevel
     if access_log:
         xray_config_template["log"]["access"] = access_log
@@ -177,14 +188,17 @@ def main(
         xray_config_template["log"]["error"] = error_log
     xray_config_template["inbounds"][0]["port"] = port
     xray_config_template["inbounds"][0]["sniffing"]["enabled"] = sniff
-    xray_config_template["inbounds"][0]["settings"]["clients"][0]["id"] = uid
+    xray_config_template["inbounds"][0]["settings"]["clients"][0]["id"] = uuid
     xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["dest"] = f"{sni}:443"
+    xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["shortIds"] = [short_ids]
     xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["serverNames"] = [f"{sni}"]
     xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["privateKey"] = private_key
-    client_info = {"port": port, "address": addr, "uuid": uid, "public key": public_key, "sni": sni, "shortIds": 88}
+
+    client_info = {"port": port, "address": addr, "uuid": uuid, "public key": public_key, "sni": sni, "shortIds": short_ids}
     xray_config_path = Path("/usr/local/etc/xray/config.json")
     xray_config_path.touch()
     xray_config_path.write_text(json.dumps(xray_config_template, indent=4))
+
     client_info_path = Path("/usr/local/etc/xray/reclient.json")
     client_info_path.touch()
     client_info_path.write_text(json.dumps(client_info, indent=4))
@@ -193,7 +207,7 @@ def main(
 
     echo("服务端配置: /usr/local/etc/xray/config.json")
     echo("客户端配置: /usr/local/etc/xray/reclient.json")
-    echo(f"vless://{uid}@{addr}:{port}?encryption=none&flow=xtls-rprx-vision&security=reality&sni={sni}&fp=chrome&pbk={public_key}&sid=88&type=tcp&headerType=none#1024-reality")
+    echo(f"vless://{uuid}@{addr}:{port}?encryption=none&flow=xtls-rprx-vision&security=reality&sni={sni}&fp=chrome&pbk={public_key}&sid={short_ids}&type=tcp&headerType=none")
     print(json.dumps(client_info, indent=4))
     echo("xray关闭: systemctl enable xray.service")
     echo("xray重启: systemctl restart xray.service")
