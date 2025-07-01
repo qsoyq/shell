@@ -206,7 +206,7 @@ def main(
             "afterBytes": random.randint(1024 * 1024 * 1, 1024 * 1024 * 4),
             "bytesPerSec": random.randint(int(1024 * 1024 * 1 / 8), int(1024 * 1024 * 2 / 8)),
         }
-        limit_fallback_config["limit_fallback_config"] = int(limit_fallback_config["bytesPerSec"] * random.randint(10, 20) / 10)
+        limit_fallback_config["burstBytesPerSec"] = int(limit_fallback_config["bytesPerSec"] * random.randint(10, 20) / 10)
         xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["limitFallbackUpload"] = limit_fallback_config
         xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["limitFallbackDownload"] = limit_fallback_config
     xray_config_template["inbounds"][0]["port"] = port
