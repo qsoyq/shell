@@ -203,7 +203,7 @@ def main(
         xray_config_template["log"]["error"] = error_log
     if limit_fallback:
         limit_fallback_config = {
-            "afterBytes": random.randint(1024 * 1024 * 1, 1024 * 4),
+            "afterBytes": random.randint(1024 * 1024 * 1, 1024 * 1024 * 4),
             "bytesPerSec": random.randint(int(1024 * 1024 * 1 / 8), int(1024 * 1024 * 2 / 8)),
         }
         limit_fallback_config["limit_fallback_config"] = int(limit_fallback_config["bytesPerSec"] * random.randint(10, 20) / 10)
