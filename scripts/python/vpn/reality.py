@@ -176,7 +176,7 @@ def main(
     if sniff is None:
         sniff = (input_with_timeout("回车或等待15秒为默认关闭sniffing，启用请输入 y/Y：", 15) or "n").lower() == "y"
     if short_ids is None:
-        short_ids = input_with_timeout("回车或等待15秒为默认88，或者自定义输入", 15) or "88"
+        short_ids = input_with_timeout("回车或等待15秒shortids为默认88，或者自定义输入", 15) or "88"
     if uuid is None:
         uuid = str(uuid4())
     echo(port, sni, sniff)
