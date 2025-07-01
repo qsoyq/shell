@@ -67,10 +67,6 @@ def main(
 
     wget https://github.com/zhboner/realm/releases/download/v2.7.0/realm-x86_64-unknown-linux-gnu.tar.gz -O - | tar -xz -C /usr/local/bin/
     """
-    if not is_root():
-        echo("必须以 root 用户运行")
-        raise typer.Exit(1)
-
     if listen_port is None:
         listen_port = input_with_timeout("回车或等待15秒为默认端口443，或者自定义端口请输入(1-65535)：", 15) or "443"
     local_ports = parse_ports(listen_port)
