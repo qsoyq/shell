@@ -13,9 +13,7 @@ def get_current_datetime_str():
 
 @app.command()
 def main(
-    until: datetime = typer.Option(
-        None, "-d", "--datetime", help="在该时间点后继续执行"
-    ),
+    until: datetime = typer.Option(None, "-d", "--datetime", help="在该时间点后继续执行"),
 ):
     """
     解析参数挂起直到指定时间
@@ -28,9 +26,7 @@ def main(
 
         delta = until - current
         wait = delta.seconds + delta.microseconds / 1_000_000
-        print(
-            f"[{get_current_datetime_str()}] [Datetime] next run at {until},  execute after {wait} s"
-        )
+        print(f"[{get_current_datetime_str()}] [Datetime] next run at {until},  execute after {wait} s")
         time.sleep(wait)
         raise typer.Exit(0)
     raise typer.Exit(0)

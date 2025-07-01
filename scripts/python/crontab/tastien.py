@@ -29,17 +29,11 @@ def sign():
 
 @app.command()
 def point_create(
-    userToken: str = typer.Option(
-        ..., "-u", "--userToken", help="替换前的字符串", envvar="userToken"
-    ),
-    activityId: str = typer.Option(
-        ..., "-a", "--activityId", help="替换后的字符串", envvar="activityId"
-    ),
+    userToken: str = typer.Option(..., "-u", "--userToken", help="替换前的字符串", envvar="userToken"),
+    activityId: str = typer.Option(..., "-a", "--activityId", help="替换后的字符串", envvar="activityId"),
     max_try: int = typer.Option(15, "--max-try", help="最大尝试次数"),
     webhook: str = typer.Option(None, "-w", "--webhook", help="请求成功后回调的 URL"),
-    until: datetime = typer.Option(
-        None, "-d", "--datetime", help="在该时间点后继续执行"
-    ),
+    until: datetime = typer.Option(None, "-d", "--datetime", help="在该时间点后继续执行"),
 ):
     """
     塔斯汀积分兑换

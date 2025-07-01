@@ -174,25 +174,17 @@ class BarkPushScheme(BaseModel):
     body: str
     category: str | None = Field(None, help="Reserved field, no use yet")
     device_key: str | None = Field(None, help="bark token, The key for each device")
-    level: BarkPushLevel | None = Field(
-        None, help="'active', 'timeSensitive', or 'passive'"
-    )
+    level: BarkPushLevel | None = Field(None, help="'active', 'timeSensitive', or 'passive'")
     badge: int | None = Field(
         None,
         help="The number displayed next to App icon ([Apple Developer](https://developer.apple.com/documentation/usernotifications/unnotificationcontent/1649864-badge))",
     )
     automaticallyCopy: str | None = Field(None, help="Must be 1")
     _copy: str | None = Field(None, help="The value to be copied", alias="copy")
-    sound: str | None = Field(
-        None, help="Value from [here](https://github.com/Finb/Bark/tree/master/Sounds)"
-    )
-    icon: str | None = Field(
-        None, help="An url to the icon, available only on iOS 15 or later"
-    )
+    sound: str | None = Field(None, help="Value from [here](https://github.com/Finb/Bark/tree/master/Sounds)")
+    icon: str | None = Field(None, help="An url to the icon, available only on iOS 15 or later")
     group: str | None = Field(None, help="The group of the notification")
-    isArchive: str | None = Field(
-        None, help="Value must be 1. Whether or not should be archived by the app"
-    )
+    isArchive: str | None = Field(None, help="Value must be 1. Whether or not should be archived by the app")
     url: str | None = Field(None, help="Url that will jump when click notification")
 
 
@@ -387,9 +379,7 @@ class BatteryPowerNotifier(threading.Thread):
     >>> BatteryPowerNotifier(bark_token, min_power=min_power, name="BatteryPowerNotifier20").start().join()
     """
 
-    def __init__(
-        self, bark_token: str, interval: int = 60, min_power: int = 20, **kwargs
-    ):
+    def __init__(self, bark_token: str, interval: int = 60, min_power: int = 20, **kwargs):
         kwargs.setdefault("name", "BatteryPowerNotifier")
         super().__init__(**kwargs)
         self.interval = interval
@@ -410,9 +400,7 @@ class BatteryPowerNotifier(threading.Thread):
     @Tools.thread_error_handler
     def run(self) -> None:
         while True:
-            logger.info(
-                f"{self.__class__.__name__} date {datetime.fromtimestamp(int(time.time()))}"
-            )
+            logger.info(f"{self.__class__.__name__} date {datetime.fromtimestamp(int(time.time()))}")
             percent = BatteryPowerNotifier.get_battery_power_percent()
             if percent is not None:
                 if percent <= self.min_power:
@@ -437,9 +425,7 @@ class BatteryPowerNotifier(threading.Thread):
 class RSSHubWatcher(ABC, threading.Thread):
     """https://docs.rsshub.app/zh/"""
 
-    def __init__(
-        self, bark_token: str, context: dict | None = None, interval: int = 60, **kwargs
-    ):
+    def __init__(self, bark_token: str, context: dict | None = None, interval: int = 60, **kwargs):
         super().__init__(**kwargs)
         self.interval = interval
         self.context = context or {}
@@ -453,9 +439,7 @@ class RSSHubWatcher(ABC, threading.Thread):
     @Tools.thread_error_handler
     def run(self) -> None:
         while True:
-            logger.info(
-                f"RSSHubWatcher {self.__class__.__name__} date {datetime.now()}"
-            )
+            logger.info(f"RSSHubWatcher {self.__class__.__name__} date {datetime.now()}")
             self.parse_rss()
             time.sleep(self.interval)
 
@@ -477,9 +461,7 @@ class RSSHubWatcher(ABC, threading.Thread):
                 res = BarkAPI(self.bark_token).push(body)
                 res.raise_for_status()
             except Exception as e:
-                logger.warning(
-                    f"{self.__class__.__name__} bark notification failed: {e}"
-                )
+                logger.warning(f"{self.__class__.__name__} bark notification failed: {e}")
                 self.failed_messages.append(message)
 
     @abstractmethod
@@ -565,9 +547,7 @@ class MikananiRssWatcher(threading.Thread):
     def __init__(self, bark_token: str, rss_url: str, interval: int = 60, **kwargs):
         super().__init__(**kwargs)
         _local = LocalStorage().get(self.__class__.__name__, {})
-        self.start_datetime = parser.parse(
-            _local.get("start_datetime", str(datetime.now()))
-        )
+        self.start_datetime = parser.parse(_local.get("start_datetime", str(datetime.now())))
         self.interval = interval
         self.rss_url = rss_url
         self.bark_token = bark_token

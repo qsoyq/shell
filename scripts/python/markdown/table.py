@@ -63,9 +63,7 @@ def sort(
         row = {k: v for k, v in zip(headers, line)}
         tables.append(row)
 
-    tables = sorted(
-        tables, key=lambda x: tuple(x.get(k, None) for k in sort_keys), reverse=reverse
-    )
+    tables = sorted(tables, key=lambda x: tuple(x.get(k, None) for k in sort_keys), reverse=reverse)
 
     sorted_table: List[List] = []
     for row in tables:

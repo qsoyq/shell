@@ -82,23 +82,15 @@ class AliyunOSSTool:
 
         return signature
 
-    def generate_authorization(
-        self, date: str, http_method: str, object_name: str, content_type: str
-    ) -> str:
+    def generate_authorization(self, date: str, http_method: str, object_name: str, content_type: str) -> str:
         signature = self.generate_sign(http_method, object_name, date, content_type)
         authorization = f"OSS {self._access_key_id}:{signature}"
         return authorization
 
-    def get_headers(
-        self, http_method: str, object_name: str, content_type: str
-    ) -> dict:
-        date = datetime.datetime.now(datetime.timezone.utc).strftime(
-            "%a, %d %b %Y %H:%M:%S GMT"
-        )
+    def get_headers(self, http_method: str, object_name: str, content_type: str) -> dict:
+        date = datetime.datetime.now(datetime.timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
         host = self._host
-        authorization = self.generate_authorization(
-            date, http_method, object_name, content_type
-        )
+        authorization = self.generate_authorization(date, http_method, object_name, content_type)
         headers = {
             "Authorization": authorization,
             "Content-Type": content_type,
@@ -157,14 +149,10 @@ class Workflow:
                 ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
                 res = httpx.get(url, verify=False, headers={"User-Agent": ua})
                 if res.status_code >= 400:
-                    typer.echo(
-                        f"\n[Warning] can't fetch data: {res.status_code}\t{url}\t{res.content}"
-                    )
+                    typer.echo(f"\n[Warning] can't fetch data: {res.status_code}\t{url}\t{res.content}")
                     return None
                 else:
-                    content_type = res.headers.get(
-                        "content-type", "application/octet-stream"
-                    )
+                    content_type = res.headers.get("content-type", "application/octet-stream")
                     data = res.content
                     return ImageData(content_type=content_type, data=data)
             else:
@@ -179,9 +167,7 @@ class Workflow:
             with fpath.open("rb") as fp:
                 data = fp.read()
                 content_type = helper._get_content_type(fpath.resolve())
-                return ImageData(
-                    content_type=content_type, data=data, local_file_path=fpath
-                )
+                return ImageData(content_type=content_type, data=data, local_file_path=fpath)
 
     def new_line(self, line: str):
         helper = self._helper
@@ -197,11 +183,7 @@ class Workflow:
             return line
 
         random_path = uuid.uuid4().hex
-        object_name = (
-            f"{helper._bucket_object_prefix}/{random_path}"
-            if helper._bucket_object_prefix
-            else f"{random_path}"
-        )
+        object_name = f"{helper._bucket_object_prefix}/{random_path}" if helper._bucket_object_prefix else f"{random_path}"
 
         if image_data.content_type.startswith("image/"):
             ext = image_data.content_type.split("/")[-1]
@@ -215,9 +197,7 @@ class Workflow:
         )
         if res.status_code >= 400:
             assert image_data.local_file_path
-            typer.echo(
-                f"\n[Error]: put file {image_data.local_file_path.name} failed. detail: {res.status_code}, {res.text}"
-            )
+            typer.echo(f"\n[Error]: put file {image_data.local_file_path.name} failed. detail: {res.status_code}, {res.text}")
             return line
         new_url = f"https://{helper._host}/{object_name}"
         new_line = line.replace(url, new_url)
@@ -264,9 +244,7 @@ def main(
     ),
     directory: Path = typer.Option(..., "-d", "--directory", help="扫描目录"),
 ):
-    helper = AliyunOSSTool(
-        region, bucket_name, access_key_id, access_key_secret, bucket_object_prefix
-    )
+    helper = AliyunOSSTool(region, bucket_name, access_key_id, access_key_secret, bucket_object_prefix)
     workflow = Workflow(helper, directory)
     workflow.get_directory_pics()
     workflow.replace_inline_pics()

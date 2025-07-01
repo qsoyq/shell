@@ -5,7 +5,6 @@ import typer
 import rich
 import rich.errors
 import httpx
-from pathlib import Path
 
 app = typer.Typer()
 

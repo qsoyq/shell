@@ -23,9 +23,7 @@ def main(
     resp = httpx.get(url)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "lxml")
-    for item in soup.select(
-        "#sk-container > div.central-container > table > tbody > tr > td"
-    ):
+    for item in soup.select("#sk-container > div.central-container > table > tbody > tr > td"):
         a = item.select_one("a")
         if a is None or filter_words not in a.text:
             continue

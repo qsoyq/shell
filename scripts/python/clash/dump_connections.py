@@ -32,9 +32,7 @@ def main(
         "--url",
         help="clash connections api endpoint",
     ),
-    output: Path = typer.Option(
-        "./connections.json", "-o", "--output", help="输出路径"
-    ),
+    output: Path = typer.Option("./connections.json", "-o", "--output", help="输出路径"),
     interval: float = typer.Option(1, "--interval", help="连接数据写入文件的间隔时间"),
 ):
     result = set()
