@@ -3,6 +3,7 @@ import os
 import json
 import sys
 import select
+import random
 import rich
 from datetime import datetime
 from uuid import uuid4
@@ -37,6 +38,16 @@ xray_config_template = {
                     "maxClientVer": "",
                     "maxTimeDiff": 0,
                     "shortIds": ["88"],
+                    "limitFallbackUpload": {
+                        "afterBytes": 0,
+                        "bytesPerSec": 0,
+                        "burstBytesPerSec": 0,
+                    },
+                    "limitFallbackDownload": {
+                        "afterBytes": 0,
+                        "bytesPerSec": 0,
+                        "burstBytesPerSec": 0,
+                    },
                 },
             },
             "sniffing": {"enabled": True, "destOverride": ["http", "tls", "quic"]},
@@ -150,7 +161,11 @@ def main(
     short_ids: str | None = typer.Option(None),
     public_key: str | None = typer.Option(None),
     private_key: str | None = typer.Option(None),
+    limit_fallback: bool = typer.Option(False, help="是否启用回落限速, 启用后参数随机设置"),
 ):
+    """
+    https://github.com/XTLS/REALITY
+    """
     if not is_root():
         echo("必须以 root 用户运行")
         raise typer.Exit(1)
@@ -186,6 +201,14 @@ def main(
         xray_config_template["log"]["access"] = access_log
     if error_log:
         xray_config_template["log"]["error"] = error_log
+    if limit_fallback:
+        limit_fallback_config = {
+            "afterBytes": random.randint(1024 * 1024 * 1, 1024 * 4),
+            "bytesPerSec": random.randint(int(1024 * 1024 * 1 / 8), int(1024 * 1024 * 2 / 8)),
+        }
+        limit_fallback_config["limit_fallback_config"] = int(limit_fallback_config["bytesPerSec"] * random.randint(10, 20) / 10)
+        xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["limitFallbackUpload"] = limit_fallback_config
+        xray_config_template["inbounds"][0]["streamSettings"]["realitySettings"]["limitFallbackDownload"] = limit_fallback_config
     xray_config_template["inbounds"][0]["port"] = port
     xray_config_template["inbounds"][0]["sniffing"]["enabled"] = sniff
     xray_config_template["inbounds"][0]["settings"]["clients"][0]["id"] = uuid
