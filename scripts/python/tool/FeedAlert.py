@@ -113,7 +113,7 @@ def make_push_messages(entries: list[Entry], bark_token: str, icon: str | None, 
             "bark": {
                 "device_key": bark_token,
                 "title": entry.title,
-                "body": f"{entry.description}\n{entry.pubDate}",
+                "body": f"{entry.description or ''}\n{entry.pubDate}",
                 "level": level,
                 "icon": icon,
                 "group": group,
