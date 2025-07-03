@@ -31,7 +31,7 @@ class GUID(BaseModel):
 
 class Entry(BaseModel):
     title: str = Field(...)
-    description: str = Field("")
+    description: str | None = Field("")
     link: str = Field(...)
     guid: GUID = Field(...)
     pubDate: str = Field(...)
