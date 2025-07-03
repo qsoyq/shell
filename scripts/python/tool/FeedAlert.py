@@ -151,6 +151,7 @@ def main(
         echo(f"[Feed]\n{feed}")
 
     for item in feed.item:
+        item.description = item.description or ""
         if verbose:
             echo(f"[Entry]\n{item}")
         keyname = f"{item.guid.text or item.link} - {item.pubDate}"
