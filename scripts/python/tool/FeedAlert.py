@@ -133,6 +133,7 @@ def main(
     bark_level: str | None = typer.Option(None, "--bark-level", help="'active', 'timeSensitive', or 'passive', or 'critical'"),
     bark_group: str | None = typer.Option(None, "--bark-group"),
     verbose: bool = typer.Option(True, help="详细输出"),
+    block_words: list[str] | None = typer.Option(None, help="屏蔽关键词"),
 ):
     cachepath = cachepath.expanduser()
     shl = ShelveStorage(cachepath)
@@ -151,6 +152,15 @@ def main(
         echo(f"[Feed]\n{feed}")
 
     for item in feed.item:
+        if block_words:
+            skip = False
+            for word in block_words:
+                if word in str(item):
+                    skip = True
+                    break
+            if skip:
+                echo(f"skip {item.title} because of block word: {word}")
+                continue
         item.description = item.description or ""
         if verbose:
             echo(f"[Entry]\n{item}")
