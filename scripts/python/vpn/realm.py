@@ -55,7 +55,7 @@ def main(
     log_output: str = typer.Option("/var/log/realm.log"),
     no_tcp: bool = typer.Option(False),
     use_udp: bool = typer.Option(True),
-    listen_host: str = typer.Option("0.0.0.0", help="本地监听主机地址"),
+    listen_host: str = typer.Option("[::0]", help="本地监听主机地址"),
     listen_port: str = typer.Option(..., help="本地监听主机端口, 支持指定端口和端口范围, 如`443,8110-8113`"),
     remote_host: str = typer.Option("127.0.0.1", help="远程主机地址"),
     remote_port: str = typer.Option("443", help="远程主机端口"),
