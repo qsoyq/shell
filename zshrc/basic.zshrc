@@ -55,6 +55,44 @@ ddxq_search() {
         }'
 }
 
+sg-nnr(){
+    curl -X PUT http://127.0.0.1:9090/proxies/Select -d'{"name":"🇸🇬NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/Telegram -d'{"name":"🇸🇬NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC1 -d'{"name":"🇸🇬NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC2 -d'{"name":"🇸🇬NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC3 -d'{"name":"🇸🇬NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC4 -d'{"name":"🇸🇬NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC5 -d'{"name":"🇸🇬NNR"}'
+}
+
+hk-nnr(){
+    curl -X PUT http://127.0.0.1:9090/proxies/Select -d'{"name":"🇭🇰NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/Telegram -d'{"name":"🇭🇰NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC1 -d'{"name":"🇭🇰NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC2 -d'{"name":"🇭🇰NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC3 -d'{"name":"🇭🇰NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC4 -d'{"name":"🇭🇰NNR"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC5 -d'{"name":"🇭🇰NNR"}'
+}
+
+tg-proxy(){
+    curl -X PUT http://127.0.0.1:9090/proxies/Telegram -d'{"name":"PROXY"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC1 -d'{"name":"PROXY"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC2 -d'{"name":"PROXY"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC3 -d'{"name":"PROXY"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC4 -d'{"name":"PROXY"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC5 -d'{"name":"PROXY"}'    
+}
+
+tg-dogyun(){
+    curl -X PUT http://127.0.0.1:9090/proxies/Telegram -d'{"name":"🇭🇰Dogyun"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC1 -d'{"name":"🇭🇰Dogyun"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC2 -d'{"name":"🇭🇰Dogyun"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC3 -d'{"name":"🇭🇰Dogyun"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC4 -d'{"name":"🇭🇰Dogyun"}'
+    curl -X PUT http://127.0.0.1:9090/proxies/TelegramDC5 -d'{"name":"🇭🇰Dogyun"}'    
+}
+
 db_set(){
     echo "$1,$2" >> ~/.database.kv
 }
