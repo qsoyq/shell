@@ -9,6 +9,12 @@ import httpx
 from pydantic import BaseModel, Field
 import xmltodict
 
+version = "0.1.0"
+help = f"""
+订阅 RSS, 并转发到 Bark 通知
+
+Version: {version}
+"""
 app = typer.Typer()
 
 
@@ -124,7 +130,7 @@ def make_push_messages(entries: list[Entry], bark_token: str, icon: str | None, 
     return {"messages": messages}
 
 
-@app.command()
+@app.command(help=help)
 def main(
     url: str = typer.Argument(..., help="rss 订阅地址"),
     cachepath: Path = typer.Option("~/.FeedAlert", "--cachepath", help="持久化存储目录"),
@@ -133,7 +139,8 @@ def main(
     bark_level: str | None = typer.Option(None, "--bark-level", help="'active', 'timeSensitive', or 'passive', or 'critical'"),
     bark_group: str | None = typer.Option(None, "--bark-group"),
     verbose: bool = typer.Option(True, help="详细输出"),
-    block_words: list[str] | None = typer.Option(None, help="屏蔽关键词"),
+    block_words: list[str] | None = typer.Option(None, help="屏蔽关键词, 跳过匹配的标题"),
+    reminder_words: list[str] | None = typer.Option(None, help="提醒关键词, 匹配的通知以 active 级别发送"),
 ):
     cachepath = cachepath.expanduser()
     shl = ShelveStorage(cachepath)
@@ -161,6 +168,11 @@ def main(
             if skip:
                 echo(f"skip {item.title} because of block word: {word}")
                 continue
+        if reminder_words:
+            for word in reminder_words:
+                if word.lower() in item.title.lower():
+                    bark_level = "active"
+                    break
         item.description = item.description or ""
         if verbose:
             echo(f"[Entry]\n{item}")

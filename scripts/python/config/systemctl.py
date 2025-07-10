@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 import os
-import toml
 import sys
 import select
-from pathlib import Path
 import rich
 from datetime import datetime
 import typer
