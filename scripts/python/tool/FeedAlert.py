@@ -155,7 +155,7 @@ def main(
         if block_words:
             skip = False
             for word in block_words:
-                if word in item.title:
+                if word.lower() in item.title.lower():
                     skip = True
                     break
             if skip:
