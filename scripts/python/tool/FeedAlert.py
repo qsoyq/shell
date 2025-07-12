@@ -159,6 +159,7 @@ def main(
         echo(f"[Feed]\n{feed}")
 
     for item in feed.item:
+        reminder = False
         if block_words:
             skip = False
             for word in block_words:
@@ -171,7 +172,7 @@ def main(
         if reminder_words:
             for word in reminder_words:
                 if word.lower() in item.title.lower():
-                    bark_level = "active"
+                    reminder = True
                     break
         item.description = item.description or ""
         if verbose:
@@ -181,7 +182,8 @@ def main(
             continue
         if bark_icon is None and feed.image and feed.image.url:
             bark_icon = feed.image.url
-        payload = make_push_messages([item], bark_token, bark_icon, bark_level, bark_group)
+        level = "active" if reminder else bark_level
+        payload = make_push_messages([item], bark_token, bark_icon, level, bark_group)
         url = "https://p.19940731.xyz/api/notifications/push/v3"
         if verbose:
             echo(f"[Push Payload]:{payload}")
