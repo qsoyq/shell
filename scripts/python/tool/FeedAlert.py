@@ -9,7 +9,7 @@ import httpx
 from pydantic import BaseModel, Field
 import xmltodict
 
-version = "0.1.0"
+version = "0.1.1"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 
