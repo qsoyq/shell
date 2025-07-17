@@ -9,7 +9,7 @@ import httpx
 from pydantic import BaseModel, Field
 import xmltodict
 
-version = "0.1.1"
+version = "0.1.2"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 
@@ -183,7 +183,8 @@ def main(
         if bark_icon is None and feed.image and feed.image.url:
             bark_icon = feed.image.url
         level = "active" if reminder else bark_level
-        payload = make_push_messages([item], bark_token, bark_icon, level, bark_group)
+        group = "feed-active" if reminder else bark_group
+        payload = make_push_messages([item], bark_token, bark_icon, level, group)
         url = "https://p.19940731.xyz/api/notifications/push/v3"
         if verbose:
             echo(f"[Push Payload]:{payload}")
