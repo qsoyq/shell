@@ -9,7 +9,7 @@ import httpx
 from pydantic import BaseModel, Field
 import xmltodict
 
-version = "0.1.2"
+version = "0.1.3"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 
@@ -141,6 +141,7 @@ def main(
     verbose: bool = typer.Option(True, help="详细输出"),
     block_words: list[str] | None = typer.Option(None, help="屏蔽关键词, 跳过匹配的标题"),
     reminder_words: list[str] | None = typer.Option(None, help="提醒关键词, 匹配的通知以 active 级别发送"),
+    timecache: bool = typer.Option(False, help="对条目进行缓存时是否基于条目的 pubDate, 若 False, 则条目的 pubDate 更新时, 也会推送"),
 ):
     cachepath = cachepath.expanduser()
     shl = ShelveStorage(cachepath)
@@ -177,7 +178,7 @@ def main(
         item.description = item.description or ""
         if verbose:
             echo(f"[Entry]\n{item}")
-        keyname = f"{item.guid.text or item.link} - {item.pubDate}"
+        keyname = f"{item.guid.text or item.link} - {item.pubDate}" if timecache is True else f"{item.guid.text or item.link}"
         if shl[keyname]:
             continue
         if bark_icon is None and feed.image and feed.image.url:
