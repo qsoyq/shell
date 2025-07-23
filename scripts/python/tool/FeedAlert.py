@@ -210,7 +210,7 @@ def make_push_messages(entry: FeedItem, bark_token: str, icon: str | None, level
         "bark": {
             "device_key": bark_token,
             "title": entry.title,
-            "body": f"{entry.content or ''}\ncreated: {entry.created}"[:1024],
+            "body": f"{entry.content or ''}\n{entry.created}"[:1024],
             "level": level,
             "icon": icon,
             "group": group,
