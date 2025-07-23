@@ -1,66 +1,47 @@
 #!/usr/bin/env python3
+import html
 from datetime import datetime
+import dateparser
 import typer
 import rich
 import rich.errors
 import shelve
+import json
 from pathlib import Path
 import httpx
 from pydantic import BaseModel, Field
 import xmltodict
 
-version = "0.1.3"
+version = "0.2.0"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
-
+支持 rss/atom/jsonfeed 版本的 rss 订阅.
 Version: {version}
 """
 app = typer.Typer()
 
 
-class ChannelImage(BaseModel):
-    url: str | None = Field(None)
-    title: str | None = Field(None)
-    link: str | None = Field(None)
+class FeedInfo(BaseModel):
+    title: str
+    description: str
+    home_page_url: str | None = Field(None)
+    feed_url: str | None = Field(None)
+    icon: str | None = Field(None)
+    favicon: str | None = Field(None)
 
 
-class GUID(BaseModel):
-    isPermaLink: str | None = Field(None, alias="@isPermaLink")
-    text: str | None = Field(None, alias="@text")
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self) -> str:
-        return f"{self.isPermaLink}\n{self.text}"
-
-
-class Entry(BaseModel):
-    title: str = Field(...)
-    description: str | None = Field("")
+class FeedItem(BaseModel):
+    id: str = Field(...)
     link: str = Field(...)
-    guid: GUID = Field(...)
-    pubDate: str = Field(...)
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self) -> str:
-        return f"{self.title}\n{self.description}\n{self.link}\n{self.guid}\n{self.pubDate}"
-
-
-class Feed(BaseModel):
     title: str = Field(...)
-    description: str = Field(...)
-    link: str = Field(...)
-    item: list[Entry] = Field(...)
-    image: ChannelImage | None = Field(None)
+    content: str | None = Field(None)
+    created: datetime | None = Field(None)
+    updated: datetime | None = Field(None)
 
-    def __str__(self) -> str:
-        return self.__repr__()
 
-    def __repr__(self) -> str:
-        return f"{self.title}\n{self.description}\n{self.link}"
+class MyFeed(BaseModel):
+    info: FeedInfo
+    items: list[FeedItem]
 
 
 def echo(*args, **kwargs):
@@ -112,22 +93,152 @@ class ShelveStorage:
                 yield (key, shl[key])
 
 
-def make_push_messages(entries: list[Entry], bark_token: str, icon: str | None, level: str | None, group: str | None) -> dict:
-    messages = []
-    for entry in entries:
-        payload = {
-            "bark": {
-                "device_key": bark_token,
-                "title": entry.title,
-                "body": f"{entry.description or ''}\n{entry.pubDate}",
-                "level": level,
-                "icon": icon,
-                "group": group,
-                "url": entry.link,
-            }
+class FeedParser:
+    def __init__(self, body: str, content_type: str):
+        self._body = body
+        version = None
+        if "application/atom+xml" in content_type:
+            version = "atom"
+        elif "application/json" in content_type:
+            version = "jsonfeed"
+        elif "application/xml" in content_type:
+            version = "rss"
+        self.version = version
+
+    def parse(self) -> MyFeed:
+        version = self.version
+        if version == "atom":
+            return self._parse_atom()
+        elif version == "jsonfeed":
+            return self._parse_json()
+        elif version == "rss":
+            return self._parse_rss()
+        raise ValueError("Invalid version")
+
+    def _parse_rss(self) -> MyFeed:
+        data = xmltodict.parse(self._body).get("rss", {}).get("channel")
+        image_url = data.get("image", {}).get("url")
+        info = FeedInfo(
+            title=data["title"],
+            description=data["description"],
+            home_page_url=data.get("link"),
+            feed_url=data.get("link"),
+            icon=image_url,
+            favicon=image_url,
+        )
+        items: list[FeedItem] = []
+        for item in data["item"]:
+            items.append(
+                FeedItem(
+                    id=item["guid"]["#text"],
+                    link=item["link"],
+                    title=item["title"],
+                    content=item.get("description"),
+                    created=dateparser.parse(item["pubDate"]),
+                    updated=None,
+                )
+            )
+            items[-1].updated = items[-1].created
+
+        return MyFeed(info=info, items=items)
+
+    def _parse_atom(self) -> MyFeed:
+        data = xmltodict.parse(self._body)["feed"]
+        links = {link["@rel"]: link["@href"] for link in data.get("link", [])}
+
+        info = FeedInfo(
+            title=data["title"],
+            description=data["subtitle"],
+            home_page_url=links.get("alternate"),
+            feed_url=links.get("self"),
+            icon=data.get("icon"),
+            favicon=data.get("favicon"),
+        )
+        items: list[FeedItem] = []
+
+        for item in data["entry"]:
+            items.append(
+                FeedItem(
+                    id=item["id"],
+                    link=item.get("link", {}).get("@href"),
+                    title=item["title"],
+                    content=item.get("content", {}).get("#text"),
+                    created=dateparser.parse(item["published"]),
+                    updated=dateparser.parse(item["updated"]),
+                )
+            )
+
+        return MyFeed(info=info, items=items)
+
+    def _parse_json(self) -> MyFeed:
+        data = json.loads(self._body)
+        info = FeedInfo(
+            title=data["title"],
+            description=data["description"],
+            home_page_url=data.get("home_page_url"),
+            feed_url=data.get("feed_url"),
+            icon=data.get("icon"),
+            favicon=data.get("favicon"),
+        )
+        items: list[FeedItem] = []
+        for item in data["items"]:
+            items.append(FeedItem(id=item["id"], link=item["url"], title=item["title"], content=item.get("content_html"), created=dateparser.parse(item["date_published"]), updated=None))
+            items[-1].updated = items[-1].created
+
+        return MyFeed(info=info, items=items)
+
+
+def make_push_messages(entry: FeedItem, bark_token: str, icon: str | None, level: str | None, group: str | None) -> dict:
+    payload = {
+        "bark": {
+            "device_key": bark_token,
+            "title": entry.title,
+            "body": f"{entry.content or ''}\ncreated: {entry.created}"[:1024],
+            "level": level,
+            "icon": icon,
+            "group": group,
+            "url": entry.link,
         }
-        messages.append(payload)
-    return {"messages": messages}
+    }
+    return {"messages": [payload]}
+
+
+def get_cache_key(item: FeedItem, timecache: bool = False) -> str:
+    keyname = f"{item.id or item.link} - {item.updated or item.created}" if timecache is True else f"{item.id or item.link}"
+    return keyname
+
+
+def filter_by_block(items: list[FeedItem], block_words: list[str]) -> list[FeedItem]:
+    if not block_words:
+        return items
+    output = []
+    for word in block_words:
+        for item in items:
+            if word.lower() in item.title.lower():
+                break
+        else:
+            output.append(item)
+    return output
+
+
+def modify_messages_push_level(messages: list, reminder_words: list[str]):
+    for item in messages:
+        payload = item["messages"][0]
+        if "bark" in payload:
+            if is_active(payload["title"], reminder_words):
+                payload["level"] = "active"
+                payload["group"] = "feed-active"
+
+
+def is_active(title: str, reminder_words: list[str]) -> bool:
+    for word in reminder_words:
+        if word.lower() in title.lower():
+            return True
+    return False
+
+
+def content_render(body: str) -> str:
+    return html.unescape(body)
 
 
 @app.command(help=help)
@@ -136,8 +247,8 @@ def main(
     cachepath: Path = typer.Option("~/.FeedAlert", "--cachepath", help="持久化存储目录"),
     bark_token: str | None = typer.Option(None, "--bark-token", help="Bark 推送 API Token"),
     bark_icon: str | None = typer.Option(None, "--bark-icon"),
-    bark_level: str | None = typer.Option(None, "--bark-level", help="'active', 'timeSensitive', or 'passive', or 'critical'"),
-    bark_group: str | None = typer.Option(None, "--bark-group"),
+    bark_level: str | None = typer.Option("passive", "--bark-level", help="'active', 'timeSensitive', or 'passive', or 'critical'"),
+    bark_group: str | None = typer.Option("Default", "--bark-group"),
     verbose: bool = typer.Option(True, help="详细输出"),
     block_words: list[str] | None = typer.Option(None, help="屏蔽关键词, 跳过匹配的标题"),
     reminder_words: list[str] | None = typer.Option(None, help="提醒关键词, 匹配的通知以 active 级别发送"),
@@ -153,45 +264,38 @@ def main(
 
     resp = httpx.get(url)
     resp.raise_for_status()
-    body = xmltodict.parse(resp.text)
-    channel = body.get("rss", {}).get("channel", {})
-    feed = Feed(**channel)
-    if verbose:
-        echo(f"[Feed]\n{feed}")
 
-    for item in feed.item:
-        reminder = False
-        if block_words:
-            skip = False
-            for word in block_words:
-                if word.lower() in item.title.lower():
-                    skip = True
-                    break
-            if skip:
-                echo(f"skip {item.title} because of block word: {word}")
-                continue
-        if reminder_words:
-            for word in reminder_words:
-                if word.lower() in item.title.lower():
-                    reminder = True
-                    break
-        item.description = item.description or ""
-        if verbose:
-            echo(f"[Entry]\n{item}")
-        keyname = f"{item.guid.text or item.link} - {item.pubDate}" if timecache is True else f"{item.guid.text or item.link}"
+    parser = FeedParser(resp.text, resp.headers.get("content-type", ""))
+    feed = parser.parse()
+    feed.items = filter_by_block(feed.items, block_words or [])
+    for item in feed.items:
+        keyname = get_cache_key(item, timecache)
         if shl[keyname]:
             continue
-        if bark_icon is None and feed.image and feed.image.url:
-            bark_icon = feed.image.url
-        level = "active" if reminder else bark_level
-        group = "feed-active" if reminder else bark_group
-        payload = make_push_messages([item], bark_token, bark_icon, level, group)
-        url = "https://p.19940731.xyz/api/notifications/push/v3"
-        if verbose:
-            echo(f"[Push Payload]:{payload}")
 
-        resp = httpx.post(url, json=payload)
-        resp.raise_for_status()
+        if item.content:
+            item.content = content_render(item.content)
+
+        level = bark_level
+        group = bark_group
+        icon = feed.info.icon or bark_icon
+        # https://github.com/livid/v2ex-blog-comments/discussions/8#discussioncomment-13859283
+        if icon and icon.startswith("https:https://"):
+            icon = icon.replace("https:https://", "https://")
+
+        if is_active(item.title, reminder_words or []):
+            level = "active"
+            group = "feed-active"
+        payload = make_push_messages(item, bark_token, icon, level, group)
+
+        if verbose:
+            echo(f"[Push Payload]: {payload}")
+
+        url = "https://p.19940731.xyz/api/notifications/push/v3"
+        resp = httpx.post(url, json=payload, headers={"content-type": "application/json"})
+        if resp.is_error:
+            echo(f"push error: {resp.text}")
+            raise typer.Exit(2)
         shl[keyname] = keyname
 
 
