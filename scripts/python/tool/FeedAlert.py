@@ -12,10 +12,11 @@ import httpx
 from pydantic import BaseModel, Field
 import xmltodict
 
-version = "0.2.0"
+version = "0.2.1"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
+
 Version: {version}
 """
 app = typer.Typer()
@@ -103,6 +104,22 @@ class FeedParser:
             version = "jsonfeed"
         elif "application/xml" in content_type:
             version = "rss"
+        else:
+            try:
+                data = xmltodict.parse(body)
+                if data.get("rss", {}).get("channel"):
+                    version = "rss"
+                elif data.get("feed"):
+                    version = "atom"
+            except Exception:
+                pass
+            try:
+                data = json.loads(body)
+                version = "jsonfeed"
+            except json.JSONDecodeError:
+                pass
+        if not version:
+            raise ValueError("Invalid version")
         self.version = version
 
     def parse(self) -> MyFeed:
