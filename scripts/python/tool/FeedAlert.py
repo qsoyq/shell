@@ -12,7 +12,7 @@ import httpx
 from pydantic import BaseModel, Field
 import xmltodict
 
-version = "0.2.1"
+version = "0.2.2"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
