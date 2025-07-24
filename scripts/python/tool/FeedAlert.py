@@ -232,8 +232,8 @@ def filter_by_block(items: list[FeedItem], block_words: list[str]) -> list[FeedI
     if not block_words:
         return items
     output = []
-    for word in block_words:
-        for item in items:
+    for item in items:
+        for word in block_words:
             if word.lower() in item.title.lower():
                 break
         else:
