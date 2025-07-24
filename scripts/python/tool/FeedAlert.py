@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup as soup
 from pydantic import BaseModel, Field
 
 
-version = "0.2.4"
+version = "0.2.5"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
