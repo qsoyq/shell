@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup as soup
 from pydantic import BaseModel, Field
 
 
-version = "0.2.3"
+version = "0.2.4"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
@@ -288,11 +288,11 @@ def main(
     parser = FeedParser(resp.text, resp.headers.get("content-type", ""))
     feed = parser.parse()
     feed.items = filter_by_block(feed.items, block_words or [])
-    for item in feed.items:
-        keyname = get_cache_key(item, timecache)
-        if shl[keyname]:
-            continue
+    feed.items = [item for item in feed.items if not shl[get_cache_key(item, timecache)]]
+    if verbose:
+        echo(f"Retrieved {len(feed.items)} new items.")
 
+    for item in feed.items:
         if item.content:
             item.content = content_render(item.content)
 
@@ -316,6 +316,7 @@ def main(
         if resp.is_error:
             echo(f"push error: {resp.text}")
             raise typer.Exit(2)
+        keyname = get_cache_key(item, timecache)
         shl[keyname] = keyname
 
 
