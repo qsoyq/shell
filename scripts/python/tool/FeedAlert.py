@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 import html
-from datetime import datetime
-import dateparser
 import typer
-import rich
-import rich.errors
 import shelve
 import json
 from pathlib import Path
-import httpx
-from pydantic import BaseModel, Field
-import xmltodict
+from datetime import datetime
 
-version = "0.2.2"
+import httpx
+import xmltodict
+import dateparser
+import rich
+import rich.errors
+from bs4 import BeautifulSoup as soup
+from pydantic import BaseModel, Field
+
+
+version = "0.2.3"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
@@ -255,7 +258,7 @@ def is_active(title: str, reminder_words: list[str]) -> bool:
 
 
 def content_render(body: str) -> str:
-    return html.unescape(body)
+    return soup(html.unescape(body), "lxml").text
 
 
 @app.command(help=help)
