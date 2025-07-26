@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 pip install --upgrade certifi   --trusted-host pypi.org --trusted-host files.pythonhosted.org
 pip install --upgrade pip   --trusted-host pypi.org --trusted-host files.pythonhosted.org
-pip install pydantic xmltodict PyYAML httpx bs4 lxml typer rich tabulate socksio ipython pysocks ipython pyvim ruff you-get vcron pythonping dnspython --trusted-host pypi.org --trusted-host files.pythonhosted.org
+pip install dateparser pydantic xmltodict PyYAML httpx bs4 lxml typer rich tabulate socksio ipython pysocks ipython pyvim ruff you-get vcron pythonping dnspython --trusted-host pypi.org --trusted-host files.pythonhosted.org
 
 curl -sL -o /usr/local/bin/mikanani-magnet "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/mikanani/filter.py?v=$(date +%s)"
 curl -sL -o /usr/local/bin/replace-all "https://raw.githubusercontent.com/qsoyq/shell/main/scripts/python/terminal/replace-all.py?v=$(date +%s)"
