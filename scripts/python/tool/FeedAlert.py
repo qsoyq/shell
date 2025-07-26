@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup as soup
 from pydantic import BaseModel, Field
 
 
-version = "0.2.5"
+version = "0.2.6"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
@@ -273,6 +273,7 @@ def main(
     block_words: list[str] | None = typer.Option(None, help="屏蔽关键词, 跳过匹配的标题"),
     reminder_words: list[str] | None = typer.Option(None, help="提醒关键词, 匹配的通知以 active 级别发送"),
     timecache: bool = typer.Option(False, help="对条目进行缓存时是否基于条目的 pubDate, 若 False, 则条目的 pubDate 更新时, 也会推送"),
+    timeout: float = typer.Option(60, help="请求订阅的超时时间"),
 ):
     cachepath = cachepath.expanduser()
     shl = ShelveStorage(cachepath)
@@ -282,7 +283,7 @@ def main(
         echo("not exists bark token.")
         raise typer.Exit(1)
 
-    resp = httpx.get(url)
+    resp = httpx.get(url, timeout=timeout)
     resp.raise_for_status()
 
     parser = FeedParser(resp.text, resp.headers.get("content-type", ""))
