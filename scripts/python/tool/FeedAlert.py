@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup as soup
 from pydantic import BaseModel, Field
 
 
-version = "0.2.6"
+version = "0.2.7"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
@@ -299,7 +299,7 @@ def main(
 
         level = bark_level
         group = bark_group
-        icon = feed.info.icon or bark_icon
+        icon = bark_icon or feed.info.icon
         # https://github.com/livid/v2ex-blog-comments/discussions/8#discussioncomment-13859283
         if icon and icon.startswith("https:https://"):
             icon = icon.replace("https:https://", "https://")
@@ -307,6 +307,7 @@ def main(
         if is_active(item.title, reminder_words or []):
             level = "active"
             group = "feed-active"
+
         payload = make_push_messages(item, bark_token, icon, level, group)
 
         if verbose:
