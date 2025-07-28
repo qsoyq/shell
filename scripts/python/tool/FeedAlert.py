@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup as soup
 from pydantic import BaseModel, Field
 
 
-version = "0.2.7"
+version = "0.2.8"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
@@ -274,6 +274,7 @@ def main(
     reminder_words: list[str] | None = typer.Option(None, help="提醒关键词, 匹配的通知以 active 级别发送"),
     timecache: bool = typer.Option(False, help="对条目进行缓存时是否基于条目的 pubDate, 若 False, 则条目的 pubDate 更新时, 也会推送"),
     timeout: float = typer.Option(60, help="请求订阅的超时时间"),
+    error_notify: bool = typer.Option(True, help="是否开启错误通知, 仅当获取订阅状态码异常时, 发送一条错误通知到 Bark"),
 ):
     cachepath = cachepath.expanduser()
     shl = ShelveStorage(cachepath)
@@ -282,9 +283,27 @@ def main(
     if not bark_token:
         echo("not exists bark token.")
         raise typer.Exit(1)
-
-    resp = httpx.get(url, timeout=timeout)
-    resp.raise_for_status()
+    resp = httpx.get(url, timeout=timeout, verify=False)
+    if resp.is_error:
+        echo(f"订阅返回异常: {resp.status_code} - {resp.text}")
+        if error_notify:
+            payload = {
+                "messages": [
+                    {
+                        "bark": {
+                            "device_key": bark_token,
+                            "title": "FeedAlert RSS",
+                            "body": f"{url}\n{resp.status_code} - {resp.text}"[:1024],
+                            "level": bark_level,
+                            "group": "FeedAlert",
+                            "url": url,
+                        }
+                    }
+                ]
+            }
+            url = "https://p.19940731.xyz/api/notifications/push/v3"
+            resp = httpx.post(url, json=payload, headers={"content-type": "application/json"}, verify=False)
+        raise typer.Exit(3)
 
     parser = FeedParser(resp.text, resp.headers.get("content-type", ""))
     feed = parser.parse()
@@ -314,7 +333,7 @@ def main(
             echo(f"[Push Payload]: {payload}")
 
         url = "https://p.19940731.xyz/api/notifications/push/v3"
-        resp = httpx.post(url, json=payload, headers={"content-type": "application/json"})
+        resp = httpx.post(url, json=payload, headers={"content-type": "application/json"}, verify=False)
         if resp.is_error:
             echo(f"push error: {resp.text}")
             raise typer.Exit(2)
