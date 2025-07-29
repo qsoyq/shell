@@ -3,6 +3,7 @@ import html
 import typer
 import shelve
 import json
+import urllib.parse
 from pathlib import Path
 from datetime import datetime
 
@@ -15,7 +16,7 @@ from bs4 import BeautifulSoup as soup
 from pydantic import BaseModel, Field
 
 
-version = "0.2.8"
+version = "0.2.9"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
@@ -287,13 +288,15 @@ def main(
     if resp.is_error:
         echo(f"订阅返回异常: {resp.status_code} - {resp.text}")
         if error_notify:
+            parse_result = urllib.parse.urlparse(url)
+            short_url = f"{parse_result.scheme}://{parse_result.netloc}{parse_result.path}"
             payload = {
                 "messages": [
                     {
                         "bark": {
                             "device_key": bark_token,
                             "title": "FeedAlert RSS",
-                            "body": f"{url}\n{resp.status_code} - {resp.text}"[:1024],
+                            "body": f"{short_url}\n{resp.status_code} - {resp.text}"[:1024],
                             "level": bark_level,
                             "group": "FeedAlert",
                             "url": url,
