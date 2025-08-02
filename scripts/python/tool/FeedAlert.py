@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup as soup
 from pydantic import BaseModel, Field
 
 
-version = "0.2.10"
+version = "0.2.11"
 help = f"""
 订阅 RSS, 并转发到 Bark 通知
 支持 rss/atom/jsonfeed 版本的 rss 订阅.
@@ -276,6 +276,7 @@ def main(
     timecache: bool = typer.Option(False, help="对条目进行缓存时是否基于条目的 pubDate, 若 False, 则条目的 pubDate 更新时, 也会推送"),
     timeout: float = typer.Option(60, help="请求订阅的超时时间"),
     error_notify: bool = typer.Option(True, help="是否开启错误通知, 仅当获取订阅状态码异常时, 发送一条错误通知到 Bark"),
+    only_reminder: bool = typer.Option(False, help="是否仅推送关键字提醒的内容"),
 ):
     cachepath = cachepath.expanduser()
     shl = ShelveStorage(cachepath)
@@ -332,6 +333,10 @@ def main(
         if is_active(item.title, reminder_words or []):
             level = "active"
             group = "feed-active"
+
+        elif only_reminder:
+            echo("[FeedItem] skip beacuse of only_reminder ")
+            continue
 
         payload = make_push_messages(item, bark_token, icon, level, group)
 
