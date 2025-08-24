@@ -30,6 +30,9 @@ alias unquote="encoder unquote"
 alias b64encode="encoder b64encode"
 alias b64decode="encoder b64decode"
 
+alias human-du="du -ah * | sort -hr | head "
+alias human-df="df -h / | awk 'NR==2 {print $5}'"
+
 magnet_url(){
     echo "magnet:?xt=urn:btih:$1"
 }
