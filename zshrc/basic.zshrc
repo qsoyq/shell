@@ -7,13 +7,6 @@ export PATH="/usr/sbin:$PATH"
 export PATH="/System/Cryptexes/App/usr/bin:$PATH"
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 
-alias pwdcopy="pwd|pbcopy"
-alias works="cd $HOME/works"
-alias github="cd $HOME/works/github"
-alias shell="code $HOME/works/github/shell"
-alias app="code $HOME/works/github/services/app"
-alias stash="code $HOME/Library/Mobile\ Documents/iCloud~ws~stash~icloud/Documents"
-
 alias reload=". ~/.zshrc"
 alias envactive="set -o allexport && . .env"
 alias grep='grep --color=auto'
