@@ -16,10 +16,11 @@ export PATH="/opt/homebrew/sbin:$PATH"
 alias init_homebrew="bash ${shell_scripts_homebrew_dir}/init_brew.sh"
 alias brew_install_recipes="bash ${shell_scripts_homebrew_dir}/brew_install_recipes.sh"
 
-string=("openssl" "zlib" "readline" "gettext" "tcl-tk@8" "sqlite3" "xz" "mpdecimal")
-for word in $string; do
-    export LDFLAGS="-L$(brew --prefix $word)/lib $LDFLAGS"
-    export CPPFLAGS="-I$(brew --prefix $word)/include $CPPFLAGS"
-    export PKG_CONFIG_PATH="$(brew --prefix $word)/lib/pkgconfig $PKG_CONFIG_PATH"
-    export PATH="$(brew --prefix $word)/bin:$PATH"
-done
+
+# string=("openssl" "zlib" "readline" "gettext" "tcl-tk@8" "sqlite3" "xz" "mpdecimal")
+# for word in $string; do
+#     export LDFLAGS="-L$(brew --prefix $word)/lib $LDFLAGS"
+#     export CPPFLAGS="-I$(brew --prefix $word)/include $CPPFLAGS"
+#     export PKG_CONFIG_PATH="$(brew --prefix $word)/lib/pkgconfig $PKG_CONFIG_PATH"
+#     export PATH="$(brew --prefix $word)/bin:$PATH"
+# done
