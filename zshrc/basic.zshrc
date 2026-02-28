@@ -8,7 +8,7 @@ export PATH="/System/Cryptexes/App/usr/bin:$PATH"
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 
 alias reload=". ~/.zshrc"
-alias envactive="set -o allexport && . .env"
+alias envactive="set -o allexport && source .env"
 alias grep='grep --color=auto'
 alias timestamp='date +%s'
 alias datetime="date \"+%Y-%m-%d %H:%M:%S\""

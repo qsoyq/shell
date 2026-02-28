@@ -8,4 +8,4 @@ set_new_network_proxy(){
     export https_proxy=http://$addr http_proxy=$addr all_proxy=socks5://$addr
 }
 
-set_clash_proxy
+# set_clash_proxy
