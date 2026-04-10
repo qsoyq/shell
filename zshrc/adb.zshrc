@@ -79,4 +79,4 @@ _apks-install() {
     _files -g "*.apks"
 }
 
-compdef _apks-install apks-install
+# compdef _apks-install apks-install
