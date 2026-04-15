@@ -177,3 +177,8 @@ upload_file_to_telegraph() {
     return 0
 }
 
+
+
+tt() {
+  open -a Terminal "$PWD"
+}
