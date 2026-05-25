@@ -1,6 +1,6 @@
 
 
-alias history="history 1000"
+alias history="history -1000"
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=100000
