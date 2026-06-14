@@ -15,7 +15,7 @@ export PATH="/opt/homebrew/sbin:$PATH"
 
 alias init_homebrew="bash ${shell_scripts_homebrew_dir}/init_brew.sh"
 alias brew_install_recipes="bash ${shell_scripts_homebrew_dir}/brew_install_recipes.sh"
-
+alias brew-update-all="brew update && brew outdated && brew upgrade && brew upgrade --cask && brew cleanup"
 
 # string=("openssl" "zlib" "readline" "gettext" "tcl-tk@8" "sqlite3" "xz" "mpdecimal")
 # for word in $string; do
